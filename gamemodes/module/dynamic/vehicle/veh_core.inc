@@ -1,0 +1,38 @@
+enum vData
+{
+	vID,
+	vOwner,
+	vColor[2],
+	vModel,
+	vLocked,
+	vInsuranced,
+	vInsurance,
+	vInsuTime,
+	vPlate[16],
+	Float:vHealth,
+	Float:vPos[4],
+	vWorld,
+	vInterior,
+	vFuel,
+	vVehicle,
+	vPark,
+	vDamage[4],
+	bool:vExists,
+	vRental,
+	vRentTime,
+	vHouse,
+	vWood,
+	vMod[17],
+	STREAMER_TAG_OBJECT:vToy[5],
+	vToyID[5],
+	cAttachedToy[5],
+	Float:vToyPosX[5],
+	Float:vToyPosY[5],
+	Float:vToyPosZ[5],
+	Float:vToyRotX[5],
+	Float:vToyRotY[5],
+	Float:vToyRotZ[5],
+};
+
+new VehicleData[MAX_PLAYER_VEHICLE][vData];
+new Iterator:PlayerVehicle<MAX_PLAYER_VEHICLE>;

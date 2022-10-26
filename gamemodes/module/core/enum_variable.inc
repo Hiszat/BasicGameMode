@@ -1,0 +1,10 @@
+new PlayerData[MAX_PLAYERS][e_player_data];
+new VehCore[MAX_VEHICLES][vCore];
+new InventoryData[MAX_PLAYERS][MAX_INVENTORY][inventoryData];
+new DroppedItems[MAX_DROPPED_ITEMS][droppedItems];
+new NearestItems[MAX_PLAYERS][MAX_LISTED_ITEMS];
+new RentData[MAX_RENTAL][e_rental];
+new EntranceData[MAX_ENTRANCES][entranceData];
+new PlayerTextdraws[MAX_PLAYERS][playerTextraws];
+new BusinessData[MAX_BUSINESSES][businessData];
+new PumpData[MAX_GAS_PUMPS][pumpData];
