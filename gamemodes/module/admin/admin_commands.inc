@@ -69,6 +69,26 @@ CMD:slap(playerid, params[])
 	return 1;
 }
 
+CMD:gotoco(playerid, params[]){
+	if(PlayerData[playerid][pAdmin] > 5){
+		new Float:a,Float:b,Float:c;
+		if(sscanf(params, "fff", a,b,c)) return SendSyntaxMessage(playerid, "/gotocoord [x] [y] [z]");
+
+		SetPlayerPos(playerid, a,b,c);
+	}
+	return 1;
+}
+
+CMD:setworld(playerid, params[])
+{
+	if(PlayerData[playerid][pAdmin] > 5){
+		new a,b,c;
+		if(sscanf(params, "udd", a,b,c)) return SendSyntaxMessage(playerid, "/setworld [playerid] [interior] [vw]");
+		SetPlayerInterior(a,b);
+		SetPlayerVirtualWorld(a,c);
+	}
+	return 1;
+}
 CMD:getcar(playerid, params[])
 {
 	if(PlayerData[playerid][pAdmin] < 1)
@@ -174,5 +194,61 @@ CMD:goto(playerid, params[])
 	SendPlayerToPlayer(playerid, id);
 
 	SendAdminAction(playerid, "Kamu telah teleportasi ke player %s dengan id %d", ReturnName(id), id);
+	return 1;
+}
+
+CMD:asetmember(playerid, params[])
+{
+	new facid, otherid;
+	if(PlayerData[playerid][pAdmin] < 6)
+		return SendErrorMessage(playerid, "You must be admin!");
+		
+	if(sscanf(params, "ud", otherid, facid))
+        return SendSyntaxMessage(playerid, "/asetmember [playerid/PartOfName] [Faction 1 - 4]");
+		
+	if(otherid == INVALID_PLAYER_ID)
+		return SendErrorMessage(playerid, "Invalid ID.");
+	
+	/*if(PlayerData[otherid][pFaction] > 0)
+		return SendErrorMessage(playerid, "This player is not in any faction!");*/
+	
+	if(facid < 1 || facid > 4)
+		return SendErrorMessage(playerid, "Faction must 1 - 4 only");
+	
+	PlayerData[otherid][pFaction] = facid;
+	PlayerData[otherid][pFacRank] = 0;
+	PlayerData[otherid][pFacDiv] = 0;
+	new infoo[256];
+	format(infoo, sizeof(infoo), "[Admin]You has set %s faction to %d", PlayerData[otherid][pName], facid);
+	SendServerMessage(playerid, infoo);
+	format(infoo, sizeof(infoo), "[Admin]%s has set your faction to %s", GetName(playerid), GetFactionName(facid));
+	SendServerMessage(otherid, infoo);
+	return 1;
+}
+
+CMD:asetrank(playerid, params[])
+{
+	new rank, otherid;
+	if(PlayerData[playerid][pAdmin] < 6)
+		return SendErrorMessage(playerid, "You must be admin!");
+		
+	if(sscanf(params, "ud", otherid, rank))
+        return SendSyntaxMessage(playerid, "/setrank [playerid/PartOfName] [rank 1-14]");
+		
+	if(otherid == INVALID_PLAYER_ID)
+		return SendErrorMessage(playerid, "Invalid ID.");
+	
+	if(PlayerData[otherid][pFaction] == 0)
+		return SendErrorMessage(playerid, "This player is not in any faction!");
+	
+	if(rank < 1 || rank > 14)
+		return SendErrorMessage(playerid, "Rank must 1 - 14 only");
+	
+	PlayerData[otherid][pFacRank] = rank;
+	new infoo[256];
+	format(infoo, sizeof(infoo), "[Admin]You has set %s faction rank to level %d", PlayerData[otherid][pName], rank);
+	SendServerMessage(playerid, infoo);
+	format(infoo, sizeof(infoo), "[Admin]%s has set your faction rank to level %d", GetName(playerid), rank);
+	SendServerMessage(otherid, infoo);
 	return 1;
 }

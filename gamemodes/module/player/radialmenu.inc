@@ -6,6 +6,7 @@ CMD:radial(playerid, test[])
     strcat(str, "Vehicle\n");
     if(GetNearbyGarkot(playerid) >= 0) strcat(str, "Garkot Menu\n");
     if(GetNearbyRental(playerid) >= 0) strcat(str, "Sewa Kendaraan\n");
+    if(IsPlayerInRangeOfPoint(playerid, 3.0, MDC_COORD)) strcat(str, "MDC Menu\n");
     Dialog_Show(playerid, RadialMenu, DIALOG_STYLE_LIST, "Radial Menu", str, "Select", "Close");
     return 1;
 }
@@ -43,6 +44,10 @@ Dialog:RadialMenu(playerid, response, listitem, inputtext[])
         if(strcmp("Sewa Kendaraan", inputtext, true) == 0)
         {
             Dialog_Show(playerid, RentalMenu, DIALOG_STYLE_LIST, "Penyewaan Kendaraan", "Sewa Kendaraan\nKembalikan Kendaraan", "Select", "Close");
+        }
+        if(strcmp("MDC Menu", inputtext, true) == 0)
+        {
+            cmd_mdc(playerid, "\1");
         }
     }
     return 1;

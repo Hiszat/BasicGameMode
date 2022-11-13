@@ -70,11 +70,17 @@ enum e_player_data
 	pListitem,
 	pInventory,
 	pStorageSelect,
+	pCP,
 	pTarget,
 	pHunger,
+	pTrackTime,
 	pThirst,
 	pRenting,
 	pEntrance,
+	pFaction,
+	pFacRank,
+	pDuty,
+	pFacDiv,
 	pFreeze,
 	pFreezeTimer,
 	bool:pPressBtn,
@@ -88,9 +94,12 @@ enum e_player_data
 	pGasPump,
 	pGasStation,
 	pEditPump,
+	pJailType,
+	pJailTime,
 	pFurnitureType,
 	pEditingItem[32 char],
-	pProductModify
+	pProductModify,
+	pWanted
 };
 
 enum vCore

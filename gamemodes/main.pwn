@@ -82,12 +82,17 @@
 #include "module/player/smartphone/smartphone_commands.inc"
 #include "module/player/smartphone/smartphone_sampcalback.inc"
 
+//factions
+#include "module/factions/core.inc"
+#include "module/factions/sapd.inc"
+
 //admin
 #include "module/admin/admin_function.inc"
 #include "module/admin/admin_commands.inc"
 
 //mapping
 #include "module/map/hospital.inc"
+#include "module/map/sapd_int.inc"
 
 
 
@@ -242,7 +247,6 @@ Function:PlayerCheck(playerid, rcc)
 	CheckAccount(playerid);
 	return true;
 }
-
 Function:CheckUsers(playerid)
 {
 	new rows = cache_num_rows();
@@ -269,14 +273,14 @@ stock SetupPlayerData(playerid)
 
 stock SaveData(playerid)
 {
-	new query[1012];
+	new query[1024];
 	if(PlayerData[playerid][pSpawned])
 	{
 		GetPlayerHealth(playerid, PlayerData[playerid][pHealth]);
 		GetPlayerArmour(playerid, PlayerData[playerid][pArmor]);
 		GetPlayerPos(playerid, PlayerData[playerid][pPos][0], PlayerData[playerid][pPos][1], PlayerData[playerid][pPos][2]);
 
-	    format(query, sizeof(query), "UPDATE `users` SET `PosX` = '%.4f', `PosY` = '%.4f', `PosZ` = '%.4f', `Health` = '%.4f', `Armor` = '%.4f', `World` = '%d', `Interior` = '%d', `Age` = '%s', `Heigth` = '%s', `Gender` = '%d', `Injured` = '%d', `Admin` = '%d',`Skin` = '%d', `Money` = '%d', `Bank` = '%d', `Level` = '%d', `Hunger` = '%d', `Thirst` = '%d'",
+	    format(query, sizeof(query), "UPDATE `users` SET `PosX` = '%.4f', `PosY` = '%.4f', `PosZ` = '%.4f', `Health` = '%.4f', `Armor` = '%.4f', `World` = '%d', `Interior` = '%d', `Age` = '%s', `Heigth` = '%s', `Gender` = '%d', `Injured` = '%d', `Admin` = '%d',`Skin` = '%d', `Money` = '%d', `Bank` = '%d', `Level` = '%d', `Hunger` = '%d', `Thirst` = '%d', `WantedLevel` = '%d'",
 			PlayerData[playerid][pPos][0],
 			PlayerData[playerid][pPos][1],
 			PlayerData[playerid][pPos][2],
@@ -294,12 +298,16 @@ stock SaveData(playerid)
 			PlayerData[playerid][pBank],
 			PlayerData[playerid][pLevel],
 			PlayerData[playerid][pHunger],
-			PlayerData[playerid][pThirst]
+			PlayerData[playerid][pThirst],
+			PlayerData[playerid][pWanted]
+			
 		);
-		format(query, sizeof(query), "%s, `Entrance` = '%d', `Business` = '%d' WHERE `pID`= '%d'",
+		format(query, sizeof(query), "%s, `Entrance` = '%d', `Business` = '%d', `Faction` = '%d' , `FactionRank` = '%d' WHERE `pID`= '%d'",
 			query,
 			PlayerData[playerid][pEntrance],
 			PlayerData[playerid][pBusiness],
+			PlayerData[playerid][pFaction],
+			PlayerData[playerid][pFacRank],
 			PlayerData[playerid][pID]
 		);
 		mysql_tquery(sqlcon, query);
@@ -331,13 +339,21 @@ Function:LoadCharacterData(playerid)
 	cache_get_value_name_int(0, "Hunger", PlayerData[playerid][pHunger]);
 	cache_get_value_name_int(0, "Thirst", PlayerData[playerid][pThirst]);
 	cache_get_value_name_int(0, "Entrance", PlayerData[playerid][pEntrance]);
-
+	cache_get_value_name_int(0, "WantedLevel", PlayerData[playerid][pWanted]);
+	cache_get_value_name_int(0, "Faction", PlayerData[playerid][pFaction]);
+	cache_get_value_name_int(0, "FactionRank", PlayerData[playerid][pFacRank]);
 
 	if(PlayerData[playerid][pGender] != -1) ShowSpawnTextdraw(playerid);
 
 	if(PlayerData[playerid][pGender] == -1) ShowPassport_1(playerid);
 
-	StartPlayerProgressBarTextdraw(playerid, 100, "Memuat Data", 100, "loadsukses", 1687547391);
+	StartPlayerProgressBarTextdraw(playerid, 100, "Memuat Data", 40, "loadsukses", 1687547391);
+    return 1;
+}
+
+Function:loadsukses(playerid)
+{
+	SendTextDrawMessageEx(playerid, NOTIFICATION_INFO, "Data dari karakter kamu berhasil di muat.");
 
 	PlayerData[playerid][pLoggedIn] = true;
 
@@ -364,12 +380,6 @@ Function:LoadCharacterData(playerid)
 	}
 	//
 	LoadPlayerVehicle(playerid);
-    return 1;
-}
-
-Function:loadsukses(playerid)
-{
-	SendTextDrawMessageEx(playerid, NOTIFICATION_INFO, "Data dari karakter kamu berhasil di muat.");
 	return 1;
 }
 
@@ -414,7 +424,6 @@ Function:OnPlayerPasswordChecked(playerid, bool:success)
 	if(!success)
         return Dialog_Show(playerid, LoginScreen, DIALOG_STYLE_PASSWORD, "MASUK", str, "Login", "Exit");
 
-	PlayerData[playerid][pLogged] = true;	
 	new cQuery[256];
 	mysql_format(sqlcon, cQuery, sizeof(cQuery), "SELECT * FROM `users` WHERE `Username` = '%s' LIMIT 1;", ReturnName(playerid));
 	mysql_tquery(sqlcon, cQuery, "LoadCharacterData", "d", playerid);	
@@ -460,6 +469,9 @@ public OnGameModeExit()
 
 public OnPlayerConnect(playerid)
 {
+	for (new i = 0; i < 100; i ++) {
+	    SendClientMessage(playerid, -1, "");
+	}
 	g_RaceCheck{playerid} ++;
 	InterpolateCameraPos(playerid, -37.715755, -2101.054931, 121.661994, 3031.810302, -638.207458, 196.425064, 12000);
 	InterpolateCameraLookAt(playerid, -33.558185, -2098.420898, 120.781112, 3028.381103, -641.794555, 195.814514, 12000);
@@ -478,6 +490,7 @@ public OnPlayerDisconnect(playerid, reason)
 	
 	UnloadPlayerVehicle(playerid);	
 	SaveData(playerid);
+	PlayerData[playerid][pLoggedIn] = false;
 	return 1;
 }
 
@@ -489,10 +502,25 @@ public OnPlayerUpdate(playerid)
 	return 1;
 }
 
+public OnPlayerEnterCheckpoint(playerid)
+{
+	if (PlayerData[playerid][pCP])
+	{
+	    DisablePlayerCheckpoint(playerid);
+	    PlayerData[playerid][pCP] = 0;
+	}
+	return 1;
+}
+
+
 Dialog:RegisterScreen(playerid, response, listitem, inputtext[])
 {
 	if(!response)
 	    return Kick(playerid);
+
+	for (new i = 0; i < 100; i ++) {
+	    SendClientMessage(playerid, -1, "");
+	}
 
 	new str[256];
 	format(str, sizeof(str), "Selamat datang di server: "SERVER_NAME"\n\nUsername: %s\nERROR: Panjang kata sandi tidak boleh di bawah 7 atau di atas 32!nSilakan masukkan Kata Sandi Anda di bawah ini untuk mendaftar:", GetName(playerid));
@@ -512,6 +540,10 @@ Dialog:LoginScreen(playerid, response, listitem, inputtext[])
 	if(!response)
 	    return Kick(playerid);
 	        
+	for (new i = 0; i < 100; i ++) {
+	    SendClientMessage(playerid, -1, "");
+	}
+
     if(strlen(inputtext) < 1)
     {
 		new str[256];
@@ -531,6 +563,8 @@ Dialog:LoginScreen(playerid, response, listitem, inputtext[])
 
 public OnPlayerSpawn(playerid)
 {
+	if(IsPlayerConnected2(playerid) == 0)
+		return SendTextDrawMessageEx(playerid, NOTIFICATION_INFO, "Kamu Belum Login atau data belum dimuat!");
 	ShowPlayerHud(playerid, true);
 	if(!PlayerData[playerid][pSpawned])
 	{
@@ -540,7 +574,9 @@ public OnPlayerSpawn(playerid)
 	    SetPlayerVirtualWorld(playerid, PlayerData[playerid][pWorld]);
 		SetPlayerInterior(playerid, PlayerData[playerid][pInterior]);
 		SetPlayerScore(playerid, PlayerData[playerid][pLevel]);
+		return 1;
 	}
+	
 	// if(PlayerData[playerid][pJailTime] > 0)
 	// {
 	//     if (PlayerData[playerid][pArrest])
@@ -582,6 +618,7 @@ public OnPlayerSpawn(playerid)
 		// ResetWeapons(playerid);
 		GiveMoney(playerid, -5000, "Bayar rumah sakit");
 		// ResetDamages(playerid);
+		return 1;
 	}
 	else
 	{
@@ -604,8 +641,9 @@ public OnPlayerSpawn(playerid)
 
 			PlayerData[playerid][pInjuredLabel] = CreateDynamic3DTextLabel("(( THIS PLAYER IS INJURED ))", X11_RED, 0.0, 0.0, 0.50, 15.0, playerid);
 		}
+		return 1;
 	}
-	return 1;
+	//return 0;
 }
 
 
@@ -853,6 +891,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		}
     }
 	return 1;
+	
 }
 
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
@@ -881,6 +920,16 @@ public OnPlayerPickUpDynamicPickup(playerid, STREAMER_TAG_PICKUP:pickupid)
 		if(pickupid == EntranceData[i][entrancePickup])
 		{
 			ShowPressButton(playerid, sprintf("Tekan F untuk masuk ke %s", EntranceData[i][entranceName]), 3000);
+		}
+	}
+
+	forex(i, 8){
+		if(pickupid == CellPickup[i])
+		{
+			if(GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_CUFFED){
+				SetPlayerArrest(playerid, 1, i+1);
+			}
+			
 		}
 	}
 }
@@ -912,6 +961,7 @@ public OnPlayerEditDynamicObject(playerid, objectid, response, Float:x, Float:y,
 	}
 	return 1;
 }
+
 
 public OnPlayerEnterDynamicArea(playerid, areaid)
 {

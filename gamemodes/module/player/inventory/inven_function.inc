@@ -64,6 +64,7 @@ Function:RefrestItemTextdraw(playerid, index)
 
 stock ShowINVTD(playerid)
 {
+	new Nama[52];
 	forex(i, 10)
 	{
 	    TextDrawShowForPlayer(playerid, INV_TD[i]);
@@ -74,6 +75,8 @@ stock ShowINVTD(playerid)
 		PlayerTextDrawShow(playerid, ITEM[i][playerid]);
 		PlayerTextDrawShow(playerid, INVJUMLAH[playerid][i]);
 	}
+	format(Nama,sizeof(Nama),"%s",GetName(playerid));
+	PlayerTextDrawSetString(playerid, INVNAME[playerid], Nama);
 	PlayerTextDrawShow(playerid, INVNAME[playerid]);
 	PlayerTextDrawShow(playerid, INVBAR[playerid]);
 }
@@ -512,6 +515,7 @@ CMD:setitem(playerid, params[])
 	new
 	    userid,
 		item[32],
+		infooo[52],
 		amount;
 
 	if (PlayerData[playerid][pAdmin] < 6)
@@ -528,8 +532,9 @@ CMD:setitem(playerid, params[])
 		// if (!strcmp(item, "Mask", true)){
 	    // 	PlayerData[userid][pMaskcode] = PlayerData[userid][pID]+random(90000) + 10000;
 	    // }
+		format(infooo,sizeof(infooo), "You have set %s's \n%s\n to %d.", GetName(userid), item, amount);
 		Inventory_Set(userid, g_aInventoryItems[i][e_InventoryItem], g_aInventoryItems[i][e_InventoryModel], amount);
-		return SendServerMessage(playerid, "You have set %s's \"%s\" to %d.", GetName(userid), item, amount);
+		return SendServerMessage(playerid, infooo);
 	}
 	SendTextDrawMessageEx(playerid, NOTIFICATION_ERROR, "Invalid item name (use /itemlist for a list).");
 	return 1;

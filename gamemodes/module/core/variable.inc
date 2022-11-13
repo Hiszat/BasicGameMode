@@ -17,3 +17,7 @@ new PlayerText:iNotification[MAX_PLAYERS][3];
 
 //============================ TEMP PLAYER =============================
 new SellLastSpawn[MAX_PLAYERS];
+
+//============================ SAPD SYSTEM ==================================
+new CellPrisoners[9];
+new CellPickup[8];

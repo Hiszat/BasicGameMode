@@ -20,6 +20,45 @@ stock Vehicle_Nearest(playerid, Float:range = 4.5)
 	return -1;
 }
 
+stock GetVehicleMaxSeats(vehicleid)
+{
+    static const g_arrMaxSeats[] = {
+		4, 2, 2, 2, 4, 4, 1, 2, 2, 4, 2, 2, 2, 4, 2, 2, 4, 2, 4, 2, 4, 4, 2, 2, 2, 1, 4, 4, 4, 2,
+		1, 7, 1, 2, 2, 0, 2, 7, 4, 2, 4, 1, 2, 2, 2, 4, 1, 2, 1, 0, 0, 2, 1, 1, 1, 2, 2, 2, 4, 4,
+		2, 2, 2, 2, 1, 1, 4, 4, 2, 2, 4, 2, 1, 1, 2, 2, 1, 2, 2, 4, 2, 1, 4, 3, 1, 1, 1, 4, 2, 2,
+		4, 2, 4, 1, 2, 2, 2, 4, 4, 2, 2, 1, 2, 2, 2, 2, 2, 4, 2, 1, 1, 2, 1, 1, 2, 2, 4, 2, 2, 1,
+		1, 2, 2, 2, 2, 2, 2, 2, 2, 4, 1, 1, 1, 2, 2, 2, 2, 7, 7, 1, 4, 2, 2, 2, 2, 2, 4, 4, 2, 2,
+		4, 4, 2, 1, 2, 2, 2, 2, 2, 2, 4, 4, 2, 2, 1, 2, 4, 4, 1, 0, 0, 1, 1, 2, 1, 2, 2, 1, 2, 4,
+		4, 2, 4, 1, 0, 4, 2, 2, 2, 2, 0, 0, 7, 2, 2, 1, 4, 4, 4, 2, 2, 2, 2, 2, 4, 2, 0, 0, 0, 4,
+		0, 0
+	};
+	new
+	    model = GetVehicleModel(vehicleid);
+
+	if (400 <= model <= 611)
+	    return g_arrMaxSeats[model - 400];
+
+	return 0;
+}
+
+stock GetAvailableSeat(vehicleid, start = 1)
+{
+	new seats = GetVehicleMaxSeats(vehicleid);
+
+	for (new i = start; i < seats; i ++) if (!IsVehicleSeatUsed(vehicleid, i)) {
+	    return i;
+	}
+	return -1;
+}
+
+stock IsVehicleSeatUsed(vehicleid, seat)
+{
+	foreach (new i : Player) if (IsPlayerInVehicle(i, vehicleid) && GetPlayerVehicleSeat(i) == seat) {
+	    return 1;
+	}
+	return 0;
+}
+
 Vehicle_Nearest2(playerid)
 {
 	foreach(new i : PlayerVehicle)

@@ -77,3 +77,14 @@
 #define GetPlayerSQLID(%0)              PlayerData[%0][pID]
 #define GetMoney(%0)                    PlayerData[%0][pMoney]
 #define GetBank(%0)                     PlayerData[%0][pBankMoney]
+
+#define MDC_COORD 2250.0708, 1257.2338, 864.0117
+
+
+//============================== WORLD ==========================================
+#define LSPD_INTERIOR		3
+#define LSPD_VW				1000
+#define EMS_INTERIOR		3
+#define EMS_VW				1001
+#define GOV_INTERIOR		3
+#define GOV_VW				1002
