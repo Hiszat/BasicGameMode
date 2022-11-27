@@ -78,6 +78,9 @@
 #define GetMoney(%0)                    PlayerData[%0][pMoney]
 #define GetBank(%0)                     PlayerData[%0][pBankMoney]
 
+//================================ ANYTHING FOR ROLEPLAY ========================
+#define ACTION_SLOT_ATT	9
+
 #define MDC_COORD 2250.0708, 1257.2338, 864.0117
 
 

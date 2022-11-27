@@ -24,6 +24,28 @@ ptask secondsTimer[999](playerid)
 		else{
 			SetPlayerDrunkLevel(playerid, 0);
 		}
+
+		if(PlayerData[playerid][pJailType] > 0 && PlayerData[playerid][pAJailTime] >= 1){// Selesaikan dulu jail ooc nya
+			PlayerData[playerid][pAJailTime] --;
+		}else if(PlayerData[playerid][pJailType] > 0 && PlayerData[playerid][pJailTime] >= 1){
+			PlayerData[playerid][pJailTime] --;
+		}else if(PlayerData[playerid][pJailType] > 0 && PlayerData[playerid][pAJailTime] <= 0){
+			if(PlayerData[playerid][pJailTime] > 0 ){
+				if(GetLSPDEmptyCell() > 0){
+					SetPlayerArrest(playerid, 1, GetLSPDEmptyCell(), PlayerData[playerid][pJailTime]);
+				}
+			}else{
+				SetPlayerPos(playerid, 0,0,0); // Jangan Lupa Di ganti nanti habis di ajail tele ke blueberry ga lucu
+			}
+		}else if(PlayerData[playerid][pJailType] > 0 && PlayerData[playerid][pJailTime] <= 0){
+			PlayerData[playerid][pJailType] = 0;
+			PlayerData[playerid][pJailTime] = 0;
+			SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
+			SetPlayerInterior(playerid, 0);
+			SetPlayerPos(playerid, 1542.3409, -1675.6566, 13.5543);
+			SetPlayerVirtualWorld(playerid, 0);
+		}
+
 		if (PlayerData[playerid][pTrackTime] > 0 && IsPlayerConnectedEx(GetPVarInt(playerid, "MDC")))
 		{
 		    PlayerData[playerid][pTrackTime]--;
@@ -64,6 +86,15 @@ ptask secondsTimer[999](playerid)
 		            SendServerMessage(playerid, "Unable to locate %s; the target is out of range (inside an interior).", ReturnName(GetPVarInt(playerid, "MDC"), 0));
 				}
 				PlayerData[playerid][pTrackTime] = 0;
+			}
+			if(GetPlayerSpecialAction(playerid) != SPECIAL_ACTION_CUFFED && PlayerData[playerid][pCuffed] == 1){
+				if(!PlayerData[playerid][pInjured]){
+					SetPlayerSpecialAction(playerid, SPECIAL_ACTION_CUFFED);
+				}else{
+					PlayerData[playerid][pCuffed] = 0;
+					SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
+					RemovePlayerAttachedObject(playerid, ACTION_SLOT_ATT);
+				}	
 			}
 		}
 	}

@@ -1,6 +1,6 @@
-#include <YSI_Coding\y_hooks>
+//#include <YSI_Coding\y_hooks>
 
-
+/*
 hook OnGameModeInit()
 {
     CellPickup[0] = CreateDynamicPickup(1313, 2, 2262.1304, 1251.0757, 863.8434, LSPD_VW, LSPD_INTERIOR, -1);
@@ -12,7 +12,7 @@ hook OnGameModeInit()
     CellPickup[6] = CreateDynamicPickup(1313, 2, 2265.9805, 1260.8147, 863.7896, LSPD_VW, LSPD_INTERIOR, -1);
     CellPickup[7] = CreateDynamicPickup(1313, 2, 2262.1453, 1260.8147, 863.8431, LSPD_VW, LSPD_INTERIOR, -1);
     return 1;
-}
+}*/
 
 stock IsACruiser(vehicleid)
 {
@@ -23,7 +23,33 @@ stock IsACruiser(vehicleid)
 }
 
 
-Function:SetPlayerArrest(playerid, type, cellid)
+stock GetCellSAPDPoint(playerid)
+{
+	if(GetPlayerInterior(playerid) == LSPD_INTERIOR && GetPlayerVirtualWorld(playerid) == LSPD_VW){
+		if(IsPlayerInRangeOfPoint(playerid, 3.0, 2262.1304,1251.0757,863.8434)){
+			return 1;
+		}else if(IsPlayerInRangeOfPoint(playerid, 3.0, 2265.8972,1251.0751,863.7908)){
+			return 2;
+		}else if(IsPlayerInRangeOfPoint(playerid, 3.0, 2269.5806,1251.0753,863.7393)){
+			return 3;
+		}else if(IsPlayerInRangeOfPoint(playerid, 3.0, 2273.1025,1251.0760,863.6912)){
+			return 4;
+		}else if(IsPlayerInRangeOfPoint(playerid, 3.0, 2273.2744,1260.8147,863.6888)){
+			return 5;
+		}else if(IsPlayerInRangeOfPoint(playerid, 3.0, 2269.7317,1260.8146,863.7372)){
+			return 6;
+		}else if(IsPlayerInRangeOfPoint(playerid, 3.0, 2265.9805,1260.8149,863.7896)){
+			return 7;
+		}else if(IsPlayerInRangeOfPoint(playerid, 3.0, 2262.1453,1260.8148,863.8431)){
+			return 8;
+		}else{
+			return 0;
+		}
+	}
+	return 0;
+}
+
+SetPlayerArrest(playerid, type, cellid, time)
 {
     switch(type){
         case 1:{// Type SAPD NORMAL 
@@ -53,6 +79,8 @@ Function:SetPlayerArrest(playerid, type, cellid)
                     SetPlayerPos(playerid, 2262.4827, 1262.6815, 863.8384);
                 }
             }
+			PlayerData[playerid][pJailType] = type;
+			PlayerData[playerid][pJailTime] = time;
             CellPrisoners[cellid] += 1;
 	        SetPlayerVirtualWorld(playerid, LSPD_VW);
 	        SetPlayerInterior(playerid, LSPD_INTERIOR);
@@ -61,8 +89,45 @@ Function:SetPlayerArrest(playerid, type, cellid)
 	        PlayerPlaySound(playerid, 1186, 0, 0, 0);
             SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
         }
-    }
-        
+    }    
+}
+
+CMD:arrest(playerid, params[]){
+	if(PlayerData[playerid][pFaction] == 1){
+		new otherid,jailtime,denda;
+		if (sscanf(params, "ui", otherid, jailtime, denda))
+	    	return SendSyntaxMessage(playerid, "/arrest [playerid/nama] [waktu (menit)] [denda]");
+
+		if(otherid == playerid)
+			return SendErrorMessage(playerid, "Kamu tidak bisa menangkap dirimu.");
+
+		if (!IsPlayerNearPlayer(playerid, otherid, 3.0))
+			return SendErrorMessage(playerid, "Player terlalu jauh.");
+
+		if(jailtime > 10080)
+			return SendErrorMessage(playerid, "Waktu tidak boleh lebih dari 10080 menit ((1 Minggu Dunia Nyata [kasian anjir yang main]))");
+		
+		if(jailtime < 1)
+			return SendErrorMessage(playerid, "Waktu tidak boleh kurang dari 1 menit");
+
+		if(denda > 5000000)
+			return SendErrorMessage(playerid, "Denda tidak boleh diatas $50,000.00");
+
+		if(denda < 1)
+			return SendErrorMessage(playerid, "Denda tidak boleh dibawah $0.01");
+
+		if(PlayerData[otherid][pWanted] == 0)
+			return SendErrorMessage(playerid, "Player tidak memiliki status kriminal.");
+
+		if(GetCellSAPDPoint(otherid) > 0){
+			PlayerData[otherid][pCuffed] = 0;
+			SendClientMessage(playerid, 0xFFFFFFFF, "System: Kamu telah masuk penjara.");
+			SetPlayerArrest(otherid, 1, GetCellSAPDPoint(otherid), jailtime);
+			PlayerData[otherid][pWanted] = 0;
+			GivePlayerMoney(otherid, -denda);
+		}else return SendErrorMessage(playerid, "Player harus berada didepan sel.");
+	}
+	return 1;
 }
 
 CMD:mdc(playerid, params[]){
@@ -142,12 +207,61 @@ CMD:cuff(playerid, params[])
 		if(sscanf(params, "u", otherid))
 			return SendSyntaxMessage(playerid, "/cuff [playerid/PartOfName]");
 
-		SetPlayerSpecialAction(otherid, SPECIAL_ACTION_CUFFED);
+		if(PlayerData[playerid][pInjured])
+			return SendErrorMessage(playerid, "Player sedang sekarat.");
+
+		if(otherid == playerid)
+			return SendErrorMessage(playerid, "Kamu tidak bisa memborgol dirimu sendiri");
+		
+		if(ProxDetectorS(4.5, playerid, otherid)){
+			PlayerData[otherid][pCuffed] = 1;
+			SetPlayerSpecialAction(otherid, SPECIAL_ACTION_CUFFED);
+			SetPlayerAttachedObject(otherid, ACTION_SLOT_ATT, 19418, 6, -0.011000, 0.028000, -0.022000, -15.600012, -33.699977, -81.700035, 0.891999, 1.000000, 1.168000);
+		}else return SendErrorMessage(playerid, "Kamu terlalu jauh dari dia.");
 	}
-	
     return 1;
 }
 
+CMD:createvehlic(playerid, params[]) // KANG INI BUAT FUNCTION SIM
+{
+	if(PlayerData[playerid][pFaction] == 1){
+		new otherid;
+		if(sscanf(params, "d", otherid))
+		{
+			SendSyntaxMessage(playerid, "/createvehlic [playerid]");
+			return 1;
+		}
+		if(IsPlayerNearPlayer(playerid, otherid, 4.0)){
+			SendClientMessage(playerid, 0xFFFFFFFF, "Kamu telah membuatkan sim");
+			SendClientMessage(otherid, 0xFFFFFFFF, "Kamu telah dibuatkan sim");
+		}
+	}
+	return 1;
+}
+
+
+CMD:uncuff(playerid, params[])
+{
+	if(PlayerData[playerid][pFaction] == 1)
+	{
+		new otherid;
+		if(sscanf(params, "u", otherid))
+			return SendSyntaxMessage(playerid, "/cuff [playerid/PartOfName]");
+
+		if(otherid == playerid)
+			return SendErrorMessage(playerid, "Kamu tidak bisa membuka borgol dirimu sendiri.");
+			
+		if(PlayerData[otherid][pCuffed] != 1)
+			return SendErrorMessage(playerid, "Player tidak terborgol.");
+
+		if(ProxDetectorS(4.5, playerid, otherid)){
+			PlayerData[otherid][pCuffed] = 0 ;
+			SetPlayerSpecialAction(otherid, SPECIAL_ACTION_NONE);
+			RemovePlayerAttachedObject(otherid, ACTION_SLOT_ATT);
+		}else return SendErrorMessage(playerid, "Kamu terlalu jauh dari dia.");
+	}
+    return 1;
+}
 
 
 Dialog:Warrants(playerid, response, listitem, inputtext[])
@@ -375,10 +489,12 @@ Dialog:ViewCharges(playerid, response, listitem, inputtext[])
 		    return Dialog_Show(playerid, ViewCharges, DIALOG_STYLE_INPUT, "Daftar Kriminal Penduduk", "Masukkan Nama atau ID Player:", "Submit", "Back");
 
 		if (IsNumeric(inputtext) && IsPlayerConnectedEx(strval(inputtext))) {
-	        ViewCharges(playerid, ReturnName(strval(inputtext)));
+	        ViewCharges(playerid, ReturnName(strval(inputtext)), 1 );
+			format(NAMAORANGGILA[playerid], MAX_PLAYER_NAME, ReturnName(strval(inputtext)));
 		}
 	    else if (!IsNumeric(inputtext)) {
-	        ViewCharges(playerid, inputtext);
+	        ViewCharges(playerid, inputtext, 1);
+			format(NAMAORANGGILA[playerid], MAX_PLAYER_NAME, inputtext);
 		}
 		else {
 		    Dialog_Show(playerid, ViewCharges, DIALOG_STYLE_INPUT, "Daftar Kriminal Penduduk", "Error: Tidak Ditemukan.\n\nMasukkan Nama atau ID Player:", "Submit", "Back");
@@ -388,11 +504,29 @@ Dialog:ViewCharges(playerid, response, listitem, inputtext[])
 	return 1;
 }
 
-Function:OnViewCharges(extraid, name[])
+Dialog:ChargeList(playerid, response, listitem, inputtext[])
 {
-	if (!IsACruiser(GetPlayerVehicleID(extraid)) && !IsPlayerInRangeOfPoint(extraid, 3.5, MDC_COORD))
+	if (!IsACruiser(GetPlayerVehicleID(playerid)) && !IsPlayerInRangeOfPoint(playerid, 3.5, MDC_COORD))
 	    return 0;
 
+	if (response)
+	{
+		if(Pagessss[playerid] == 0){
+			cmd_mdc(playerid, "\1");
+		}else{
+			Pagessss[playerid] += 1;
+			ViewCharges(playerid, NAMAORANGGILA[playerid], Pagessss[playerid]);
+		}
+	}else{
+		Pagessss[playerid] -= 1;
+		ViewCharges(playerid, NAMAORANGGILA[playerid], Pagessss[playerid]);
+	}
+
+	return 1;
+}
+
+Function:OnViewCharges(extraid, name[], pages)
+{
 	static
 	    rows;
 
@@ -409,24 +543,35 @@ Function:OnViewCharges(extraid, name[])
 
 	string[0] = 0;
 
-	for (new i = 0; i < rows; i ++) {
-	    cache_get_value_name(i, "Description", desc);
-	    cache_get_value_name(i, "Date", date);
-
-	    format(string, sizeof(string), "%s%s (%s)\n", string, desc, date);
+	if(rows < 11){
+		for (new i = 0; i < 10; i ++) {
+	    	cache_get_value_name(i, "Description", desc);
+	    	cache_get_value_name(i, "Date", date);
+	    	format(string, sizeof(string), "%s%d. %s (%s)\n", string, desc, date);
+		}
+		format(desc, sizeof(desc), "Nama Penduduk: %s", name);
+		Dialog_Show(extraid, ChargeList, DIALOG_STYLE_LIST, desc, string, "Close", "");
+		Pagessss[extraid] = 0;
+	}else if(rows > 10){
+		for (new i = pages*10; i < ((pages+1)*10); i ++) {
+	    	cache_get_value_name(i, "Description", desc);
+	    	cache_get_value_name(i, "Date", date);
+	    	format(string, sizeof(string), "%s%d. %s (%s)\n", string, desc, date);
+		}
+		format(desc, sizeof(desc), "Nama Penduduk: %s", name);
+		Dialog_Show(extraid, ChargeList, DIALOG_STYLE_LIST, desc, string, "Next", "Back");
+		Pagessss[extraid] = pages;
 	}
-	format(desc, sizeof(desc), "Nama Penduduk: %s", name);
-	Dialog_Show(extraid, ChargeList, DIALOG_STYLE_LIST, desc, string, "Close", "");
 	return 1;
 }
 
-stock ViewCharges(playerid, name[])
+stock ViewCharges(playerid, name[], pages=1)
 {
 	new
 	    string[128];
 
 	format(string, sizeof(string), "SELECT * FROM `criminallog` WHERE `Suspect` = '%s' ORDER BY `ID` DESC", name);
-	mysql_tquery(sqlcon, string, "OnViewCharges", "ds", playerid, name);
+	mysql_tquery(sqlcon, string, "OnViewCharges", "dsi", playerid, name, pages);
 	return 1;
 }
 

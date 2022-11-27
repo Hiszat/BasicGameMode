@@ -56,7 +56,20 @@ stock ResetPlayerData(playerid)
 	PlayerData[playerid][pGasStation] = -1;
 	PlayerData[playerid][pFurnitureType] = 0;
 	PlayerData[playerid][pProductModify] = 0;
-
+	PlayerData[playerid][pFaction] = 0;
+	PlayerData[playerid][pFacRank] = 0;
+	PlayerData[playerid][pDuty] = 0;
+	PlayerData[playerid][pFacDiv] = 0;
+	PlayerData[playerid][pWanted] = 0;
+	PlayerData[playerid][pCuffed] = 0;
+	PlayerData[playerid][pJob] = 0;
+	PlayerData[playerid][pJob2] = 0;
+	PlayerData[playerid][pJailTime] = 0;
+	PlayerData[playerid][pJailType] = 0;
+	PlayerData[playerid][pAJailTime] = 0;
+	Pagessss[playerid] = 0;
+	NAMAORANGGILA[playerid] = "";
+	//format(NAMAORANGGILA[playerid], sizeof(NAMAORANGGILA[playerid]), "");
 	// Temp Variable
 	SellLastSpawn[playerid] = -1;
 
@@ -66,6 +79,65 @@ stock ResetPlayerData(playerid)
 		PlayerTextDrawSetString(playerid, ITEMTXT[inv][playerid], "_");
 		PlayerTextDrawSetString(playerid, INVJUMLAH[playerid][inv], "_");
 	}
+}
+
+SaveServerStuff(id,amount)
+{
+	new query[1024];
+	format(query, sizeof(query), "UPDATE `Stuff` SET Amount='%d' WHERE id='%d'", amount, id);
+	mysql_tquery(sqlcon, query);
+	return 1;
+}
+
+Function:LoadServerStuff(){
+
+	new rows;
+	cache_get_row_count(rows);
+	if(rows)
+  	{
+ 		new id = 0 , i = 0;
+		while(i < rows){
+			if(i < 2)
+			{
+				if(i == 0)
+				{
+					cache_get_value_name_int(i, "ID", id);
+					cache_get_value_name_int(i, "Amount", Tax);
+					//Iter_Add(Stuff, id);
+				}else if(i == 1)
+				{
+					cache_get_value_name_int(i, "ID", id);
+					cache_get_value_name_int(i, "Amount", TaxVault);
+					//Iter_Add(Stuff, id);
+					
+				}
+				i++;
+			}else{
+				cache_get_value_name_int(i, "ID", StuffData[i][sId]);
+				cache_get_value_name(i, "Name", StuffData[i][sName]);
+				cache_get_value_name_int(i, "Amount", StuffData[i][sAmount]);
+				//Iter_Add(Stuff, id);
+				i++;
+			}
+		}
+		printf("[STUFF] Loaded %d rows  %d (Tax) %d (Tax Vault) Stuff from database.", rows,Tax,TaxVault);
+	}
+	return 1;
+}
+
+stock Float:GetDistanceBetweenPoints(Float:X, Float:Y, Float:Z, Float:PointX, Float:PointY, Float:PointZ)
+{
+	new Float:Distance;Distance = floatabs(floatsub(X, PointX)) + floatabs(floatsub(Y, PointY)) + floatabs(floatsub(Z, PointZ));
+	return Distance;
+}
+
+stock GetLSPDEmptyCell(){
+	for(new  i = 1; i < 9; i++){
+		if(CellPrisoners[i] < 3){ // Sel Cuman Muat Dua Orang
+			return i;
+		}
+	}
+	return 0;
 }
 
 stock GetElapsedTime(time, &hours, &minutes, &seconds)
@@ -298,6 +370,17 @@ stock GiveMoney(playerid, amount, reason[] = "unknown")
 	// AddToLog("cash", gstr);
 
     return 1;
+}
+
+ProxDetectorS(Float:radi, playerid, targetid) {
+	new
+		Float: fp_playerPos[3];
+	GetPlayerPos(targetid, fp_playerPos[0], fp_playerPos[1], fp_playerPos[2]);
+	if(IsPlayerInRangeOfPoint(playerid, radi, fp_playerPos[0], fp_playerPos[1], fp_playerPos[2]) && GetPlayerVirtualWorld(playerid) == GetPlayerVirtualWorld(targetid))
+	{
+		return 1;
+	}
+	return 0;
 }
 
 stock IsPlayerSpawned(playerid)

@@ -1,13 +1,12 @@
-new g_TaxVault;
 
 stock Tax_Percent(price)
 {
-	return floatround((float(price) / 100) * 85);
+	return floatround((float(price) / 100) * Tax);
 }
 
 stock Tax_AddMoney(amount)
 {
-	g_TaxVault = g_TaxVault + amount;
+	TaxVault += amount;
 
 	//Server_Save();
 
@@ -18,7 +17,7 @@ stock Tax_AddPercent(price)
 {
 	new money = (price - Tax_Percent(price));
 
-	g_TaxVault = g_TaxVault + money;
+	TaxVault  += money;
 
 	//Server_Save();
 	return 1;

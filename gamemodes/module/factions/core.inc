@@ -23,6 +23,20 @@ GetFactionRank(playerid)
 			default: rank = "Training";
 		}
 	}
+	if(PlayerData[playerid][pFaction] == 2)
+	{
+		switch(PlayerData[playerid][pFacRank]){
+			case 1: rank = "PNS";
+			case 2: rank = "Pengacara";
+			case 3: rank = "Jaksa";
+			case 4: rank = "Wakil Hakim";
+			case 5: rank = "Hakim";
+			case 6: rank = "Walikota";
+			case 7: rank = "Gubernur";
+			case 8: rank = "Presiden";
+			default: rank = "Honor";
+		}
+	}
 	return rank;
 }
 
@@ -31,8 +45,8 @@ GetFactionName(facid)
 	new name[52];
 	switch(facid){
 		case 1: name = "San Andreas Police Deparment";
-		case 2: name = "Emergency Services";
-		case 3: name = "Goverment";
+		case 2: name = "San Andreas Goverment";
+		case 3: name = "Emergency Services";
 		default: name = "Unknown";
 	}
 	return name;
@@ -85,6 +99,7 @@ SetFactionColor(playerid)
 
 	switch(factionid){
 		case 1: SetPlayerColor(playerid, COLOR_SAPD);
+		case 2: SetPlayerColor(playerid, COLOR_GOV);
 		default: SetPlayerColor(playerid, 0xFFFFFFFF);
 	}
 	return 1;
@@ -105,14 +120,21 @@ CMD:d(playerid, params[])
 	
 	for(new fid = 1; fid < 5; fid++)
 	{
-		if(PlayerData[playerid][pFaction] == 1) 
-		{
-			SendFactionMessage(fid, 0xFFD7004A, "** [SAPD Departement] %s %s: %s", GetFactionRank(playerid),PlayerData[playerid][pName], text);
-			format(mstr, sizeof(mstr), "[<DEPARTEMENT>]\n* %s *", text);
-			SetPlayerChatBubble(playerid, mstr, 0xFFD7004A, 10.0, 3000);
-		}
-		else
+		switch(PlayerData[playerid][pFaction]){
+			case 1:{
+				SendFactionMessage(fid, 0xFFD7004A, "** [SAPD] %s %s: %s", GetFactionRank(playerid),PlayerData[playerid][pName], text);
+				format(mstr, sizeof(mstr), "[<DEPARTEMENT>]\n* %s *", text);
+				SetPlayerChatBubble(playerid, mstr, 0xFFD7004A, 10.0, 3000);
+			}
+			case 2:{
+				SendFactionMessage(fid, 0xFFD7004A, "** [GOV] %s %s: %s", GetFactionRank(playerid),PlayerData[playerid][pName], text);
+				format(mstr, sizeof(mstr), "[<DEPARTEMENT>]\n* %s *", text);
+				SetPlayerChatBubble(playerid, mstr, 0xFFD7004A, 10.0, 3000);
+			}
+			default:{
 				return SendErrorMessage(playerid, "You aren't in any faction");
+			}
+		}			
 	}
     return 1;
 }
@@ -136,43 +158,64 @@ CMD:gov(playerid, params[])
 }
 
 
-CMD:setrank(playerid, params[])
+CMD:giverank(playerid, params[])
 {
 	new rank, otherid;
 	if(PlayerData[playerid][pFaction] == 0)
 		return SendErrorMessage(playerid, "You must joining faction!");
 
-	if(/*PlayerData[playerid][pFaction] == 1 && */PlayerData[playerid][pFacRank] < 11) // Jika Faction LSPD dan Tapi Rank dibawah 11
-		return SendErrorMessage(playerid, "You must faction leader!");
+	if(ISACopLeader(playerid) || ISAGovLeader(playerid)){ // Jika Faction LSPD dan Tapi Rank dibawah 11	
+		if(sscanf(params, "ud", otherid, rank))
+			return SendSyntaxMessage(playerid, "/setrank [playerid/PartOfName] [rank 1-14]");
+			
+		if(otherid == INVALID_PLAYER_ID)
+			return SendErrorMessage(playerid, "Invalid ID.");
 		
-	if(sscanf(params, "ud", otherid, rank))
-        return SendSyntaxMessage(playerid, "/setrank [playerid/PartOfName] [rank 1-14]");
+		if(otherid == playerid)
+			return SendErrorMessage(playerid, "Invalid ID.");
 		
-	if(otherid == INVALID_PLAYER_ID)
-		return SendErrorMessage(playerid, "Invalid ID.");
-	
-	if(otherid == playerid)
-		return SendErrorMessage(playerid, "Invalid ID.");
-	
-	if(PlayerData[otherid][pFaction] != PlayerData[playerid][pFaction])
-		return SendErrorMessage(playerid, "This player is not in your faction!");
-	
-	if(PlayerData[otherid][pFacRank] >= PlayerData[playerid][pFacRank])
-		return SendErrorMessage(playerid, "This player rank is higher than you!");
+		if(PlayerData[otherid][pFaction] != PlayerData[playerid][pFaction])
+			return SendErrorMessage(playerid, "This player is not in your faction!");
+		
+		if(PlayerData[otherid][pFacRank] >= PlayerData[playerid][pFacRank])
+			return SendErrorMessage(playerid, "This player rank is higher than you!");
 
-	if(rank >= PlayerData[playerid][pFacRank])
-		return SendErrorMessage(playerid, "You can't set this player rank higher than you!");	
-
-	if(rank < 1 || rank > 14)
-		return SendErrorMessage(playerid, "Rank must 1 - 14 only");
-	
-	PlayerData[otherid][pFacRank] = rank;
-	new infoo[256];
-	format(infoo, sizeof(infoo), "You has set %s faction rank to level %d", PlayerData[otherid][pName], rank);
-	SendServerMessage(playerid, infoo);
-	format(infoo, sizeof(infoo), "%s has set your faction rank to level %d", PlayerData[playerid][pName], rank);
-	SendServerMessage(otherid, infoo);
+		if(rank >= PlayerData[playerid][pFacRank])
+			return SendErrorMessage(playerid, "You can't set this player rank higher than you!");	
+		switch(PlayerData[playerid][pFaction]){
+			case 1:{
+				if(rank < 1 || rank > 14)
+					return SendErrorMessage(playerid, "Rank must 1 - 14 only");
+			}
+			case 2:{
+				if(rank < 1 || rank > 8)
+					return SendErrorMessage(playerid, "Rank must 1 - 7 only");
+			}
+		}
+		PlayerData[otherid][pFacRank] = rank;
+		new infoo[256];
+		format(infoo, sizeof(infoo), "You has set %s faction rank to level %d", PlayerData[otherid][pName], rank);
+		SendServerMessage(playerid, infoo);
+		format(infoo, sizeof(infoo), "%s has set your faction rank to level %d", PlayerData[playerid][pName], rank);
+		SendServerMessage(otherid, infoo);
+	}
 	return 1;
+}
+
+ISACopLeader(playerid)
+{
+	if(PlayerData[playerid][pFaction] == 1 && PlayerData[playerid][pFacRank] >= 11){
+		return 1;
+	}
+	return 0;
+}
+
+ISAGovLeader(playerid)
+{
+	if(PlayerData[playerid][pFaction] == 2 && PlayerData[playerid][pFacRank] >= 6){
+		return 1;
+	}
+	return 0;
 }
 
 

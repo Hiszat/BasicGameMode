@@ -82,10 +82,14 @@
 #include "module/player/smartphone/smartphone_commands.inc"
 #include "module/player/smartphone/smartphone_sampcalback.inc"
 
+//job 
+#include "module/job/trucker.inc"
+#include "module/job/taxi.inc"
+
 //factions
 #include "module/factions/core.inc"
 #include "module/factions/sapd.inc"
-
+#include "module/factions/goverment.inc"
 //admin
 #include "module/admin/admin_function.inc"
 #include "module/admin/admin_commands.inc"
@@ -455,6 +459,7 @@ public OnGameModeInit()
 	mysql_tquery(sqlcon, "SELECT * FROM `rental`", "Rental_Load", "");
 	mysql_tquery(sqlcon, "SELECT * FROM `entrances`", "Entrance_Load", "");
 	mysql_tquery(sqlcon, "SELECT * FROM `businesses`", "Business_Load", "");
+	mysql_tquery(sqlcon, "SELECT * FROM `stuff`", "LoadServerStuff", "");
 
 	//timer
 	SetTimer("FuelUpdate", 50000, true);
@@ -508,6 +513,84 @@ public OnPlayerEnterCheckpoint(playerid)
 	{
 	    DisablePlayerCheckpoint(playerid);
 	    PlayerData[playerid][pCP] = 0;
+	}
+	return 1;
+}
+
+public OnPlayerEnterRaceCheckpoint(playerid){
+	if(IsHauling[playerid] > 0)
+    {
+ 		if(IsHauling[playerid] % 2 == 0)
+	    {
+            if(IsTrailerAttachedToVehicle(GetPlayerVehicleID(playerid)))
+			{
+                PlayerData[playerid][pTruckerTimer] += 5 * 60;
+			    DisablePlayerRaceCheckpoint(playerid);
+                DestroyVehicle(GetVehicleTrailer(GetPlayerVehicleID(playerid)));
+                switch(IsHauling[playerid]){
+                    case 2:{
+                        DialogHauling[0] = false;
+                        GivePlayerMoney(playerid, 35000); 
+                    }
+                    case 4:{
+                        DialogHauling[1] = false;
+                        GivePlayerMoney(playerid, 30000);                        
+                    }
+                    case 6:{
+                        DialogHauling[2] = false;
+                        GivePlayerMoney(playerid, 25000);                        
+                    }
+                    case 8:{
+                        DialogHauling[3] = false;
+                        GivePlayerMoney(playerid, 27000);                       
+                    }
+                    case 10:{
+                        DialogHauling[4] = false;
+                        GivePlayerMoney(playerid, 39900);                       
+                    }
+                    case 12:{
+                        DialogHauling[5] = false;
+                        GivePlayerMoney(playerid, 20000);                        
+                    }
+                    case 14:{
+                        DialogHauling[6] = false;
+                        GivePlayerMoney(playerid, 31000);                       
+                    }
+                    case 16:{
+                        DialogHauling[7] = false;
+                        GivePlayerMoney(playerid, 33300);                       
+                    }
+                    case 18:{
+                        DialogHauling[8] = false;
+                        GivePlayerMoney(playerid, 29000);  
+                    }
+                    case 20:{
+                        DialogHauling[9] = false;
+                        GivePlayerMoney(playerid, 22500);  
+                    }
+                }
+                IsHauling[playerid] = 0;
+                return 1;
+			}
+		}else{
+            DisablePlayerRaceCheckpoint(playerid);
+            switch (IsHauling[playerid]){
+                case 1: SetPlayerRaceCheckpoint(playerid, 1, -2471.2942, 783.0248, 35.1719, -2471.2942, 783.0248, 35.1719, 10.0);
+                case 3: SetPlayerRaceCheckpoint(playerid, 1, -576.2687, 2569.0842, 53.5156, 576.2687, 2569.0842, 53.5156, 10.0); 
+                case 5: SetPlayerRaceCheckpoint(playerid, 1, 1424.8624, 2333.4939, 10.8203, 1424.8624, 2333.4939, 10.8203, 10.0);
+                case 7: SetPlayerRaceCheckpoint(playerid, 1, 1198.7153, 165.4331, 20.5056, 1198.7153, 165.4331, 20.5056, 10.0);
+                case 9: SetPlayerRaceCheckpoint(playerid, 1, 1201.5385, 171.6184, 20.5035, 1201.5385, 171.6184, 20.5035, 10.0);
+                case 11: SetPlayerRaceCheckpoint(playerid, 1, 1613.7815, 2236.2046, 10.3787, 1613.7815, 2236.2046, 10.3787, 10.0);
+                case 13: SetPlayerRaceCheckpoint(playerid, 1, 2786.8313, -2417.9558, 13.6339, 2786.8313, -2417.9558, 13.6339, 10.0);
+                case 15: SetPlayerRaceCheckpoint(playerid, 1, 2415.7803, -2470.1309, 13.6300, 2415.7803, -2470.1309, 13.6300, 10.0);
+                case 17: SetPlayerRaceCheckpoint(playerid, 1, -980.1684, -713.3505, 32.0078, -980.1684, -713.3505, 32.0078, 10.0);
+                case 19: SetPlayerRaceCheckpoint(playerid, 1, -2226.1292, -2315.1055, 30.6045, -2226.1292, -2315.1055, 30.6045, 10.0);
+            }
+     		SendServerMessage(playerid,"Attach the trailer to your vehicle to order");
+  			IsHauling[playerid] += 1;
+       		return 1;
+        }
+        return 1;
 	}
 	return 1;
 }
@@ -625,8 +708,9 @@ public OnPlayerSpawn(playerid)
 		SetPlayerVirtualWorld(playerid, PlayerData[playerid][pWorld]);
 		SetPlayerInterior(playerid, PlayerData[playerid][pInterior]);
 
-		if(IsValidDynamic3DTextLabel(PlayerData[playerid][pInjuredLabel]))
+		if(IsValidDynamic3DTextLabel(PlayerData[playerid][pInjuredLabel])){
 			DestroyDynamic3DTextLabel(PlayerData[playerid][pInjuredLabel]);
+		}
 
 		//if(PlayerData[playerid][pInjured] && PlayerData[playerid][pJailTime] < 1)	
 		if(PlayerData[playerid][pInjured])
@@ -923,15 +1007,15 @@ public OnPlayerPickUpDynamicPickup(playerid, STREAMER_TAG_PICKUP:pickupid)
 		}
 	}
 
-	forex(i, 8){
+	/*forex(i, 8){
 		if(pickupid == CellPickup[i])
 		{
 			if(GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_CUFFED){
 				SetPlayerArrest(playerid, 1, i+1);
 			}
 			
-		}
-	}
+		}*
+	}*/
 }
 
 public OnPlayerEditDynamicObject(playerid, objectid, response, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz)

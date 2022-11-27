@@ -60,7 +60,7 @@ enum e_player_data
     pInjured,
     pInjuredTime,
     bool:pDead,
-    STREAMER_TAG_3D_TEXT_LABEL:pInjuredLabel,
+    Text3D:pInjuredLabel,
     pAdmin,
     pLevel,
     pMoney,
@@ -96,10 +96,23 @@ enum e_player_data
 	pEditPump,
 	pJailType,
 	pJailTime,
+	pAJailTime,
 	pFurnitureType,
 	pEditingItem[32 char],
 	pProductModify,
-	pWanted
+	pWanted,
+	pCuffed,
+	pJob,
+	pJob2,
+	pTruckerTimer,
+	pJobDuty  
+};
+
+enum sStuffData
+{
+	sId,
+	sName[64],
+	sAmount
 };
 
 enum vCore
@@ -112,6 +125,12 @@ enum vCore
 	vehWood,
 	bool:vehHood,
 	bool:vehBoot,
+	vehType, // 0 : Tidak Ada, 1: SAPD, 2: GOV, 3: SAMD, 69: Admin Veh, sisanya sesuai faction ditambahkan nanti '-'
+};
+
+enum vehFac{
+	vfCreated,
+	vfOwner[MAX_PLAYER_NAME],
 };
 
 enum inventoryData
