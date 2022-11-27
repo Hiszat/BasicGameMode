@@ -51,7 +51,7 @@ CMD:taxwithdraw(playerid, params[])
 	return 1;
 }
 
-CMD:taxwithdraw(playerid, params[])
+CMD:taxdeposit(playerid, params[])
 {
 	if(PlayerData[playerid][pFaction] == 2 && PlayerData[playerid][pFacRank] == 8){
  		new String[1024], amount;

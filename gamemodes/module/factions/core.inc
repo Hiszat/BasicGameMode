@@ -217,7 +217,7 @@ ISAGovLeader(playerid)
 
 GetFactionMaxRank(factionid)
 {
-	switch(factioid){
+	switch(factionid){
 		case 1:{
 			return 14;
 		}

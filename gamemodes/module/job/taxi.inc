@@ -68,7 +68,7 @@ hook OnPlayerStateChange(playerid, newstate, oldstate)
             GivePlayerMoney(TaxiDriver[vehicleid], TaxiInfo[TaxiDriver[vehicleid]][FareTotal]);
             TaxiInfo[TaxiDriver[vehicleid]][FareTotal] = 0;
             TaxiInfo[TaxiDriver[vehicleid]][FareTotal] = 0;
-            TaxiInfo[playerid][InTaxi] == INVALID_VEHICLE_ID;
+            TaxiInfo[playerid][InTaxi] = INVALID_VEHICLE_ID;
         }
     }
 

@@ -1,6 +1,6 @@
 new PlayerData[MAX_PLAYERS][e_player_data];
 new VehCore[MAX_VEHICLES][vCore];
-new VehFac[MAX_VEHICLES][vehFac]
+new VehFac[MAX_VEHICLES][vehFac];
 new InventoryData[MAX_PLAYERS][MAX_INVENTORY][inventoryData];
 new DroppedItems[MAX_DROPPED_ITEMS][droppedItems];
 new NearestItems[MAX_PLAYERS][MAX_LISTED_ITEMS];
