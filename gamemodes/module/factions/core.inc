@@ -182,16 +182,13 @@ CMD:giverank(playerid, params[])
 
 		if(rank >= PlayerData[playerid][pFacRank])
 			return SendErrorMessage(playerid, "You can't set this player rank higher than you!");	
-		switch(PlayerData[playerid][pFaction]){
-			case 1:{
-				if(rank < 1 || rank > 14)
-					return SendErrorMessage(playerid, "Rank must 1 - 14 only");
-			}
-			case 2:{
-				if(rank < 1 || rank > 8)
-					return SendErrorMessage(playerid, "Rank must 1 - 7 only");
-			}
-		}
+
+		new tidakpenting[126];
+		format(tidakpenting, sizeof(tidakpenting), "Rank must 0 - %d only", GetFactionMaxRank(PlayerData[playerid][pFaction]));
+		if(rank < 1 || rank > GetFactionMaxRank(PlayerData[playerid][pFaction]))
+			return SendErrorMessage(playerid, tidakpenting);
+
+		
 		PlayerData[otherid][pFacRank] = rank;
 		new infoo[256];
 		format(infoo, sizeof(infoo), "You has set %s faction rank to level %d", PlayerData[otherid][pName], rank);
@@ -217,6 +214,20 @@ ISAGovLeader(playerid)
 	}
 	return 0;
 }
+
+GetFactionMaxRank(factionid)
+{
+	switch(factioid){
+		case 1:{
+			return 14;
+		}
+		case 2:{
+			return 8;
+		}
+	}
+	return 0;
+}
+
 
 
 /*
