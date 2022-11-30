@@ -42,6 +42,25 @@ enum E_STATIC_LOCATION_DATA
   PICKUP_MODEL_ID
 };
 
+enum drInfo{
+    Float:dPosX,
+    Float:dPosY,
+    Float:dPosZ,
+    Float:dAngle,
+    dObject,
+    dCurrPos,
+    dType,
+    dTimer,
+    dDirection,
+    dCondition,
+    dSkinned,
+    bool: dFinalDest,
+    bool: dAntlers,
+    dTimerArea,
+    dAlert,
+    dMovedVar
+};
+
 enum e_player_data
 {
 	pID,

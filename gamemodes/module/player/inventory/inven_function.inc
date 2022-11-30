@@ -190,6 +190,14 @@ stock Inventory_Set(playerid, item[], model, amount)
 	return 1;
 }
 
+stock InvenAdd(playerid, item[], amount){
+	for (new i = 0; i < sizeof(g_aInventoryItems); i ++) if (!strcmp(g_aInventoryItems[i][e_InventoryItem], item, true))
+	{
+		Inventory_Set(playerid, g_aInventoryItems[i][e_InventoryItem], g_aInventoryItems[i][e_InventoryModel], amount);
+		return 1;
+	}
+	return 0;
+}
 stock Inventory_SetQuantity(playerid, item[], quantity)
 {
 	new
@@ -389,6 +397,49 @@ Function:OnPlayerUseItem(playerid, itemid, name[])
 		ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.1, 0, 0, 0, 0, 0, 1);
         SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s mengambil Ayam Goreng dan memakannya.", GetName(playerid));
 		StartPlayerProgressBarTextdraw(playerid, 100, "Memakan Ayam Goreng", 70, "UseAyamGoreng", 1687547391);		
+	}else if(!strcmp(name, "Skinning Knife")){
+		//if(PlayerData[playerid][pJob] == 6){
+		    new Float:x1, Float:y1, Float:z1;
+			new Float:x2, Float:y2, Float:z2;
+			GetXYZInFrontOfPlayer(playerid, x1, y1, z1, 1.0);//Distance 0.6
+			SetPVarInt(playerid, "Deer", 255);
+			print("255");
+			for(new i=0; i < MAX_DEERS; i++)
+			{
+			    if(DeerInfo[i][dObject] != INVALID_OBJECT_ID)
+			    {
+					print("berhasil tidak invalid");
+					GetObjectPos(DeerInfo[i][dObject], x2, y2, z2);
+			        if(GetDistanceBetweenPoints(x1, y1, z1, x2, y2, z2) < 2.0)
+			        {
+			            SetPVarInt(playerid, "Deer", i);
+						print("berhasil");
+			            break;
+					}
+				}
+			}
+			if(GetPVarInt(playerid, "Deer") != 255 && DeerInfo[GetPVarInt(playerid, "Deer")][dType] == 1)
+			{
+			    if(GetPlayerAnimationIndex(playerid) == 754)//Already doing something (slicing shit)
+		        {
+		            return SendErrorMessage(playerid, "Finish the current action first.");
+				}
+		    	if(!IsPlayerAttachedObjectSlotUsed(playerid, ACTION_SLOT_ATT))
+		    	{
+		    	    SetPlayerAttachedObject(playerid, ACTION_SLOT_ATT, 335, 6, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.75, 0.75, 0.75);
+				}
+		        ShowSkinningKnifeDialog(playerid);
+			}
+			else
+			{
+			    SendErrorMessage(playerid, "Kamu tidak berada di depan rusa atau tidak menghadap rusa.");
+			}
+		/*}
+		else
+		{
+		    SendClientMessage(playerid, 0xFFFF0000, "ERROR: You are not a Hunter. Only Hunter can use the Skinning Knife.");
+		}*/
+			
 	}
 	/*else if(!strcmp(name, "Cellphone"))
 	{

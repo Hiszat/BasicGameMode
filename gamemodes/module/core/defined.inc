@@ -83,7 +83,7 @@
 
 #define MDC_COORD 2250.0708, 1257.2338, 864.0117
 
-
+#define EXTERIOR	0
 //============================== WORLD ==========================================
 #define LSPD_INTERIOR		3
 #define LSPD_VW				1000
@@ -91,3 +91,39 @@
 #define EMS_VW				1001
 #define GOV_INTERIOR		3
 #define GOV_VW				1002
+// ================================ KEY =========================================
+#define KEY_AIM 128
+
+// ============================= DEER ===========================================
+#define MAX_DEERS 1
+#define MAX_DEER_POSITIONS  229
+#define MAX_DEER_TRACKS 28
+
+#define COLOR_GRAD1 0xFFFFFFFF
+#define COLOR_GRAD2 0xF8F8F8FF
+#define COLOR_GRAD3 0xF0F0F0FF
+#define COLOR_GRAD4 0xE8E8E8FF
+#define COLOR_GRAD5 0xE0E0E0FF
+#define COLOR_GRAD6 0xD8D8D8FF
+#define COLOR_GRAD7 0xD0D0D0FF
+#define COLOR_GRAD8 0xC8C8C8FF
+#define COLOR_GRAD9 0xC0C0C0FF
+#define COLOR_GRAD10 0xB8B8B8FF
+#define COLOR_GRAD11 0xB0B0B0FF
+#define COLOR_GRAD12 0xA8A8A8FF
+#define COLOR_GRAD13 0xA0A0A0FF
+#define COLOR_GRAD14 0x989898FF
+#define COLOR_GRAD15 0x909090FF
+#define COLOR_GRAD16 0x888888FF
+#define COLOR_GRAD17 0x808080FF
+#define COLOR_GRAD18 0x787878FF
+#define COLOR_GRAD19 0x707070FF
+#define COLOR_GRAD20 0x686868FF
+#define COLOR_GRAD21 0x606060FF
+#define COLOR_GRAD22 0x585858FF
+#define COLOR_GRAD23 0x505050FF
+#define COLOR_GRAD24 0x484848FF
+#define COLOR_GRAD25 0x404040FF
+#define COLOR_GRAD26 0x383838FF
+#define COLOR_GRAD27 0x303030FF
+#define COLOR_GRAD28 0x282828FF

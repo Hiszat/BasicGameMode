@@ -85,6 +85,7 @@
 //job 
 #include "module/job/trucker.inc"
 #include "module/job/taxi.inc"
+#include "module/job/hunter.inc"
 
 //factions
 #include "module/factions/core.inc"

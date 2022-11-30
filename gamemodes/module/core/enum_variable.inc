@@ -10,3 +10,4 @@ new PlayerTextdraws[MAX_PLAYERS][playerTextraws];
 new BusinessData[MAX_BUSINESSES][businessData];
 new PumpData[MAX_GAS_PUMPS][pumpData];
 new StuffData[100][sStuffData];
+new DeerInfo[MAX_DEERS][drInfo];

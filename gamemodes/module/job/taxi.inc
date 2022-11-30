@@ -39,7 +39,7 @@ CMD:taxiduty(playerid)
 			SetPlayerColor(playerid, 0xFFFFFFFF);
 		}
 	}
-	else return SendErrorMessage(playerid,   "Anda bukan pekerja taxi driver.");
+	else return SendErrorMessage(playerid, "Anda bukan pekerja taxi driver.");
 	return 1;
 }
 

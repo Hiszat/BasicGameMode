@@ -29,3 +29,7 @@ new CellPickup[8];
 //============================ JOB =====================================
 new bool:DialogHauling[10];
 new TrailerHauling[MAX_PLAYERS];
+
+//============================ DEER ====================================
+new Text3D: DeerTrack[MAX_DEERS][MAX_DEER_TRACKS];
+new Float: dRotX[MAX_DEERS], Float: dRotY[MAX_DEERS];
