@@ -398,7 +398,7 @@ Function:OnPlayerUseItem(playerid, itemid, name[])
         SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s mengambil Ayam Goreng dan memakannya.", GetName(playerid));
 		StartPlayerProgressBarTextdraw(playerid, 100, "Memakan Ayam Goreng", 70, "UseAyamGoreng", 1687547391);		
 	}else if(!strcmp(name, "Skinning Knife")){
-		//if(PlayerData[playerid][pJob] == 6){
+		if(PlayerData[playerid][pJob] == 6){
 		    new Float:x1, Float:y1, Float:z1;
 			new Float:x2, Float:y2, Float:z2;
 			GetXYZInFrontOfPlayer(playerid, x1, y1, z1, 1.0);//Distance 0.6
@@ -434,11 +434,11 @@ Function:OnPlayerUseItem(playerid, itemid, name[])
 			{
 			    SendErrorMessage(playerid, "Kamu tidak berada di depan rusa atau tidak menghadap rusa.");
 			}
-		/*}
+		}
 		else
 		{
-		    SendClientMessage(playerid, 0xFFFF0000, "ERROR: You are not a Hunter. Only Hunter can use the Skinning Knife.");
-		}*/
+		   SendErrorMessage(playerid, "Kamu bukan pemburu. Hanya pemburu yang bisa menggunakan 'skinning knife'.");
+		}
 			
 	}
 	/*else if(!strcmp(name, "Cellphone"))
