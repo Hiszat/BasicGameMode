@@ -929,7 +929,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 			case 30: damage = float(RandomEx(20, 25)); // AK47
 			case 31: damage = float(RandomEx(20, 22)); // M4A1
 			case 33, 34:{
-				if(HuntingRifle[playerid] = true){
+				if(HuntingRifle[playerid] == true){
 					damage = 0.3; 
 				}else{
 				damage = float(RandomEx(70, 75)); 
