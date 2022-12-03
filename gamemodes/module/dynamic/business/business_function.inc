@@ -93,10 +93,10 @@ public Business_Load()
             cache_get_value_name_float(i, "bizPosY", BusinessData[i][bizPos][1]);
             cache_get_value_name_float(i, "bizPosZ", BusinessData[i][bizPos][2]);
             cache_get_value_name_float(i, "bizPosA", BusinessData[i][bizPos][3]);
-            cache_get_value_name_float(i, "bizIntX", BusinessData[i][bizInt][0]);
-            cache_get_value_name_float(i, "bizIntY", BusinessData[i][bizInt][1]);
-            cache_get_value_name_float(i, "bizIntZ", BusinessData[i][bizInt][2]);
-            cache_get_value_name_float(i, "bizIntA", BusinessData[i][bizInt][3]);
+            cache_get_value_name_float(i, "bizIntX", BusinessData[i][bizActorPosition][0]);
+            cache_get_value_name_float(i, "bizIntY", BusinessData[i][bizActorPosition][1]);
+            cache_get_value_name_float(i, "bizIntZ", BusinessData[i][bizActorPosition][2]);
+            cache_get_value_name_float(i, "bizIntA", BusinessData[i][bizActorPosition][3]);
             cache_get_value_name_float(i, "bizSpawnX", BusinessData[i][bizSpawn][0]);
             cache_get_value_name_float(i, "bizSpawnY", BusinessData[i][bizSpawn][1]);
             cache_get_value_name_float(i, "bizSpawnZ", BusinessData[i][bizSpawn][2]);
@@ -370,27 +370,14 @@ Business_PurchaseMenu(playerid, bizid)
 	{
 	    case 1, 6:
 	    {
-			format(string, sizeof(string), "Mobile Phone - %s\nGPS System - %s\nSpray Paint - %s\nBackpack - %s\nWater Bottle - %s\nSoda Bottle - %s\nLottery Ticket - %s\nPortable Radio - %s\nCan of Fuel - %s\nCrowbar - %s\nBoombox - %s\nMask - %s\nFirst Aid Kit - %s\nRepair Kit - %s\nNOS Canister - %s\nBaseball Bat - %s\nFrozen Pizza - %s\nFrozen Burger - %s",
+			format(string, sizeof(string), "Nama Barang\tHarga Barang\nSmartphone\t%s\nEs Teh\t%s\nBurger\t%s\nRokok\t%s",
 				FormatNumber(BusinessData[bizid][bizPrices][0]),
 				FormatNumber(BusinessData[bizid][bizPrices][1]),
 				FormatNumber(BusinessData[bizid][bizPrices][2]),
 				FormatNumber(BusinessData[bizid][bizPrices][3]),
-				FormatNumber(BusinessData[bizid][bizPrices][4]),
-				FormatNumber(BusinessData[bizid][bizPrices][5]),
-				FormatNumber(BusinessData[bizid][bizPrices][6]),
-				FormatNumber(BusinessData[bizid][bizPrices][7]),
-				FormatNumber(BusinessData[bizid][bizPrices][8]),
-				FormatNumber(BusinessData[bizid][bizPrices][9]),
-				FormatNumber(BusinessData[bizid][bizPrices][10]),
-				FormatNumber(BusinessData[bizid][bizPrices][11]),
-				FormatNumber(BusinessData[bizid][bizPrices][12]),
-				FormatNumber(BusinessData[bizid][bizPrices][13]),
-				FormatNumber(BusinessData[bizid][bizPrices][14]),
-				FormatNumber(BusinessData[bizid][bizPrices][15]),
-				FormatNumber(BusinessData[bizid][bizPrices][16]),
-				FormatNumber(BusinessData[bizid][bizPrices][17])
+				FormatNumber(BusinessData[bizid][bizPrices][4])
 			);
-			Dialog_Show(playerid, BusinessBuy, DIALOG_STYLE_LIST, BusinessData[bizid][bizName], string, "Purchase", "Cancel");
+			Dialog_Show(playerid, BusinessBuy, DIALOG_STYLE_TABLIST_HEADERS, BusinessData[bizid][bizName], string, "Purchase", "Cancel");
 		}
 		case 2:
 	    {
@@ -406,13 +393,12 @@ Business_PurchaseMenu(playerid, bizid)
 		}
 		case 3:
 	    {
-			format(string, sizeof(string), "Clothes - %s\nGlasses - %s\nHats - %s\nBandana - %s",
+			format(string, sizeof(string), "Nama Barang\tHarga Barang\nClothes\t%s\nToys\nBaju Baru\t%s",
 				FormatNumber(BusinessData[bizid][bizPrices][0]),
 				FormatNumber(BusinessData[bizid][bizPrices][1]),
-				FormatNumber(BusinessData[bizid][bizPrices][2]),
-				FormatNumber(BusinessData[bizid][bizPrices][3])
+				FormatNumber(BusinessData[bizid][bizPrices][2])
 			);
-			Dialog_Show(playerid, BusinessBuy, DIALOG_STYLE_LIST, BusinessData[bizid][bizName], string, "Purchase", "Cancel");
+			Dialog_Show(playerid, BusinessBuy, DIALOG_STYLE_TABLIST_HEADERS, BusinessData[bizid][bizName], string, "Purchase", "Cancel");
 		}
 		case 4:
 		{
@@ -455,10 +441,10 @@ Business_Save(bizid)
 		BusinessData[bizid][bizPos][1],
 		BusinessData[bizid][bizPos][2],
 		BusinessData[bizid][bizPos][3],
-		BusinessData[bizid][bizInt][0],
-		BusinessData[bizid][bizInt][1],
-		BusinessData[bizid][bizInt][2],
-		BusinessData[bizid][bizInt][3],
+		BusinessData[bizid][bizActorPosition][0],
+		BusinessData[bizid][bizActorPosition][1],
+		BusinessData[bizid][bizActorPosition][2],
+		BusinessData[bizid][bizActorPosition][3],
 		BusinessData[bizid][bizInterior],
 		BusinessData[bizid][bizExterior],
 		BusinessData[bizid][bizExteriorVW],
@@ -485,13 +471,23 @@ Business_Save(bizid)
     //  mysql_tquery(sqlcon, query);
 }
 
-Business_Inside(playerid)
+// Business_Inside(playerid)
+// {
+// 	if (PlayerData[playerid][pBusiness] != -1)
+// 	{
+// 	    for (new i = 0; i != MAX_BUSINESSES; i ++) if (BusinessData[i][bizExists] && BusinessData[i][bizID] == PlayerData[playerid][pBusiness] && GetPlayerInterior(playerid) == BusinessData[i][bizInterior] && GetPlayerVirtualWorld(playerid) > 0) {
+// 	        return i;
+// 		}
+// 	}
+// 	return -1;
+// }
+
+Business_Inside(playerid, Float:radius = 2.5)
 {
-	if (PlayerData[playerid][pBusiness] != -1)
+    for (new i = 0; i != MAX_BUSINESSES; i ++) if (BusinessData[i][bizExists] && IsPlayerInRangeOfPoint(playerid, radius, BusinessData[i][bizActorPosition][0], BusinessData[i][bizActorPosition][1], BusinessData[i][bizActorPosition][2]))
 	{
-	    for (new i = 0; i != MAX_BUSINESSES; i ++) if (BusinessData[i][bizExists] && BusinessData[i][bizID] == PlayerData[playerid][pBusiness] && GetPlayerInterior(playerid) == BusinessData[i][bizInterior] && GetPlayerVirtualWorld(playerid) > 0) {
-	        return i;
-		}
+		if (GetPlayerInterior(playerid) == BusinessData[i][bizExterior] && GetPlayerVirtualWorld(playerid) == BusinessData[i][bizExteriorVW])
+			return i;
 	}
 	return -1;
 }
@@ -530,10 +526,14 @@ Business_Refresh(bizid)
         if (IsValidDynamicPickup(BusinessData[bizid][bizDeliverPickup]))
 		    DestroyDynamicPickup(BusinessData[bizid][bizDeliverPickup]);
 
+		if(IsValidDynamicActor(BusinessData[bizid][bizActor]))
+			DestroyDynamicActor(BusinessData[bizid][bizActor]);	
+
 		static
 		    string[128],
 			pickup;
 
+		BusinessData[bizid][bizActor] = CreateDynamicActor(g_aMaleSkins[random(sizeof(g_aMaleSkins))], BusinessData[bizid][bizActorPosition][0], BusinessData[bizid][bizActorPosition][1], BusinessData[bizid][bizActorPosition][2], BusinessData[bizid][bizActorPosition][3], 1, 40.0, 0, 0, -1, 50.0, -1, 0);
 		if (!BusinessData[bizid][bizOwner]) {
 			format(string, sizeof(string), "[%s]\n%s", FormatNumber(BusinessData[bizid][bizPrice]), BusinessData[bizid][bizName]);
             BusinessData[bizid][bizText3D] = CreateDynamic3DTextLabel(string, 0x33AA33FF, BusinessData[bizid][bizPos][0], BusinessData[bizid][bizPos][1], BusinessData[bizid][bizPos][2], 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, BusinessData[bizid][bizExteriorVW], BusinessData[bizid][bizExterior]);
@@ -544,9 +544,9 @@ Business_Refresh(bizid)
 			    format(string, sizeof(string), "%s (closed)", BusinessData[bizid][bizName]);
 			}
 			else {
-			    format(string, sizeof(string), "%s", BusinessData[bizid][bizName]);
+			    format(string, sizeof(string), "[[ %s Actor ]]", BusinessData[bizid][bizName]);
 			}
-			BusinessData[bizid][bizText3D] = CreateDynamic3DTextLabel(string, (BusinessData[bizid][bizLocked]) ? (X11_RED) : (X11_WHITE), BusinessData[bizid][bizPos][0], BusinessData[bizid][bizPos][1], BusinessData[bizid][bizPos][2], 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, BusinessData[bizid][bizExteriorVW], BusinessData[bizid][bizExterior]);
+			BusinessData[bizid][bizText3D] = CreateDynamic3DTextLabel(string, (BusinessData[bizid][bizLocked]) ? (X11_RED) : (X11_WHITE), BusinessData[bizid][bizActorPosition][0], BusinessData[bizid][bizActorPosition][1], BusinessData[bizid][bizActorPosition][2] + 1.0, 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, BusinessData[bizid][bizExteriorVW], BusinessData[bizid][bizExterior]);
 		}
 		switch (BusinessData[bizid][bizType]) {
 		    case 1: pickup = 1272;
@@ -613,10 +613,10 @@ Business_Create(playerid, type, price)
     	        BusinessData[i][bizDeliver][2] = 0.0;
 
 				if (type == 1) {
-                	BusinessData[i][bizInt][0] = -27.3074;
-                	BusinessData[i][bizInt][1] = -30.8741;
-                	BusinessData[i][bizInt][2] = 1003.5573;
-                	BusinessData[i][bizInt][3] = 0.0000;
+                	BusinessData[i][bizActorPosition][0] = -27.3074;
+                	BusinessData[i][bizActorPosition][1] = -30.8741;
+                	BusinessData[i][bizActorPosition][2] = 1003.5573;
+                	BusinessData[i][bizActorPosition][3] = 0.0000;
 					BusinessData[i][bizInterior] = 4;
 
 					BusinessData[i][bizPrices][0] = 75;
@@ -639,10 +639,10 @@ Business_Create(playerid, type, price)
 		            BusinessData[i][bizPrices][17] = 5;
 				}
 				else if (type == 2) {
-                	BusinessData[i][bizInt][0] = 316.3963;
-                	BusinessData[i][bizInt][1] = -169.8375;
-                	BusinessData[i][bizInt][2] = 999.6010;
-                	BusinessData[i][bizInt][3] = 0.0000;
+                	BusinessData[i][bizActorPosition][0] = 316.3963;
+                	BusinessData[i][bizActorPosition][1] = -169.8375;
+                	BusinessData[i][bizActorPosition][2] = 999.6010;
+                	BusinessData[i][bizActorPosition][3] = 0.0000;
 					BusinessData[i][bizInterior] = 6;
 
                     BusinessData[i][bizPrices][0] = 50;
@@ -653,10 +653,10 @@ Business_Create(playerid, type, price)
 		            BusinessData[i][bizPrices][5] = 800;
 				}
 				else if (type == 3) {
-                	BusinessData[i][bizInt][0] = 161.4801;
-                	BusinessData[i][bizInt][1] = -96.5368;
-                	BusinessData[i][bizInt][2] = 1001.8047;
-                	BusinessData[i][bizInt][3] = 0.0000;
+                	BusinessData[i][bizActorPosition][0] = 161.4801;
+                	BusinessData[i][bizActorPosition][1] = -96.5368;
+                	BusinessData[i][bizActorPosition][2] = 1001.8047;
+                	BusinessData[i][bizActorPosition][3] = 0.0000;
 					BusinessData[i][bizInterior] = 18;
 
 					BusinessData[i][bizPrices][0] = 25;
@@ -665,10 +665,10 @@ Business_Create(playerid, type, price)
 		            BusinessData[i][bizPrices][3] = 10;
 				}
 				else if (type == 4) {
-                	BusinessData[i][bizInt][0] = 363.3402;
-                	BusinessData[i][bizInt][1] = -74.6679;
-                	BusinessData[i][bizInt][2] = 1001.5078;
-                	BusinessData[i][bizInt][3] = 315.0000;
+                	BusinessData[i][bizActorPosition][0] = 363.3402;
+                	BusinessData[i][bizActorPosition][1] = -74.6679;
+                	BusinessData[i][bizActorPosition][2] = 1001.5078;
+                	BusinessData[i][bizActorPosition][3] = 315.0000;
 					BusinessData[i][bizInterior] = 10;
 
 					BusinessData[i][bizPrices][0] = 2;
@@ -680,17 +680,17 @@ Business_Create(playerid, type, price)
 		            BusinessData[i][bizPrices][6] = 10;
 				}
 				else if (type == 5) {
-				    BusinessData[i][bizInt][0] = 1494.5612;
-	            	BusinessData[i][bizInt][1] = 1304.2061;
-	            	BusinessData[i][bizInt][2] = 1093.2891;
-	            	BusinessData[i][bizInt][3] = 0.0000;
+				    BusinessData[i][bizActorPosition][0] = 1494.5612;
+	            	BusinessData[i][bizActorPosition][1] = 1304.2061;
+	            	BusinessData[i][bizActorPosition][2] = 1093.2891;
+	            	BusinessData[i][bizActorPosition][3] = 0.0000;
 					BusinessData[i][bizInterior] = 3;
 				}
 				else if (type == 6) {
-                	BusinessData[i][bizInt][0] = -27.3383;
-                	BusinessData[i][bizInt][1] = -57.6909;
-                	BusinessData[i][bizInt][2] = 1003.5469;
-                	BusinessData[i][bizInt][3] = 0.0000;
+                	BusinessData[i][bizActorPosition][0] = -27.3383;
+                	BusinessData[i][bizActorPosition][1] = -57.6909;
+                	BusinessData[i][bizActorPosition][2] = 1003.5469;
+                	BusinessData[i][bizActorPosition][3] = 0.0000;
 					BusinessData[i][bizInterior] = 6;
 
 					BusinessData[i][bizPrices][0] = 75;
@@ -712,10 +712,10 @@ Business_Create(playerid, type, price)
 		            BusinessData[i][bizPrices][16] = 5;
 				}
 				else if (type == 7) {
-					BusinessData[i][bizInt][0] = -2240.4954;
-   					BusinessData[i][bizInt][1] = 128.3774;
-			   		BusinessData[i][bizInt][2] = 1035.4210;
-      				BusinessData[i][bizInt][3] = 270.0000;
+					BusinessData[i][bizActorPosition][0] = -2240.4954;
+   					BusinessData[i][bizActorPosition][1] = 128.3774;
+			   		BusinessData[i][bizActorPosition][2] = 1035.4210;
+      				BusinessData[i][bizActorPosition][3] = 270.0000;
 					BusinessData[i][bizInterior] = 6;
 
 					BusinessData[i][bizPrices][0] = 75;
@@ -899,16 +899,16 @@ Dialog:BusinessBuy(playerid, response, listitem, inputtext[])
 				}*/
 				case 1:
 		        {
-		            if (Inventory_HasItem(playerid, "GPS System"))
-		                return SendErrorMessage(playerid, "You have a GPS system already.");
+		            // if (Inventory_HasItem(playerid, "GPS System"))
+		            //     return SendErrorMessage(playerid, "You have a GPS system already.");
 
-					new id = Inventory_Add(playerid, "GPS System", 18875);
+					new id = Inventory_Add(playerid, "Es Teh", 19835);
 
 					if (id == -1)
-        				return SendErrorMessage(playerid, "You don't have any inventory slots left.");
+        				return SendErrorMessage(playerid, "Anda tidak memiliki slot yang tersisa.");
 
 					GiveMoney(playerid, -price);
-					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a GPS System.", ReturnName(playerid, 0), FormatNumber(price));
+					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s telah membayar %s dan menerima Es Teh.", ReturnName(playerid, 0), FormatNumber(price));
 
 					BusinessData[bizid][bizProducts]--;
 					BusinessData[bizid][bizVault] += Tax_Percent(price);
@@ -918,16 +918,16 @@ Dialog:BusinessBuy(playerid, response, listitem, inputtext[])
 			    }
 				case 2:
 		        {
-		            if (Inventory_Count(playerid, "Spray Can") >= 3)
-		                return SendErrorMessage(playerid, "You have 3 spray cans, you can't buy anymore.");
+		            // if (Inventory_HasItem(playerid, "GPS System"))
+		            //     return SendErrorMessage(playerid, "You have a GPS system already.");
 
-					new id = Inventory_Add(playerid, "Spray Can", 365);
+					new id = Inventory_Add(playerid, "Burger", 18875);
 
 					if (id == -1)
-        				return SendErrorMessage(playerid, "You don't have any inventory slots left.");
+        				return SendErrorMessage(playerid, "Anda tidak memiliki slot yang tersisa.");
 
 					GiveMoney(playerid, -price);
-					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a can of spray paint.", ReturnName(playerid, 0), FormatNumber(price));
+					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s telah membayar %s dan menerima Burger.", ReturnName(playerid, 0), FormatNumber(price));
 
 					BusinessData[bizid][bizProducts]--;
 					BusinessData[bizid][bizVault] += Tax_Percent(price);
@@ -935,225 +935,18 @@ Dialog:BusinessBuy(playerid, response, listitem, inputtext[])
 					Business_Save(bizid);
 					Tax_AddPercent(price);
 			    }
-				case 4:
+				case 3:
 		        {
-		            if (Inventory_Count(playerid, "Water Bottle") >= 10)
-		                return SendErrorMessage(playerid, "You have 10 bottles of water, you can't buy anymore.");
+		            // if (Inventory_HasItem(playerid, "GPS System"))
+		            //     return SendErrorMessage(playerid, "You have a GPS system already.");
 
-					new id = Inventory_Add(playerid, "Water Bottle", 2958);
+					new id = Inventory_Add(playerid, "Cigarette", 18875);
 
 					if (id == -1)
-        				return SendErrorMessage(playerid, "You don't have any inventory slots left.");
+        				return SendErrorMessage(playerid, "Anda tidak memiliki slot yang tersisa.");
 
 					GiveMoney(playerid, -price);
-					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a bottle of water.", ReturnName(playerid, 0), FormatNumber(price));
-
-					BusinessData[bizid][bizProducts]--;
-					BusinessData[bizid][bizVault] += Tax_Percent(price);
-
-					Business_Save(bizid);
-					Tax_AddPercent(price);
-			    }
-				case 5:
-		        {
-              		if (Inventory_Count(playerid, "Soda") >= 5)
-		                return SendErrorMessage(playerid, "You have 5 bottles of soda, you can't buy anymore.");
-
-					new id = Inventory_Add(playerid, "Soda", 1543);
-
-					if (id == -1)
-        				return SendErrorMessage(playerid, "You don't have any inventory slots left.");
-
-					GiveMoney(playerid, -price);
-					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a bottle of soda.", ReturnName(playerid, 0), FormatNumber(price));
-
-					BusinessData[bizid][bizProducts]--;
-					BusinessData[bizid][bizVault] += Tax_Percent(price);
-
-					Business_Save(bizid);
-					Tax_AddPercent(price);
-			    }
-				case 7:
-		        {
-		            if (Inventory_HasItem(playerid, "Portable Radio"))
-		                return SendErrorMessage(playerid, "You have this item already.");
-
-					new id = Inventory_Add(playerid, "Portable Radio", 18868);
-
-					if (id == -1)
-        				return SendErrorMessage(playerid, "You don't have any inventory slots left.");
-
-					GiveMoney(playerid, -price);
-					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a portable radio.", ReturnName(playerid, 0), FormatNumber(price));
-
-					BusinessData[bizid][bizProducts]--;
-					BusinessData[bizid][bizVault] += Tax_Percent(price);
-
-					Business_Save(bizid);
-					Tax_AddPercent(price);
-			    }
-				case 8:
-		        {
-		            if (Inventory_Count(playerid, "Fuel Can") >= 3)
-		                return SendErrorMessage(playerid, "You have 3 cans of fuel, you can't buy anymore.");
-
-					new id = Inventory_Add(playerid, "Fuel Can", 1650);
-
-					if (id == -1)
-        				return SendErrorMessage(playerid, "You don't have any inventory slots left.");
-
-					GiveMoney(playerid, -price);
-					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a can of fuel.", ReturnName(playerid, 0), FormatNumber(price));
-
-					BusinessData[bizid][bizProducts]--;
-					BusinessData[bizid][bizVault] += Tax_Percent(price);
-
-					Business_Save(bizid);
-					Tax_AddPercent(price);
-			    }
-				case 9:
-		        {
-		            if (Inventory_HasItem(playerid, "Crowbar"))
-		                return SendErrorMessage(playerid, "You have a crowbar already.");
-
-					new id = Inventory_Add(playerid, "Crowbar", 18634);
-
-					if (id == -1)
-        				return SendErrorMessage(playerid, "You don't have any inventory slots left.");
-
-					GiveMoney(playerid, -price);
-					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a crowbar.", ReturnName(playerid, 0), FormatNumber(price));
-
-					BusinessData[bizid][bizProducts]--;
-					BusinessData[bizid][bizVault] += Tax_Percent(price);
-
-					Business_Save(bizid);
-					Tax_AddPercent(price);
-			    }
-			    case 10:
-		        {
-		            if (Inventory_HasItem(playerid, "Boombox"))
-		                return SendErrorMessage(playerid, "You have a boombox already.");
-
-					new id = Inventory_Add(playerid, "Boombox", 2226);
-
-					if (id == -1)
-        				return SendErrorMessage(playerid, "You don't have any inventory slots left.");
-
-					GiveMoney(playerid, -price);
-					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a boombox.", ReturnName(playerid, 0), FormatNumber(price));
-
-					BusinessData[bizid][bizProducts]--;
-					BusinessData[bizid][bizVault] += Tax_Percent(price);
-
-					Business_Save(bizid);
-					Tax_AddPercent(price);
-			    }
-			   
-				case 12:
-		        {
-		            if (Inventory_Count(playerid, "First Aid") >= 3)
-		                return SendErrorMessage(playerid, "You have 3 first aid kits, you can't buy anymore.");
-
-					new id = Inventory_Add(playerid, "First Aid", 1580);
-
-					if (id == -1)
-        				return SendErrorMessage(playerid, "You don't have any inventory slots left.");
-
-					GiveMoney(playerid, -price);
-					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a first aid kit.", ReturnName(playerid, 0), FormatNumber(price));
-
-					BusinessData[bizid][bizProducts]--;
-					BusinessData[bizid][bizVault] += Tax_Percent(price);
-
-					Business_Save(bizid);
-					Tax_AddPercent(price);
-			    }
-				case 13:
-		        {
-		            if (Inventory_Count(playerid, "Repair Kit") >= 3)
-		                return SendErrorMessage(playerid, "You have 3 repair kits, you can't buy anymore.");
-
-					new id = Inventory_Add(playerid, "Repair Kit", 920);
-
-					if (id == -1)
-        				return SendErrorMessage(playerid, "You don't have any inventory slots left.");
-
-					GiveMoney(playerid, -price);
-					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a repair kit.", ReturnName(playerid, 0), FormatNumber(price));
-
-					BusinessData[bizid][bizProducts]--;
-					BusinessData[bizid][bizVault] += Tax_Percent(price);
-
-					Business_Save(bizid);
-					Tax_AddPercent(price);
-			    }
-			    case 14:
-		        {
-		            if (Inventory_Count(playerid, "NOS Canister") >= 5)
-		                return SendErrorMessage(playerid, "You have 5 canisters, you can't buy anymore.");
-
-					new id = Inventory_Add(playerid, "NOS Canister", 1010);
-
-					if (id == -1)
-        				return SendErrorMessage(playerid, "You don't have any inventory slots left.");
-
-					GiveMoney(playerid, -price);
-					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a NOS canister.", ReturnName(playerid, 0), FormatNumber(price));
-
-					BusinessData[bizid][bizProducts]--;
-					BusinessData[bizid][bizVault] += Tax_Percent(price);
-
-					Business_Save(bizid);
-					Tax_AddPercent(price);
-			    }
-				// case 15:
-		        // {
-		        //     if (PlayerHasWeapon(playerid, 5))
-		        //         return SendErrorMessage(playerid, "You have this item already.");
-
-				// 	GiveWeaponToPlayer(playerid, 5, 1);
-
-				// 	GiveMoney(playerid, -price);
-				// 	SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a baseball bat.", ReturnName(playerid, 0), FormatNumber(price));
-
-				// 	BusinessData[bizid][bizProducts]--;
-				// 	BusinessData[bizid][bizVault] += Tax_Percent(price);
-
-				// 	Business_Save(bizid);
-				// 	Tax_AddPercent(price);
-			    // }
-				case 16:
-		        {
-		            if (Inventory_Count(playerid, "Frozen Pizza") >= 3)
-		                return SendErrorMessage(playerid, "You have 3 frozen pizzas, you can't buy anymore.");
-
-					new id = Inventory_Add(playerid, "Frozen Pizza", 2814);
-
-					if (id == -1)
-        				return SendErrorMessage(playerid, "You don't have any inventory slots left.");
-
-					GiveMoney(playerid, -price);
-					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a box of frozen pizza.", ReturnName(playerid, 0), FormatNumber(price));
-
-					BusinessData[bizid][bizProducts]--;
-					BusinessData[bizid][bizVault] += Tax_Percent(price);
-
-					Business_Save(bizid);
-					Tax_AddPercent(price);
-			    }
-				case 17:
-		        {
-		            if (Inventory_Count(playerid, "Frozen Burger") >= 5)
-		                return SendErrorMessage(playerid, "You have 5 frozen burgers, you can't buy anymore.");
-
-					new id = Inventory_Add(playerid, "Frozen Burger", 2768);
-
-					if (id == -1)
-        				return SendErrorMessage(playerid, "You don't have any inventory slots left.");
-
-					GiveMoney(playerid, -price);
-					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has paid %s and received a frozen burger.", ReturnName(playerid, 0), FormatNumber(price));
+					SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s telah membayar %s dan menerima Cigarette.", ReturnName(playerid, 0), FormatNumber(price));
 
 					BusinessData[bizid][bizProducts]--;
 					BusinessData[bizid][bizVault] += Tax_Percent(price);
@@ -1300,41 +1093,30 @@ Dialog:BusinessBuy(playerid, response, listitem, inputtext[])
 					Tax_AddPercent(price);
 			    }
 		    }
-		}
+		}*/
 		else if (BusinessData[bizid][bizType] == 3)
 		{
-		    switch (listitem)
-		    {
-		        case 0:
+			PlayerData[playerid][pSkinPrice] = price;
+			if(listitem == 0)
+			{
+				if(PlayerData[playerid][pGender] == 1)
 				{
-				    PlayerData[playerid][pClothesType] = 1;
-
-					switch (PlayerData[playerid][pGender])
-                    {
-                        case 1:
-                        	ShowModelSelectionMenu(playerid, "Clothes", MODEL_SELECTION_CLOTHES, g_aMaleSkins, sizeof(g_aMaleSkins), -16.0, 0.0, -55.0);
-
-						case 2:
-                       		ShowModelSelectionMenu(playerid, "Clothes", MODEL_SELECTION_CLOTHES, g_aFemaleSkins, sizeof(g_aFemaleSkins), -16.0, 0.0, -55.0);
-                    }
+					ShowModelSelectionMenu(playerid, "Male Skins", MODEL_SELECTION_BUYSKIN, g_aMaleSkins, sizeof(g_aMaleSkins), -16.0, 0.0, -55.0);
 				}
-		        case 1:
+				else
 				{
-				    PlayerData[playerid][pClothesType] = 2;
-					ShowModelSelectionMenu(playerid, "Glasses", MODEL_SELECTION_CLOTHES, {19006, 19007, 19008, 19009, 19010, 19011, 19012, 19013, 19014, 19015, 19016, 19017, 19018, 19019, 19020, 19021, 19022, 19023, 19024, 19025, 19026, 19027, 19028, 19029, 19030, 19031, 19032, 19033, 19034, 19035}, 30, 0.0, 0.0, 90.0);
+					ShowModelSelectionMenu(playerid, "Female Skins", MODEL_SELECTION_BUYSKIN, g_aFemaleSkins, sizeof(g_aFemaleSkins), -16.0, 0.0, -55.0);
 				}
-			    case 2:
-				{
-				    PlayerData[playerid][pClothesType] = 3;
-					ShowModelSelectionMenu(playerid, "Hats", MODEL_SELECTION_CLOTHES, {18926, 18927, 18928, 18929, 18930, 18931, 18932, 18933, 18934, 18935, 18944, 18945, 18946, 18947, 18948, 18949, 18950, 18951}, 18, -20.0, -90.0, 0.0);
-				}
-				case 3:
-				{
-				    PlayerData[playerid][pClothesType] = 4;
-					ShowModelSelectionMenu(playerid, "Bandanas", MODEL_SELECTION_CLOTHES, {18911, 18912, 18913, 18914, 18915, 18916, 18917, 18918, 18919, 18920}, 10, 80.0, -173.0, 0.0);
-				}
-		    }
-		}*/
+			}
+			if(listitem == 1)
+			{
+				ShowModelSelectionMenu(playerid, "Purchase Accessory", MODEL_SELECTION_ACC, g_AccList, sizeof(g_AccList), 0.0, 0.0, 0.0);
+			}
+			if(listitem == 2)
+			{
+				Dialog_Show(playerid, DialogBajuBaru, DIALOG_STYLE_INPUT, "Buat Baju Baru", "Masukan nama baju yang ingin kamu buat.\n\nCatatan: nama baju hanya untuk mengidentifikasi baju kamu", "Select", "Close");
+			}
+		}
 		else if (BusinessData[bizid][bizType] == 4)
 		{
 			switch (listitem)
@@ -1596,4 +1378,14 @@ Function:FuelUpdate()
 		    SwitchVehicleEngine(i, false);
 		}
 	}
+}
+
+Dialog:DialogBajuBaru(playerid, response, listitem, inputtext[])
+{
+	if(!response) return 1;
+
+	GiveMoney(playerid, -PlayerData[playerid][pSkinPrice]);
+	SendInfoMessage(playerid, "Berhasil membeli baju baru");
+	GivePlayerNewClothing(playerid, inputtext);
+	return 1;
 }

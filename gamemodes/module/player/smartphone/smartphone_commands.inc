@@ -2,6 +2,7 @@ CMD:phonetd(playerid, params[])
 {
     if(isOnPhone[playerid]) return SendTextDrawMessageEx(playerid, NOTIFICATION_ERROR, "Kamu sudah membuka handphone");
 
+    SendCursorAlert(playerid);
     PhonePage[playerid] = PHONE_LOCKSCREEN;
     ShowPhoneLockscreen(playerid, true);
     SelectTextDraw(playerid, X11_RED);

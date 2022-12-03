@@ -17,12 +17,14 @@
 #define PRESSED(%0) 					(((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
 
 #define SendServerMessage(%0,%1)        SendTextDrawMessageEx(%0, NOTIFICATION_INFO, %1)
+#define SendInfoMessage(%0,%1)        	SendTextDrawMessageEx(%0, NOTIFICATION_INFO, %1)
 #define SendCustomMessage(%0,%1,%2)     SendClientMessageEx(%0, X11_LIGHT_SKY_BLUE_1, %1": "WHITE""%2)
 #define SendSyntaxMessage(%0,%1)        SendTextDrawMessageEx(%0, NOTIFICATION_INFO, %1)
 #define SendErrorMessage(%0,%1)         SendTextDrawMessageEx(%0, NOTIFICATION_ERROR, %1)
-#define SendAdminAction(%0,%1)          SendClientMessageEx(%0, X11_TOMATO, "AdmCmd | "%1)
+#define SendAdminAction(%0,%1)          SendClientMessageEx(%0, X11_PINK, "AdmCmd | "%1)
 	
 #define PermissionError(%0)				SendTextDrawMessageEx(%0, NOTIFICATION_ERROR, "ERROR: Kamu tidak diizinkan menggunakan perintah ini!")
+#define SendCursorAlert(%0)             SendClientMessageEx(%0, X11_PINK, "PETUNJUK | Gunakan perintah '"YELLOW"/cursor"PINK"' apabila cursor kamu tiba tiba menghilang")
 
 //================================ NOTIFICATION ID ===============================
 #define NOTIFICATION_INFO       1
@@ -40,6 +42,16 @@
 #define 	MAX_BUSINESSES 				(500)
 #define 	MAX_DEALERSHIP_CARS 		(40)
 #define	 	MAX_GAS_PUMPS 				(100)
+#define 	MAX_HOUSES 					(500)
+#define 	MAX_HOUSE_STORAGE 			(10)
+#define 	MAX_FACTIONS 				(15)
+
+//================================ FRAKSI ===============================
+#define FACTION_POLICE 					(1)
+#define FACTION_NEWS 					(2)
+#define FACTION_MEDIC 					(3)
+#define FACTION_GOV 					(4)
+#define FACTION_GANG 					(5)
 
 //================================ STARTPACK ===============================
 #define START_PLAYER_MONEY        (25000)
@@ -47,6 +59,7 @@
 
 //================================ MAX OWNTABLE ===============================
 #define MAX_OWNABLE_BUSINESSES (3)
+#define MAX_OWNABLE_HOUSES (3)
 
 //================================ BODY SYSTEM ===============================
 #define BODY_PART_TORSO (3)
@@ -77,6 +90,7 @@
 #define GetPlayerSQLID(%0)              PlayerData[%0][pID]
 #define GetMoney(%0)                    PlayerData[%0][pMoney]
 #define GetBank(%0)                     PlayerData[%0][pBankMoney]
+
 
 //================================ ANYTHING FOR ROLEPLAY ========================
 #define ACTION_SLOT_ATT	9

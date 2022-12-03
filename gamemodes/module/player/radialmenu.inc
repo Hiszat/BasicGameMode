@@ -1,12 +1,13 @@
 CMD:radial(playerid, test[])
 {
-    new str[200];
+    new str[200], houseid = -1;
+
     strcat(str, "Umum\n");
     strcat(str, "Dokumen Pribadi\n");
-    strcat(str, "Vehicle\n");
+    strcat(str, "Kendaraan\n");
+    if ((houseid = House_Inside(playerid)) != -1 && (House_IsOwner(playerid, houseid)) && (Berangkas_Nearest(playerid) != -1)) strcat(str, "Berangkas Rumah\n");
     if(GetNearbyGarkot(playerid) >= 0) strcat(str, "Garkot Menu\n");
     if(GetNearbyRental(playerid) >= 0) strcat(str, "Sewa Kendaraan\n");
-    if(IsPlayerInRangeOfPoint(playerid, 3.0, MDC_COORD)) strcat(str, "MDC Menu\n");
     Dialog_Show(playerid, RadialMenu, DIALOG_STYLE_LIST, "Radial Menu", str, "Select", "Close");
     return 1;
 }
@@ -20,7 +21,7 @@ Dialog:RadialMenu(playerid, response, listitem, inputtext[])
             new str[400];
             Dialog_Show(playerid, RadialUmum, DIALOG_STYLE_LIST, "Radial Menu", str, "Select", "Close");
         }
-        if(strcmp("Vehicle", inputtext, true) == 0)
+        if(strcmp("Kendaraan", inputtext, true) == 0)
         {
             new str[400];
             strcat(str, "Mesin\n");
@@ -32,7 +33,19 @@ Dialog:RadialMenu(playerid, response, listitem, inputtext[])
             strcat(str, "Rem Tangan\n");
             Dialog_Show(playerid, RadialVehicle, DIALOG_STYLE_LIST, "Radial Menu", str, "Select", "Close");
         }
-     
+
+        if(strcmp("Berangkas Rumah", inputtext, true) == 0)
+        {
+            static
+                houseid = -1;
+
+            //if ((houseid = House_Inside(playerid)) != -1 && (House_IsOwner(playerid, houseid) || GetFactionType(playerid) == FACTION_POLICE)) {
+            if ((houseid = House_Inside(playerid)) != -1 && (House_IsOwner(playerid, houseid))) {
+                House_OpenStorage(playerid, houseid);
+                PlayerData[playerid][pStorageSelect] = 1;	
+            }
+            else SendErrorMessage(playerid, "You are not in range of your house interior.");
+        }
 		if(strcmp("Garkot Menu", inputtext, true) == 0)
         {
             new gid = GetNearbyGarkot(playerid);
@@ -44,10 +57,6 @@ Dialog:RadialMenu(playerid, response, listitem, inputtext[])
         if(strcmp("Sewa Kendaraan", inputtext, true) == 0)
         {
             Dialog_Show(playerid, RentalMenu, DIALOG_STYLE_LIST, "Penyewaan Kendaraan", "Sewa Kendaraan\nKembalikan Kendaraan", "Select", "Close");
-        }
-        if(strcmp("MDC Menu", inputtext, true) == 0)
-        {
-            cmd_mdc(playerid, "\1");
         }
     }
     return 1;
@@ -226,7 +235,7 @@ Dialog:RadialVehicle(playerid, response, listitem, inputtext[])
         else if(strcmp("Kepemilikan", inputtext, true) == 0)
         {
             new bool:have, str[512];
-            format(str, sizeof(str), "Model\tPlate\tInsurance\n");
+            format(str, sizeof(str), "Model Kendaraan\tNomor Kendaraan\tInfo Kendaraan\n");
             foreach(new i : PlayerVehicle)
             {
                 if(Vehicle_IsOwner(playerid, i))
@@ -237,11 +246,15 @@ Dialog:RadialVehicle(playerid, response, listitem, inputtext[])
                     }
                     else if(VehicleData[i][vRental] != -1)
                     {
-                        format(str, sizeof(str), "%s%s(Rental)\t%s\tN/A\n", str, GetVehicleModelName(VehicleData[i][vModel]), VehicleData[i][vPlate]);
+                        format(str, sizeof(str), "%s%s(Sewa)\t%s\tN/A\n", str, GetVehicleModelName(VehicleData[i][vModel]), VehicleData[i][vPlate]);
                     }
                     else if(VehicleData[i][vHouse] != -1)
                     {
                         format(str, sizeof(str), "%s%s(House Parked)\t%s\t%d Left\n", str, GetVehicleModelName(VehicleData[i][vModel]), VehicleData[i][vPlate], VehicleData[i][vInsurance]);
+                    }
+                    else if(VehicleData[i][vPark] != -1)
+                    {
+                        format(str, sizeof(str), "%s%s(Garasi Kota ID: %s)\t%s\tN/A\n", str, GetVehicleModelName(VehicleData[i][vModel]), VehicleData[i][vPark]);
                     }
                     else
                     {

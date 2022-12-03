@@ -1,25 +1,3 @@
-stock Vehicle_Nearest(playerid, Float:range = 4.5)
-{
-	static
-	Float:fX,
-	Float:fY,
-	Float:fZ;
-
- 	foreach(new i : PlayerVehicle)
-	{
-	    if(IsValidVehicle(VehicleData[i][vVehicle]))
-	    {
-			GetVehiclePos(VehicleData[i][vVehicle], fX, fY, fZ);
-
-			if(IsPlayerInRangeOfPoint(playerid, range, fX, fY, fZ))
-			{
-				return i;
-			}
-		}
-	}
-	return -1;
-}
-
 stock GetVehicleMaxSeats(vehicleid)
 {
     static const g_arrMaxSeats[] = {
@@ -57,6 +35,28 @@ stock IsVehicleSeatUsed(vehicleid, seat)
 	    return 1;
 	}
 	return 0;
+}
+
+stock Vehicle_Nearest(playerid, Float:range = 4.5)
+{
+	static
+	Float:fX,
+	Float:fY,
+	Float:fZ;
+
+ 	foreach(new i : PlayerVehicle)
+	{
+	    if(IsValidVehicle(VehicleData[i][vVehicle]))
+	    {
+			GetVehiclePos(VehicleData[i][vVehicle], fX, fY, fZ);
+
+			if(IsPlayerInRangeOfPoint(playerid, range, fX, fY, fZ))
+			{
+				return i;
+			}
+		}
+	}
+	return -1;
 }
 
 Vehicle_Nearest2(playerid)
@@ -253,7 +253,7 @@ Function:UnloadPlayerVehicle(playerid)
 			Iter_SafeRemove(PlayerVehicle, i, i);
 		}
 	}
-	print("test");
+
 	return 0;
 }
 

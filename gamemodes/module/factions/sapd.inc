@@ -213,7 +213,7 @@ CMD:cuff(playerid, params[])
 		if(otherid == playerid)
 			return SendErrorMessage(playerid, "Kamu tidak bisa memborgol dirimu sendiri");
 		
-		if(ProxDetectorS(4.5, playerid, otherid)){
+		if (IsPlayerNearPlayer(playerid, otherid, 4.5)){
 			PlayerData[otherid][pCuffed] = 1;
 			SetPlayerSpecialAction(otherid, SPECIAL_ACTION_CUFFED);
 			SetPlayerAttachedObject(otherid, ACTION_SLOT_ATT, 19418, 6, -0.011000, 0.028000, -0.022000, -15.600012, -33.699977, -81.700035, 0.891999, 1.000000, 1.168000);
@@ -254,7 +254,7 @@ CMD:uncuff(playerid, params[])
 		if(PlayerData[otherid][pCuffed] != 1)
 			return SendErrorMessage(playerid, "Player tidak terborgol.");
 
-		if(ProxDetectorS(4.5, playerid, otherid)){
+		if (IsPlayerNearPlayer(playerid, otherid, 4.5)){
 			PlayerData[otherid][pCuffed] = 0 ;
 			SetPlayerSpecialAction(otherid, SPECIAL_ACTION_NONE);
 			RemovePlayerAttachedObject(otherid, ACTION_SLOT_ATT);
@@ -580,6 +580,6 @@ stock AddWarrant(targetid, playerid, const description[])
 	new
 	    string[255];
 
-	format(string, sizeof(string), "INSERT INTO `criminallog` (`Suspect`, `Username`, `Date`, `Description`) VALUES('%s', '%s', '%s', '%s')", ReturnName(targetid), ReturnName(playerid), ReturnDate(), description);
+	format(string, sizeof(string), "INSERT INTO `criminallog` (`Suspect`, `Officer`, `Date`, `Description`) VALUES('%s', '%s', '%s', '%s')", ReturnName(targetid), ReturnName(playerid), ReturnDate(), description);
 	mysql_tquery(sqlcon, string);
 }

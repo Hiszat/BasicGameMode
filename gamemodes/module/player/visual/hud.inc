@@ -494,100 +494,64 @@ ptask UpdatePlayerHUD[1000](playerid)
 		PlayerTextDrawTextSize(playerid, TEXTDRAW_HAUS[playerid], 18.000000, -0.135 * PlayerData[playerid][pThirst]);
 		PlayerTextDrawShow(playerid, TEXTDRAW_HAUS[playerid]);
     }
-}
-// task UpdatePlayerVisual[1000]() 
-// {
-// 	foreach (new i : Player)
-//     {
-// 		if(!PlayerInfo[i][pTogHUD])
-// 		{
-// 			new
-// 				Float:health,
-// 				Float:armour
-// 			;
-// 			GetPlayerHealth(i, health);
-// 			GetPlayerArmour(i, armour);
-
-// 			if(health > 100)
-// 			{
-// 				health = 100;
-// 			}
-
-// 			if(armour > 100)
-// 			{
-// 				armour = 100;
-// 			}
-
-// 			PlayerTextDrawTextSize(i, TEXTDRAW_DARAH[i], 0.28 * health, 13.000000);
-// 			PlayerTextDrawShow(i, TEXTDRAW_DARAH[i]);
-
-// 			PlayerTextDrawTextSize(i, TEXTDRAW_ARMOUR[i], 0.28 * armour, 13.000000);
-// 			PlayerTextDrawShow(i, TEXTDRAW_ARMOUR[i]);
-
-// 			PlayerTextDrawTextSize(i, TEXTDRAW_LAPAR[i], 18.000000, -0.145 * PlayerInfo[i][pLapar]);
-// 			PlayerTextDrawShow(i, TEXTDRAW_LAPAR[i]);
-
-// 			PlayerTextDrawTextSize(i, TEXTDRAW_HAUS[i], 18.000000, -0.135 * PlayerInfo[i][pHaus]);
-// 			PlayerTextDrawShow(i, TEXTDRAW_HAUS[i]);
-// 		}
-// 		if (IsPlayerInAnyVehicle(i) && GetPlayerState(i) == PLAYER_STATE_DRIVER)
-// 		{
-// 			if(!PlayerInfo[i][pTogSpeedo])
-// 			{
-// 				static 
-// 					Float:fDamage, 
-// 					Float:fSpeed, 
-// 					Float:fVelocity[3];
+	if (IsPlayerInAnyVehicle(playerid) && GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
+	{
+		static 
+				Float:fDamage, 
+				Float:fSpeed, 
+				Float:fVelocity[3];
 				
-// 				new vehicleid = GetPlayerVehicleID(i);
-// 				GetVehicleHealth(vehicleid, fDamage);
-// 				GetVehicleVelocity(vehicleid, fVelocity[0], fVelocity[1], fVelocity[2]);
+		new vehicleid = GetPlayerVehicleID(playerid);
+		GetVehicleHealth(vehicleid, fDamage);
+		GetVehicleVelocity(vehicleid, fVelocity[0], fVelocity[1], fVelocity[2]);
 					
-// 				fSpeed = floatmul(floatsqroot((fVelocity[0] * fVelocity[0]) + (fVelocity[1] * fVelocity[1]) + (fVelocity[2] * fVelocity[2])), 100.0);
+		fSpeed = floatmul(floatsqroot((fVelocity[0] * fVelocity[0]) + (fVelocity[1] * fVelocity[1]) + (fVelocity[2] * fVelocity[2])), 100.0);
 			
-// 				PlayerTextDrawSetString(i, SPEED_0[i], sprintf("%.0f", fSpeed));
+		PlayerTextDrawSetString(playerid, SPEED_0[playerid], sprintf("%.0f", fSpeed));
 
-// 				PlayerTextDrawSetString(i, BENSIN_0[i], sprintf("%d", VehCore[vehicleid][vehFuel]));
+		PlayerTextDrawSetString(playerid, BENSIN_0[playerid], sprintf("%d", VehCore[vehicleid][vehFuel]));
 
-// 				new Float:rz;
-// 				new tempstr[32];
-// 				if(IsPlayerInAnyVehicle(i))
-// 				{
-// 					GetVehicleZAngle(GetPlayerVehicleID(i), rz);
-// 				}
-// 				else
-// 				{
-// 					GetPlayerFacingAngle(i, rz);
-// 				}
+		new Float:rz;
+		new tempstr[32];
+		if(IsPlayerInAnyVehicle(playerid))
+		{
+			GetVehicleZAngle(GetPlayerVehicleID(playerid), rz);
+		}
+		else
+		{
+			GetPlayerFacingAngle(playerid, rz);
+		}
 
-// 				if(rz >= 355.0 || rz < 5.0) tempstr = "N";
-// 				else if(rz >= 265.0 && rz < 275.0) tempstr = "E";
-// 				else if(rz >= 175.0 && rz < 185.0) tempstr = "S";
-// 				else if(rz >= 85.0 && rz < 95.0) tempstr = "W";
-// 				else if(rz >= 225.0 && rz < 235.0) tempstr = "SE";
-// 				else if(rz >= 140.0 && rz < 150.0) tempstr = "SW";
-// 				else if(rz >= 50.0 && rz < 60.0) tempstr = "NW";
-// 				else if(rz >= 317.0 && rz < 327.0) tempstr = "NE";
-// 				else tempstr = "Loading...";
+		if(rz >= 355.0 || rz < 5.0) tempstr = "N";
+		else if(rz >= 265.0 && rz < 275.0) tempstr = "E";
+		else if(rz >= 175.0 && rz < 185.0) tempstr = "S";
+		else if(rz >= 85.0 && rz < 95.0) tempstr = "W";
+		else if(rz >= 225.0 && rz < 235.0) tempstr = "SE";
+		else if(rz >= 140.0 && rz < 150.0) tempstr = "SW";
+		else if(rz >= 50.0 && rz < 60.0) tempstr = "NW";
+		else if(rz >= 317.0 && rz < 327.0) tempstr = "NE";
+		else tempstr = "Loading...";
 
-// 				new zone[28];
-// 				GetPlayer2DZone(i, zone, MAX_ZONE_NAME);
-// 				format(gstr, sizeof(gstr), "( %s )", zone);
+		new zone[28], str[400];
+		GetPlayer2DZone(playerid, zone, MAX_ZONE_NAME);
+		format(str, sizeof(str), "( %s )", zone);
 
-// 				PlayerTextDrawSetString(i, CAR_GPS[i], sprintf("%s_I_%s", tempstr, zone));
+		PlayerTextDrawSetString(playerid, CAR_GPS[playerid], sprintf("%s_I_%s", tempstr, zone));
 
-// 				new hour, minute;
-// 				gettime(hour, minute);
-// 				PlayerTextDrawSetString(i, CARTIME[i], sprintf("%02d:%02d", hour, minute));													
-// 			}
-// 		}	
-// 	}
-// }
+		new hour, minute;
+		gettime(hour, minute);
+		PlayerTextDrawSetString(playerid, CARTIME[playerid], sprintf("%02d:%02d", hour, minute));													
+	}
+}
 
 hook OnPlayerStateChange(playerid, newstate, oldstate)
 {
 	if(newstate == PLAYER_STATE_DRIVER)
 	{
 		ShowPlayerSpeedometer(playerid, true);
+	}
+	if(oldstate == PLAYER_STATE_DRIVER)
+	{
+		ShowPlayerSpeedometer(playerid, false);
 	}
 }

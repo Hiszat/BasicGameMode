@@ -49,6 +49,7 @@ Function:Garkot_Load()
  		new id, i = 0, str[528];
 		while(i < rows)
 		{
+			format(str, sizeof(str), "[[ GARASI KOTA ]]", id, GetLocation(GarkotData[id][parkX], GarkotData[id][parkY], GarkotData[id][parkZ]));
 		    cache_get_value_name_int(i, "id", id);
 			cache_get_value_name_float(i, "posx", GarkotData[id][parkX]);
 			cache_get_value_name_float(i, "posy", GarkotData[id][parkY]);
@@ -60,7 +61,6 @@ Function:Garkot_Load()
 			cache_get_value_name_float(i, "spawna", GarkotData[id][spawn][3]);
 			cache_get_value_name_int(i, "interior", GarkotData[id][parkInt]);
 			cache_get_value_name_int(i, "world", GarkotData[id][parkWorld]);
-			format(str, sizeof(str), "[[ GARASI KOTA %s ]]", GetLocation(GarkotData[id][parkX], GarkotData[id][parkY], GarkotData[id][parkZ]));
 			GarkotData[id][parkActor] = CreateDynamicActor(g_aMaleSkins[random(sizeof(g_aMaleSkins))], GarkotData[id][parkX], GarkotData[id][parkY], GarkotData[id][parkZ], GarkotData[id][parkA], 1, 40.0, 0, 0, -1, 50.0, -1, 0);
 			GarkotData[id][parkLabel] = CreateDynamic3DTextLabel(str, X11_LIGHTBLUE, GarkotData[id][parkX], GarkotData[id][parkY], GarkotData[id][parkZ]+1.0, 10.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, GarkotData[id][parkWorld], GarkotData[id][parkInt], -1, 10.0);
 			GarkotData[id][parkMap] = CreateDynamicMapIcon(GarkotData[id][parkX], GarkotData[id][parkY], GarkotData[id][parkZ], 55, -1, -1, -1, -1, 100.0);

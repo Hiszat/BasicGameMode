@@ -5,7 +5,7 @@ CMD:settax(playerid, params[])
 		SendErrorMessage(playerid, "Kamu bukan bagian dari Pemerintah.");
 		return 1;
 	}
-	if(PlayerData[playerid][pFacRank] != 8)
+	if(PlayerData[playerid][pFactionRank] != 8)
 	{
 		SendErrorMessage(playerid, "Kamu bukan presiden.");
 		return 1;
@@ -28,7 +28,7 @@ CMD:settax(playerid, params[])
 
 CMD:taxwithdraw(playerid, params[])
 {
-	if(PlayerData[playerid][pFaction] == 2 && PlayerData[playerid][pFacRank] == 8){
+	if(PlayerData[playerid][pFaction] == 2 && PlayerData[playerid][pFactionRank] == 8){
  		new String[1024], amount;
 		if(sscanf(params, "d", amount))
 		{
@@ -53,7 +53,7 @@ CMD:taxwithdraw(playerid, params[])
 
 CMD:taxdeposit(playerid, params[])
 {
-	if(PlayerData[playerid][pFaction] == 2 && PlayerData[playerid][pFacRank] == 8){
+	if(PlayerData[playerid][pFaction] == 2 && PlayerData[playerid][pFactionRank] == 8){
  		new String[1024], amount;
 		if(sscanf(params, "d", amount))
 		{

@@ -1,5 +1,6 @@
 /* Includes */
 #include <a_samp>
+#include <a_zones>
 #include <a_mysql>
 
 // YSI
@@ -34,10 +35,27 @@
 // server
 #include "module/server/economy_server.inc"
 
+// penting
+#include "module/player/weapon/weapon_function.inc"
+#include "module/player/weapon/weapon_commands.inc"
+
+
 // dynamic
+//#include "module/dynamic/fraksi/fraksi_function.inc"
+//#include "module/dynamic/fraksi/fraksi_commands.inc"
+
 #include "module/dynamic/entrance/entrance_function.inc"
 #include "module/dynamic/entrance/entrance_commands.inc"
 #include "module/dynamic/entrance/entrance_sampcalback.inc"
+
+#include "module/dynamic/berangkas/berangkas_core.inc"
+#include "module/dynamic/berangkas/berangkas_function.inc"
+#include "module/dynamic/berangkas/berangkas_commands.inc"
+
+#include "module/dynamic/houses/houses_core.inc"
+#include "module/dynamic/houses/houses_function.inc"
+#include "module/dynamic/houses/houses_commands.inc"
+#include "module/dynamic/houses/house_storage.inc"
 
 #include "module/dynamic/business/business_function.inc"
 #include "module/dynamic/business/business_commands.inc"
@@ -78,29 +96,39 @@
 #include "module/player/passport/function_passport.inc"
 
 #include "module/player/smartphone/smartphone_core.inc"
+#include "module/player/smartphone/smartphone_textdraws.inc"
 #include "module/player/smartphone/smartphone_function.inc"
 #include "module/player/smartphone/smartphone_commands.inc"
 #include "module/player/smartphone/smartphone_sampcalback.inc"
 
-//job 
-#include "module/job/trucker.inc"
-#include "module/job/taxi.inc"
-#include "module/job/hunter.inc"
+// masih di pending dan akan di lanjutkan setelah sistem rumah selesai
+#include "module/player/clothing/clothing_core.inc"
+#include "module/player/clothing/clothing_function.inc"
+#include "module/player/clothing/clothing_commands.inc"
 
-//factions
-#include "module/factions/core.inc"
-#include "module/factions/sapd.inc"
-#include "module/factions/goverment.inc"
-//admin
+// admin
 #include "module/admin/admin_function.inc"
 #include "module/admin/admin_commands.inc"
 
+// player
+#include "module/player/commands.inc"
+#include "module/player/sampcallback.inc"
+
 //mapping
 #include "module/map/hospital.inc"
-#include "module/map/sapd_int.inc"
+#include "module/map/market.inc"
+#include "module/map/ammunationgta5.inc"
+#include "module/map/sapd_int"
 
+//faction
+#include "module/factions/core.inc"
+#include "module/factions/sapd.inc"
+#include "module/factions/goverment.inc"
 
-
+//job 
+#include "module/job/hunter.inc"
+#include "module/job/taxi.inc"
+#include "module/job/trucker.inc"
 
 /* Functions */
 
@@ -252,18 +280,19 @@ Function:PlayerCheck(playerid, rcc)
 	CheckAccount(playerid);
 	return true;
 }
+
 Function:CheckUsers(playerid)
 {
 	new rows = cache_num_rows();
 	new str[256];
 	if (rows)
 	{
-	    format(str, sizeof(str), "Selamat datang kembali di server "SERVER_NAME"!\n\nUsername: %s\nSilakan masukkan Kata Sandi Anda di bawah ini untuk masuk:", GetName(playerid));
+	    format(str, sizeof(str), "Selamat datang kembali di server "SERVER_NAME"!\n\nUsername: %s\nVersion: "SERVER_REVISION"\n\n"YELLOW"Silakan masukkan Kata Sandi Anda di bawah ini untuk masuk:", GetName(playerid));
 		Dialog_Show(playerid, LoginScreen, DIALOG_STYLE_PASSWORD, "MASUK", str, "Select", "Cancel");
 	}
 	else
 	{
-	    format(str, sizeof(str), "Selamat datang di server: "SERVER_NAME"\n\nUsername: %s\nSilakan masukkan Kata Sandi Anda di bawah ini untuk mendaftar:", GetName(playerid));
+	    format(str, sizeof(str), "Selamat datang di server: "SERVER_NAME"\n\nUsername: %s\nVersion: "SERVER_REVISION"\n\n"YELLOW"Silakan masukkan Kata Sandi Anda di bawah ini untuk mendaftar:", GetName(playerid));
 		Dialog_Show(playerid, RegisterScreen, DIALOG_STYLE_PASSWORD, "DAFTAR", str, "Select", "Cancel");
 	}
 	return 1;
@@ -278,14 +307,14 @@ stock SetupPlayerData(playerid)
 
 stock SaveData(playerid)
 {
-	new query[1024];
+	new query[2012];
 	if(PlayerData[playerid][pSpawned])
 	{
 		GetPlayerHealth(playerid, PlayerData[playerid][pHealth]);
 		GetPlayerArmour(playerid, PlayerData[playerid][pArmor]);
 		GetPlayerPos(playerid, PlayerData[playerid][pPos][0], PlayerData[playerid][pPos][1], PlayerData[playerid][pPos][2]);
 
-	    format(query, sizeof(query), "UPDATE `users` SET `PosX` = '%.4f', `PosY` = '%.4f', `PosZ` = '%.4f', `Health` = '%.4f', `Armor` = '%.4f', `World` = '%d', `Interior` = '%d', `Age` = '%s', `Heigth` = '%s', `Gender` = '%d', `Injured` = '%d', `Admin` = '%d',`Skin` = '%d', `Money` = '%d', `Bank` = '%d', `Level` = '%d', `Hunger` = '%d', `Thirst` = '%d', `WantedLevel` = '%d'",
+	    format(query, sizeof(query), "UPDATE `users` SET `PosX` = '%.4f', `PosY` = '%.4f', `PosZ` = '%.4f', `Health` = '%.4f', `Armor` = '%.4f', `World` = '%d', `Interior` = '%d', `Age` = '%s', `Heigth` = '%s', `Gender` = '%d', `Injured` = '%d', `Admin` = '%d',`Skin` = '%d', `Money` = '%d', `Bank` = '%d', `Level` = '%d', `Hunger` = '%d', `Thirst` = '%d'",
 			PlayerData[playerid][pPos][0],
 			PlayerData[playerid][pPos][1],
 			PlayerData[playerid][pPos][2],
@@ -303,16 +332,28 @@ stock SaveData(playerid)
 			PlayerData[playerid][pBank],
 			PlayerData[playerid][pLevel],
 			PlayerData[playerid][pHunger],
-			PlayerData[playerid][pThirst],
-			PlayerData[playerid][pWanted]
-			
+			PlayerData[playerid][pThirst]
 		);
-		format(query, sizeof(query), "%s, `Entrance` = '%d', `Business` = '%d', `Faction` = '%d' , `FactionRank` = '%d' WHERE `pID`= '%d'",
+		forex(index, 13)
+		{
+			format(query, sizeof(query), "%s, `Gun%d` = '%d', `Ammo%d` = '%d', `Durability%d` = '%d'", query, index + 1, PlayerData[playerid][pGuns][index], index + 1, PlayerData[playerid][pAmmo][index], index + 1, PlayerData[playerid][pDurability][index]);
+		}
+	   	
+		format(query, sizeof(query), "%s, `Entrance` = '%d', `Business` = '%d', `House` = '%d', `Faction` = '%d', `FactionRank` = '%d',`Job_1` = '%d', `Job_2` = '%d',`JailType` = '%d', `JailTime` = '%d', `AJailTime` = '%d', `Wanted` = '%d', `TruckerDelay` = '%d', `Clothing` = '%d' WHERE `pID`= '%d'",
 			query,
 			PlayerData[playerid][pEntrance],
 			PlayerData[playerid][pBusiness],
+			PlayerData[playerid][pHouse],
 			PlayerData[playerid][pFaction],
-			PlayerData[playerid][pFacRank],
+			PlayerData[playerid][pFactionRank],
+			PlayerData[playerid][pJob],
+			PlayerData[playerid][pJob2],
+			PlayerData[playerid][pJailType],
+			PlayerData[playerid][pJailTime],
+			PlayerData[playerid][pAJailTime],
+			PlayerData[playerid][pWanted],
+			PlayerData[playerid][pTruckerTimer],
+			PlayerData[playerid][pClothing],
 			PlayerData[playerid][pID]
 		);
 		mysql_tquery(sqlcon, query);
@@ -344,21 +385,37 @@ Function:LoadCharacterData(playerid)
 	cache_get_value_name_int(0, "Hunger", PlayerData[playerid][pHunger]);
 	cache_get_value_name_int(0, "Thirst", PlayerData[playerid][pThirst]);
 	cache_get_value_name_int(0, "Entrance", PlayerData[playerid][pEntrance]);
-	cache_get_value_name_int(0, "WantedLevel", PlayerData[playerid][pWanted]);
+	cache_get_value_name_int(0, "Business", PlayerData[playerid][pBusiness]);
+	cache_get_value_name_int(0, "House", PlayerData[playerid][pHouse]);
 	cache_get_value_name_int(0, "Faction", PlayerData[playerid][pFaction]);
-	cache_get_value_name_int(0, "FactionRank", PlayerData[playerid][pFacRank]);
+	cache_get_value_name_int(0, "FactionRank", PlayerData[playerid][pFactionRank]);
+	cache_get_value_name_int(0, "Job_1", PlayerData[playerid][pJob]);
+	cache_get_value_name_int(0, "Job_2", PlayerData[playerid][pJob2]);
+	cache_get_value_name_int(0, "JailType", PlayerData[playerid][pJailType]);
+	cache_get_value_name_int(0, "JailTime", PlayerData[playerid][pJailTime]);
+	cache_get_value_name_int(0, "AJailTime", PlayerData[playerid][pAJailTime]);
+	cache_get_value_name_int(0, "Wanted", PlayerData[playerid][pWanted]);
+	cache_get_value_name_int(0, "TruckerDelay", PlayerData[playerid][pTruckerTimer]);
+	cache_get_value_name_int(0, "Clothing", PlayerData[playerid][pClothing]);
+
+	new query[450];
+
+	forex(i, 13) {
+		format(query, sizeof(query), "Gun%d", i + 1);
+		cache_get_value_name_int(0, query, PlayerData[playerid][pGuns][i]);
+
+		format(query, sizeof(query), "Ammo%d", i + 1);
+		cache_get_value_name_int(0, query, PlayerData[playerid][pAmmo][i]);
+
+		format(query, sizeof(query), "Durability%d", i + 1);
+		cache_get_value_name_int(0, query, PlayerData[playerid][pDurability][i]);
+	}
 
 	if(PlayerData[playerid][pGender] != -1) ShowSpawnTextdraw(playerid);
 
 	if(PlayerData[playerid][pGender] == -1) ShowPassport_1(playerid);
 
-	StartPlayerProgressBarTextdraw(playerid, 100, "Memuat Data", 40, "loadsukses", 1687547391);
-    return 1;
-}
-
-Function:loadsukses(playerid)
-{
-	SendTextDrawMessageEx(playerid, NOTIFICATION_INFO, "Data dari karakter kamu berhasil di muat.");
+	StartPlayerProgressBarTextdraw(playerid, 100, "Memuat Data", 100, "loadsukses", 1687547391);
 
 	PlayerData[playerid][pLoggedIn] = true;
 
@@ -384,7 +441,14 @@ Function:loadsukses(playerid)
 		}
 	}
 	//
+	LoadPlayerToys(playerid);
 	LoadPlayerVehicle(playerid);
+    return 1;
+}
+
+Function:loadsukses(playerid)
+{
+	SendTextDrawMessageEx(playerid, NOTIFICATION_INFO, "Data dari karakter kamu berhasil di muat.");
 	return 1;
 }
 
@@ -424,11 +488,12 @@ Function:OnPlayerRegister(playerid)
 Function:OnPlayerPasswordChecked(playerid, bool:success)
 {
 	new str[256];
-    format(str, sizeof(str), "Selamat datang kembali di server "SERVER_NAME"!\n\nUsername: %s\nSilakan masukkan Kata Sandi Anda di bawah ini untuk masuk:", GetName(playerid));
+    format(str, sizeof(str), "Selamat datang kembali di server "SERVER_NAME"!\n\nUsername: %s\nVersion: "SERVER_REVISION"\n\n"YELLOW"Silakan masukkan Kata Sandi Anda di bawah ini untuk masuk:", GetName(playerid));
     
 	if(!success)
         return Dialog_Show(playerid, LoginScreen, DIALOG_STYLE_PASSWORD, "MASUK", str, "Login", "Exit");
 
+	PlayerData[playerid][pLogged] = true;	
 	new cQuery[256];
 	mysql_format(sqlcon, cQuery, sizeof(cQuery), "SELECT * FROM `users` WHERE `Username` = '%s' LIMIT 1;", ReturnName(playerid));
 	mysql_tquery(sqlcon, cQuery, "LoadCharacterData", "d", playerid);	
@@ -460,7 +525,10 @@ public OnGameModeInit()
 	mysql_tquery(sqlcon, "SELECT * FROM `rental`", "Rental_Load", "");
 	mysql_tquery(sqlcon, "SELECT * FROM `entrances`", "Entrance_Load", "");
 	mysql_tquery(sqlcon, "SELECT * FROM `businesses`", "Business_Load", "");
+	mysql_tquery(sqlcon, "SELECT * FROM `houses`", "House_Load", "");
+	mysql_tquery(sqlcon, "SELECT * FROM `berangkas`", "Berangkas_Load", "");
 	mysql_tquery(sqlcon, "SELECT * FROM `stuff`", "LoadServerStuff", "");
+	//mysql_tquery(sqlcon, "SELECT * FROM `factions`", "Faction_Load", "");
 
 	//timer
 	SetTimer("FuelUpdate", 50000, true);
@@ -475,9 +543,6 @@ public OnGameModeExit()
 
 public OnPlayerConnect(playerid)
 {
-	for (new i = 0; i < 100; i ++) {
-	    SendClientMessage(playerid, -1, "");
-	}
 	g_RaceCheck{playerid} ++;
 	InterpolateCameraPos(playerid, -37.715755, -2101.054931, 121.661994, 3031.810302, -638.207458, 196.425064, 12000);
 	InterpolateCameraLookAt(playerid, -33.558185, -2098.420898, 120.781112, 3028.381103, -641.794555, 195.814514, 12000);
@@ -496,7 +561,6 @@ public OnPlayerDisconnect(playerid, reason)
 	
 	UnloadPlayerVehicle(playerid);	
 	SaveData(playerid);
-	PlayerData[playerid][pLoggedIn] = false;
 	return 1;
 }
 
@@ -505,16 +569,10 @@ public OnPlayerUpdate(playerid)
 	foreach (new i : Player) {
 		ShowPlayerNameTagForPlayer(i, playerid, 1);
 	}
-	return 1;
-}
-
-public OnPlayerEnterCheckpoint(playerid)
-{
-	if (PlayerData[playerid][pCP])
-	{
-	    DisablePlayerCheckpoint(playerid);
-	    PlayerData[playerid][pCP] = 0;
-	}
+	if(GetPlayerMoney(playerid) != PlayerData[playerid][pMoney]) {
+        ResetPlayerMoney(playerid);
+        GivePlayerMoney(playerid, PlayerData[playerid][pMoney]);
+    }
 	return 1;
 }
 
@@ -602,12 +660,8 @@ Dialog:RegisterScreen(playerid, response, listitem, inputtext[])
 	if(!response)
 	    return Kick(playerid);
 
-	for (new i = 0; i < 100; i ++) {
-	    SendClientMessage(playerid, -1, "");
-	}
-
 	new str[256];
-	format(str, sizeof(str), "Selamat datang di server: "SERVER_NAME"\n\nUsername: %s\nERROR: Panjang kata sandi tidak boleh di bawah 7 atau di atas 32!nSilakan masukkan Kata Sandi Anda di bawah ini untuk mendaftar:", GetName(playerid));
+	format(str, sizeof(str), "Selamat datang di server: "SERVER_NAME"\n\nUsername: %s\nVersion: "SERVER_REVISION"\n\nERROR: Panjang kata sandi tidak boleh di bawah 7 atau di atas 32!n"YELLOW"Silakan masukkan Kata Sandi Anda di bawah ini untuk mendaftar:", GetName(playerid));
 
     if(strlen(inputtext) < 7)
 		return Dialog_Show(playerid, RegisterScreen, DIALOG_STYLE_PASSWORD, "DAFTAR", str, "Select", "Cancel");
@@ -624,14 +678,10 @@ Dialog:LoginScreen(playerid, response, listitem, inputtext[])
 	if(!response)
 	    return Kick(playerid);
 	        
-	for (new i = 0; i < 100; i ++) {
-	    SendClientMessage(playerid, -1, "");
-	}
-
     if(strlen(inputtext) < 1)
     {
 		new str[256];
-        format(str, sizeof(str), "Selamat datang kembali di server "SERVER_NAME"!\n\nUsername: %s\nSilakan masukkan Kata Sandi Anda di bawah ini untuk masuk:", GetName(playerid));
+        format(str, sizeof(str), "Selamat datang kembali di server "SERVER_NAME"!\n\nUsername: %s\nVersion: "SERVER_REVISION"\n\n"YELLOW"Silakan masukkan Kata Sandi Anda di bawah ini untuk masuk:", GetName(playerid));
         Dialog_Show(playerid, LoginScreen, DIALOG_STYLE_PASSWORD, "MASUK", str, "Login", "Exit");
         return 1;
 	}
@@ -647,8 +697,6 @@ Dialog:LoginScreen(playerid, response, listitem, inputtext[])
 
 public OnPlayerSpawn(playerid)
 {
-	if(IsPlayerConnected2(playerid) == 0)
-		return SendTextDrawMessageEx(playerid, NOTIFICATION_INFO, "Kamu Belum Login atau data belum dimuat!");
 	ShowPlayerHud(playerid, true);
 	if(!PlayerData[playerid][pSpawned])
 	{
@@ -658,9 +706,8 @@ public OnPlayerSpawn(playerid)
 	    SetPlayerVirtualWorld(playerid, PlayerData[playerid][pWorld]);
 		SetPlayerInterior(playerid, PlayerData[playerid][pInterior]);
 		SetPlayerScore(playerid, PlayerData[playerid][pLevel]);
-		return 1;
+		SetWeapons(playerid);
 	}
-	
 	// if(PlayerData[playerid][pJailTime] > 0)
 	// {
 	//     if (PlayerData[playerid][pArrest])
@@ -684,6 +731,7 @@ public OnPlayerSpawn(playerid)
     // else if(PlayerData[playerid][pDead] && PlayerData[playerid][pJailTime] < 1)
 	else if(PlayerData[playerid][pDead])
     {
+		ResetWeapons(playerid);
 		PlayerData[playerid][pInjured] = false;
 		PlayerData[playerid][pDead] = false;
 		ClearAnimations(playerid);
@@ -702,16 +750,14 @@ public OnPlayerSpawn(playerid)
 		// ResetWeapons(playerid);
 		GiveMoney(playerid, -5000, "Bayar rumah sakit");
 		// ResetDamages(playerid);
-		return 1;
 	}
 	else
 	{
 		SetPlayerVirtualWorld(playerid, PlayerData[playerid][pWorld]);
 		SetPlayerInterior(playerid, PlayerData[playerid][pInterior]);
 
-		if(IsValidDynamic3DTextLabel(PlayerData[playerid][pInjuredLabel])){
+		if(IsValidDynamic3DTextLabel(PlayerData[playerid][pInjuredLabel]))
 			DestroyDynamic3DTextLabel(PlayerData[playerid][pInjuredLabel]);
-		}
 
 		//if(PlayerData[playerid][pInjured] && PlayerData[playerid][pJailTime] < 1)	
 		if(PlayerData[playerid][pInjured])
@@ -726,15 +772,14 @@ public OnPlayerSpawn(playerid)
 
 			PlayerData[playerid][pInjuredLabel] = CreateDynamic3DTextLabel("(( THIS PLAYER IS INJURED ))", X11_RED, 0.0, 0.0, 0.50, 15.0, playerid);
 		}
-		return 1;
 	}
-	//return 0;
+	return 1;
 }
 
 
 public OnPlayerText(playerid, text[])
 {
-	SendNearbyMessage(playerid, 20.0, -1, "%s says: %s", GetName(playerid), text);
+	SendNearbyMessage(playerid, 20.0, -1, "OOC | %s: %s", ReturnName(playerid, 0), text);
     return 0;
 }
 
@@ -759,60 +804,74 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 	{
 	    if(playertextid == ITEM[i][playerid])
 		{
-			PlayerData[playerid][pListitem] = i;
-
-			if(InventoryData[playerid][PlayerData[playerid][pListitem]][invQuantity] < 1)
-                return SendErrorMessage(playerid, "Tidak ada item di slot yang dipilih!");	
-
-			forex(txd, 20)
-	        {
-	        	PlayerTextDrawBackgroundColor(playerid, ITEM[txd][playerid], 150);
-	        }
-	        PlayerTextDrawBackgroundColor(playerid, ITEM[i][playerid], 1687547286);
-
-			forex(txd, 20)
+			if(InventoryData[playerid][i][invExists])
 			{
-				PlayerTextDrawHide(playerid, ITEM[txd][playerid]);
+				new before = PlayerData[playerid][pListitem];
+
+				PlayerData[playerid][pListitem] = i;
+
+				if(InventoryData[playerid][PlayerData[playerid][pListitem]][invQuantity] < 1)
+					return SendErrorMessage(playerid, "Tidak ada item di slot yang dipilih!");
+
+
+				forex(txd, 20)
+				{
+					PlayerTextDrawBackgroundColor(playerid, ITEM[txd][playerid], 150);
+				}
+				PlayerTextDrawBackgroundColor(playerid, ITEM[i][playerid], 1687547286);
+
+				PlayerTextDrawHide(playerid, ITEM[before][playerid]);
+				PlayerTextDrawHide(playerid, ITEM[i][playerid]);
+						
+				SetTimerEx("RefrestItemTextdraw", 100, false, "dddd", playerid, before, i);		
 			}
-			
-			SetTimerEx("RefrestItemTextdraw", 100, false, "dd", playerid, i);		
 		}
 	}
-	if(playertextid == PassportTD_2[playerid][32])
+	if(PassportTD_2[playerid][0] != PlayerText:-1)
 	{
-		InputAge(playerid);
-	}
-	if(playertextid == PassportTD_2[playerid][36])
-	{
-		InputGender(playerid);
-	}
-	if(playertextid == PassportTD_2[playerid][38])
-	{
-		InputTinggi(playerid);
-	}
-	if(playertextid == PassportTD_2[playerid][13])
-	{
-		SubmitPassport(playerid);
-	}
-	if(playertextid == PassportTD_1[playerid][6])
-	{
-		SubmitPassport1(playerid);
+		if(playertextid == PassportTD_2[playerid][32])
+		{
+			InputAge(playerid);
+		}
+		if(playertextid == PassportTD_2[playerid][36])
+		{
+			InputGender(playerid);
+		}
+		if(playertextid == PassportTD_2[playerid][38])
+		{
+			InputTinggi(playerid);
+		}
+		if(playertextid == PassportTD_2[playerid][13])
+		{
+			SubmitPassport(playerid);
+		}
+		if(playertextid == PassportTD_1[playerid][6])
+		{
+			SubmitPassport1(playerid);
+		}
 	}
 	// SYSTEM HANDPHONE
-	if(playertextid == PhoneTextdraw[playerid][lockscreen][4])
+	if(PhonePage[playerid] == PHONE_LOCKSCREEN)
 	{
-		ShowPhoneLockscreen(playerid, false);
-		ShowHomePagePhone(playerid, true);
+		if(playertextid == PhoneTextdraw[playerid][lockscreen][4])
+		{
+			ShowPhoneLockscreen(playerid, false);
+			ShowHomePagePhone(playerid, true);
+		}
 	}
-	if(playertextid == PhoneTextdraw[playerid][myapplication][22])
+	// Application 
+	else if(PhonePage[playerid] == PHONE_HOMESCREEN)
 	{
-		ShowHomePagePhone(playerid, false);
-		ShowMobileBanking(playerid, true);
-	}
-	if(playertextid == PhoneTextdraw[playerid][myapplication][11])
-	{
-		ShowHomePagePhone(playerid, false);
-		ShowPhoneDjek(playerid, true);
+		if(playertextid == PhoneTextdraw[playerid][myapplication][22])
+		{
+			ShowHomePagePhone(playerid, false);
+			ShowMobileBanking(playerid, true);
+		}
+		if(playertextid == PhoneTextdraw[playerid][myapplication][11])
+		{
+			ShowHomePagePhone(playerid, false);
+			ShowPhoneDjek(playerid, true);
+		}
 	}
 	return 1;
 }
@@ -869,7 +928,13 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 			}
 			case 30: damage = float(RandomEx(20, 25)); // AK47
 			case 31: damage = float(RandomEx(20, 22)); // M4A1
-			case 33, 34: damage = float(RandomEx(70, 75)); // Country Rifle, Sniper Rifle
+			case 33, 34:{
+				if(HuntingRifle[playerid] = true){
+					damage = 0.3; 
+				}else{
+				damage = float(RandomEx(70, 75)); 
+				}
+			} 
 			case 35: damage = 0.0; // RPG
 			case 36: damage = 0.0; // HS Rocket
 			case 38: damage = 0.0; // Minigun
@@ -940,6 +1005,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				}
 			}
 			ShowInventoryTextdraw(playerid, 1);
+			PlayerData[playerid][pStorageSelect] = 0;
 			SetTimerEx("ShowingInventory", 1000, false, "d", playerid);
 		}
 	}
@@ -976,7 +1042,6 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		}
     }
 	return 1;
-	
 }
 
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
@@ -995,6 +1060,482 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			PlayerData[playerid][pListitem] = listitem;
 		}
 	}
+	if(dialogid == DIALOG_TOYPOSX)
+	{
+		if(response)
+		{
+			if(!toyToggle[playerid][toySelect[playerid]])
+				return SendErrorMessage(playerid, "Please attach your accessory first!");
+
+			new Float:posisi = floatstr(inputtext);
+
+			SetPlayerAttachedObject(playerid,
+				toySelect[playerid],
+				pToys[playerid][toySelect[playerid]][toy_model],
+				pToys[playerid][toySelect[playerid]][toy_bone],
+				posisi,
+				pToys[playerid][toySelect[playerid]][toy_y],
+				pToys[playerid][toySelect[playerid]][toy_z],
+				pToys[playerid][toySelect[playerid]][toy_rx],
+				pToys[playerid][toySelect[playerid]][toy_ry],
+				pToys[playerid][toySelect[playerid]][toy_rz],
+				pToys[playerid][toySelect[playerid]][toy_sx],
+				pToys[playerid][toySelect[playerid]][toy_sy],
+				pToys[playerid][toySelect[playerid]][toy_sz]);
+			
+			pToys[playerid][toySelect[playerid]][toy_x] = posisi;
+
+			cmd_acc(playerid, "");
+
+			SavePlayerToys(playerid);
+		}
+	}
+	if(dialogid == DIALOG_TOYPOSY)
+	{
+		if(response)
+		{
+
+			if(!toyToggle[playerid][toySelect[playerid]])
+				return SendErrorMessage(playerid, "Please attach your accessory first!");
+
+			new Float:posisi = floatstr(inputtext);
+			
+			SetPlayerAttachedObject(playerid,
+				toySelect[playerid],
+				pToys[playerid][toySelect[playerid]][toy_model],
+				pToys[playerid][toySelect[playerid]][toy_bone],
+				pToys[playerid][toySelect[playerid]][toy_x],
+				posisi,
+				pToys[playerid][toySelect[playerid]][toy_z],
+				pToys[playerid][toySelect[playerid]][toy_rx],
+				pToys[playerid][toySelect[playerid]][toy_ry],
+				pToys[playerid][toySelect[playerid]][toy_rz],
+				pToys[playerid][toySelect[playerid]][toy_sx],
+				pToys[playerid][toySelect[playerid]][toy_sy],
+				pToys[playerid][toySelect[playerid]][toy_sz]);
+			
+			pToys[playerid][toySelect[playerid]][toy_y] = posisi;
+			cmd_acc(playerid, "");
+
+			SavePlayerToys(playerid);
+		}
+	}
+	if(dialogid == DIALOG_TOYPOSZ)
+	{
+		if(response)
+		{
+			if(!toyToggle[playerid][toySelect[playerid]])
+				return SendErrorMessage(playerid, "Please attach your accessory first!");
+
+			new Float:posisi = floatstr(inputtext);
+			
+			SetPlayerAttachedObject(playerid,
+				toySelect[playerid],
+				pToys[playerid][toySelect[playerid]][toy_model],
+				pToys[playerid][toySelect[playerid]][toy_bone],
+				pToys[playerid][toySelect[playerid]][toy_x],
+				pToys[playerid][toySelect[playerid]][toy_y],
+				posisi,
+				pToys[playerid][toySelect[playerid]][toy_rx],
+				pToys[playerid][toySelect[playerid]][toy_ry],
+				pToys[playerid][toySelect[playerid]][toy_rz],
+				pToys[playerid][toySelect[playerid]][toy_sx],
+				pToys[playerid][toySelect[playerid]][toy_sy],
+				pToys[playerid][toySelect[playerid]][toy_sz]);
+			
+			pToys[playerid][toySelect[playerid]][toy_z] = posisi;
+			cmd_acc(playerid, "");
+
+			SavePlayerToys(playerid);
+		}
+	}
+	if(dialogid == DIALOG_TOYPOSRX)
+	{
+		if(response)
+		{
+			if(!toyToggle[playerid][toySelect[playerid]])
+				return SendErrorMessage(playerid, "Please attach your accessory first!");
+
+			new Float:posisi = floatstr(inputtext);
+			
+			SetPlayerAttachedObject(playerid,
+				toySelect[playerid],
+				pToys[playerid][toySelect[playerid]][toy_model],
+				pToys[playerid][toySelect[playerid]][toy_bone],
+				pToys[playerid][toySelect[playerid]][toy_x],
+				pToys[playerid][toySelect[playerid]][toy_y],
+				pToys[playerid][toySelect[playerid]][toy_z],
+				posisi,
+				pToys[playerid][toySelect[playerid]][toy_ry],
+				pToys[playerid][toySelect[playerid]][toy_rz],
+				pToys[playerid][toySelect[playerid]][toy_sx],
+				pToys[playerid][toySelect[playerid]][toy_sy],
+				pToys[playerid][toySelect[playerid]][toy_sz]);
+			
+			pToys[playerid][toySelect[playerid]][toy_rx] = posisi;
+			cmd_acc(playerid, "");
+
+			SavePlayerToys(playerid);
+		}
+	}
+	if(dialogid == DIALOG_TOYPOSRY)
+	{
+		if(response)
+		{
+			if(!toyToggle[playerid][toySelect[playerid]])
+				return SendErrorMessage(playerid, "Please attach your accessory first!");
+
+			new Float:posisi = floatstr(inputtext);
+			
+			SetPlayerAttachedObject(playerid,
+				toySelect[playerid],
+				pToys[playerid][toySelect[playerid]][toy_model],
+				pToys[playerid][toySelect[playerid]][toy_bone],
+				pToys[playerid][toySelect[playerid]][toy_x],
+				pToys[playerid][toySelect[playerid]][toy_y],
+				pToys[playerid][toySelect[playerid]][toy_z],
+				pToys[playerid][toySelect[playerid]][toy_rx],
+				posisi,
+				pToys[playerid][toySelect[playerid]][toy_rz],
+				pToys[playerid][toySelect[playerid]][toy_sx],
+				pToys[playerid][toySelect[playerid]][toy_sy],
+				pToys[playerid][toySelect[playerid]][toy_sz]);
+			
+			pToys[playerid][toySelect[playerid]][toy_ry] = posisi;
+			cmd_acc(playerid, "");
+
+			SavePlayerToys(playerid);
+		}
+	}
+	if(dialogid == DIALOG_TOYPOSRZ)
+	{
+		if(response)
+		{
+			if(!toyToggle[playerid][toySelect[playerid]])
+				return SendErrorMessage(playerid, "Please attach your accessory first!");
+
+			new Float:posisi = floatstr(inputtext);
+			
+			SetPlayerAttachedObject(playerid,
+				toySelect[playerid],
+				pToys[playerid][toySelect[playerid]][toy_model],
+				pToys[playerid][toySelect[playerid]][toy_bone],
+				pToys[playerid][toySelect[playerid]][toy_x],
+				pToys[playerid][toySelect[playerid]][toy_y],
+				pToys[playerid][toySelect[playerid]][toy_z],
+				pToys[playerid][toySelect[playerid]][toy_rx],
+				pToys[playerid][toySelect[playerid]][toy_ry],
+				posisi,
+				pToys[playerid][toySelect[playerid]][toy_sx],
+				pToys[playerid][toySelect[playerid]][toy_sy],
+				pToys[playerid][toySelect[playerid]][toy_sz]);
+			
+			pToys[playerid][toySelect[playerid]][toy_rz] = posisi;
+			cmd_acc(playerid, "");
+
+			SavePlayerToys(playerid);
+		}
+	}
+	if(dialogid == DIALOG_TOYPOSSX)
+	{
+		if(response)
+		{
+			if(!toyToggle[playerid][toySelect[playerid]])
+				return SendErrorMessage(playerid, "Please attach your accessory first!");
+
+			new Float:posisi = floatstr(inputtext);
+			
+			SetPlayerAttachedObject(playerid,
+				toySelect[playerid],
+				pToys[playerid][toySelect[playerid]][toy_model],
+				pToys[playerid][toySelect[playerid]][toy_bone],
+				pToys[playerid][toySelect[playerid]][toy_x],
+				pToys[playerid][toySelect[playerid]][toy_y],
+				pToys[playerid][toySelect[playerid]][toy_z],
+				pToys[playerid][toySelect[playerid]][toy_rx],
+				pToys[playerid][toySelect[playerid]][toy_ry],
+				pToys[playerid][toySelect[playerid]][toy_rz],
+				posisi,
+				pToys[playerid][toySelect[playerid]][toy_sy],
+				pToys[playerid][toySelect[playerid]][toy_sz]);
+			
+			pToys[playerid][toySelect[playerid]][toy_sx] = posisi;
+			cmd_acc(playerid, "");
+
+			SavePlayerToys(playerid);
+		}
+	}
+	if(dialogid == DIALOG_TOYPOSSY)
+	{
+		if(response)
+		{
+			if(!toyToggle[playerid][toySelect[playerid]])
+				return SendErrorMessage(playerid, "Please attach your accessory first!");
+
+			new Float:posisi = floatstr(inputtext);
+			
+			SetPlayerAttachedObject(playerid,
+				toySelect[playerid],
+				pToys[playerid][toySelect[playerid]][toy_model],
+				pToys[playerid][toySelect[playerid]][toy_bone],
+				pToys[playerid][toySelect[playerid]][toy_x],
+				pToys[playerid][toySelect[playerid]][toy_y],
+				pToys[playerid][toySelect[playerid]][toy_z],
+				pToys[playerid][toySelect[playerid]][toy_rx],
+				pToys[playerid][toySelect[playerid]][toy_ry],
+				pToys[playerid][toySelect[playerid]][toy_rz],
+				pToys[playerid][toySelect[playerid]][toy_sx],
+				posisi,
+				pToys[playerid][toySelect[playerid]][toy_sz]);
+			
+			pToys[playerid][toySelect[playerid]][toy_sy] = posisi;
+			cmd_acc(playerid, "");
+
+			SavePlayerToys(playerid);
+		}
+	}
+	if(dialogid == DIALOG_TOYPOSSZ)
+	{
+		if(response)
+		{
+			if(!toyToggle[playerid][toySelect[playerid]])
+				return SendErrorMessage(playerid, "Please attach your accessory first!");
+
+			new Float:posisi = floatstr(inputtext);
+			
+			SetPlayerAttachedObject(playerid,
+				toySelect[playerid],
+				pToys[playerid][toySelect[playerid]][toy_model],
+				pToys[playerid][toySelect[playerid]][toy_bone],
+				pToys[playerid][toySelect[playerid]][toy_x],
+				pToys[playerid][toySelect[playerid]][toy_y],
+				pToys[playerid][toySelect[playerid]][toy_z],
+				pToys[playerid][toySelect[playerid]][toy_rx],
+				pToys[playerid][toySelect[playerid]][toy_ry],
+				pToys[playerid][toySelect[playerid]][toy_rz],
+				pToys[playerid][toySelect[playerid]][toy_sx],
+				pToys[playerid][toySelect[playerid]][toy_sy],
+				posisi);
+			
+			pToys[playerid][toySelect[playerid]][toy_sz] = posisi;
+			cmd_acc(playerid, "");
+
+			SavePlayerToys(playerid);
+		}
+	}
+	if(dialogid == DIALOG_TOYPOSISIBUY)
+	{
+		if(response)
+		{
+	        GiveMoney(playerid, -PlayerData[playerid][pSkinPrice]);
+			SendNearbyMessage(playerid, 20.0, COLOR_PURPLE, "> %s telah membayar $%s dan mengambil toys", ReturnName(playerid), FormatNumber(PlayerData[playerid][pSkinPrice]));
+			// benerin nanti
+			// BusinessData[PlayerData[playerid][pBusiness]][bizProducts]--;		
+			// BusinessData[PlayerData[playerid][pBusiness]][bizVault] += PlayerData[playerid][pSkinPrice];
+			new slot = GetPlayerFreeToySlot(playerid);
+			printf("%s", PlayerData[playerid][pTempModel]);
+			pToys[playerid][slot][toy_model] = PlayerData[playerid][pTempModel];
+			pToys[playerid][slot][toy_bone] = listitem + 1;
+			pToys[playerid][slot][toy_sx] = 1.0;
+			pToys[playerid][slot][toy_sy] = 1.0;
+			pToys[playerid][slot][toy_sz] = 1.0;
+			toySelect[playerid] = slot;
+			SetPlayerAttachedObject(playerid, slot, pToys[playerid][slot][toy_model], listitem + 1);
+			EditAttachedObject(playerid, toySelect[playerid]);
+		}
+	}
+	if(dialogid == DIALOG_TOYPOSISI)
+	{
+		if(response)
+		{
+			pToys[playerid][toySelect[playerid]][toy_bone] = listitem + 1;
+			if(toyToggle[playerid][toySelect[playerid]])
+			{
+				RemovePlayerAttachedObject(playerid, toySelect[playerid]);
+			}
+			SetPlayerAttachedObject(playerid,
+					toySelect[playerid],
+					pToys[playerid][toySelect[playerid]][toy_model],
+					pToys[playerid][toySelect[playerid]][toy_bone],
+					pToys[playerid][toySelect[playerid]][toy_x],
+					pToys[playerid][toySelect[playerid]][toy_y],
+					pToys[playerid][toySelect[playerid]][toy_z],
+					pToys[playerid][toySelect[playerid]][toy_rx],
+					pToys[playerid][toySelect[playerid]][toy_ry],
+					pToys[playerid][toySelect[playerid]][toy_rz],
+					pToys[playerid][toySelect[playerid]][toy_sx],
+					pToys[playerid][toySelect[playerid]][toy_sy],
+					pToys[playerid][toySelect[playerid]][toy_sz]);
+			SendServerMessage(playerid, "Accessory new bone position now is {FFFF00}%s", Bone_Name[listitem + 1]);
+		}
+	}
+	if(dialogid == DIALOG_TOYEDIT)
+	{
+		if(response)
+		{
+			new mstr[156];
+			switch(listitem)
+			{
+				case 0: // toggle attach
+				{
+					if(!toyToggle[playerid][toySelect[playerid]])
+					{
+						SendInfoMessage(playerid, "Accessory ~g~attached", 3);
+
+						SetPlayerAttachedObject(playerid,
+						toySelect[playerid],
+						pToys[playerid][toySelect[playerid]][toy_model],
+						pToys[playerid][toySelect[playerid]][toy_bone],
+						pToys[playerid][toySelect[playerid]][toy_x],
+						pToys[playerid][toySelect[playerid]][toy_y],
+						pToys[playerid][toySelect[playerid]][toy_z],
+						pToys[playerid][toySelect[playerid]][toy_rx],
+						pToys[playerid][toySelect[playerid]][toy_ry],
+						pToys[playerid][toySelect[playerid]][toy_rz],
+						pToys[playerid][toySelect[playerid]][toy_sx],
+						pToys[playerid][toySelect[playerid]][toy_sy],
+						pToys[playerid][toySelect[playerid]][toy_sz]);
+
+						toyToggle[playerid][toySelect[playerid]] = true;
+					}
+					else
+					{
+						RemovePlayerAttachedObject(playerid, toySelect[playerid]);
+						SendInfoMessage(playerid, "~w~Accessory ~r~deattached", 3);
+
+						toyToggle[playerid][toySelect[playerid]] = false;
+					}
+					SavePlayerToys(playerid);
+				}
+				case 1: // change bone
+				{
+				    ShowPlayerDialog(playerid, DIALOG_TOYPOSISI, DIALOG_STYLE_LIST, "Bone Selection", "Spine\nHead\nLeft upper arm\nRight upper arm\nLeft hand\nRight hand\nLeft thigh\nRight thigh\nLeft foot\nRight foot\nRight calf\nLeft calf\nLeft forearm\nRight forearm\nLeft shoulder\nRight shoulder\nNeck\nJaw", "Choose", "Cancel");
+				}
+				case 2: // change placement
+				{
+
+					EditAttachedObject(playerid, toySelect[playerid]);
+
+				}
+				case 3:	//remove from list
+				{
+					if(IsPlayerAttachedObjectSlotUsed(playerid, toySelect[playerid]))
+					{
+						RemovePlayerAttachedObject(playerid, toySelect[playerid]);
+					}
+					pToys[playerid][toySelect[playerid]][toy_model] = 0;
+					SendInfoMessage(playerid, "~w~Accessory ~y~removed!", 3);
+					SavePlayerToys(playerid);
+				}
+				case 4: //Scale Fix
+				{
+
+					SendInfoMessage(playerid, "~w~Accessory scale ~y~Fixed", 3);
+
+					pToys[playerid][toySelect[playerid]][toy_sx] = 1.0;
+					pToys[playerid][toySelect[playerid]][toy_sy] = 1.0;
+					pToys[playerid][toySelect[playerid]][toy_sz] = 1.0;
+
+					if(!toyToggle[playerid][toySelect[playerid]])
+					{
+						RemovePlayerAttachedObject(playerid, toySelect[playerid]);
+						SetPlayerAttachedObject(playerid,
+						toySelect[playerid],
+						pToys[playerid][toySelect[playerid]][toy_model],
+						pToys[playerid][toySelect[playerid]][toy_bone],
+						pToys[playerid][toySelect[playerid]][toy_x],
+						pToys[playerid][toySelect[playerid]][toy_y],
+						pToys[playerid][toySelect[playerid]][toy_z],
+						pToys[playerid][toySelect[playerid]][toy_rx],
+						pToys[playerid][toySelect[playerid]][toy_ry],
+						pToys[playerid][toySelect[playerid]][toy_rz],
+						pToys[playerid][toySelect[playerid]][toy_sx],
+						pToys[playerid][toySelect[playerid]][toy_sy],
+						pToys[playerid][toySelect[playerid]][toy_sz]);
+
+						toyToggle[playerid][toySelect[playerid]] = true;
+					}
+				}
+				case 5: //Pos X
+				{
+					format(mstr, sizeof(mstr), "Current X Position: %f\nInput new X Position:(Float)", pToys[playerid][toySelect[playerid]][toy_x]);
+					ShowPlayerDialog(playerid, DIALOG_TOYPOSX, DIALOG_STYLE_INPUT, "Edit X Position", mstr, "Edit", "Cancel");
+				}
+				case 6: //Pos Y
+				{
+					format(mstr, sizeof(mstr), "Current Y Position: %f\nInput new Y Position:(Float)", pToys[playerid][toySelect[playerid]][toy_y]);
+					ShowPlayerDialog(playerid, DIALOG_TOYPOSY, DIALOG_STYLE_INPUT, "Edit Y Position", mstr, "Edit", "Cancel");
+				}
+				case 7: //Pos Z
+				{
+					format(mstr, sizeof(mstr), "Current Z Position: %f\nInput new Z Position:(Float)", pToys[playerid][toySelect[playerid]][toy_z]);
+					ShowPlayerDialog(playerid, DIALOG_TOYPOSZ, DIALOG_STYLE_INPUT, "Edit Z Position", mstr, "Edit", "Cancel");
+				}
+				case 8: //Pos RX
+				{
+					format(mstr, sizeof(mstr), "Current X Rotation: %f\nInput new X Rotation:(Float)", pToys[playerid][toySelect[playerid]][toy_rx]);
+					ShowPlayerDialog(playerid, DIALOG_TOYPOSRX, DIALOG_STYLE_INPUT, "Edit X Rotation", mstr, "Edit", "Cancel");
+				}
+				case 9: //Pos RY
+				{
+					format(mstr, sizeof(mstr), "Current Y Rotation: %f\nInput new Y Rotation:(Float)", pToys[playerid][toySelect[playerid]][toy_ry]);
+					ShowPlayerDialog(playerid, DIALOG_TOYPOSRY, DIALOG_STYLE_INPUT, "Edit Y Rotation", mstr, "Edit", "Cancel");
+				}
+				case 10: //Pos RZ
+				{
+					format(mstr, sizeof(mstr), "Current Z Rotation: %f\nInput new Z Rotation(Float)", pToys[playerid][toySelect[playerid]][toy_rz]);
+					ShowPlayerDialog(playerid, DIALOG_TOYPOSRZ, DIALOG_STYLE_INPUT, "Edit Z Rotation", mstr, "Edit", "Cancel");
+				}
+				case 11: //Scale X
+				{
+					format(mstr, sizeof(mstr), "Current X Scale: %f\nInput new X Scale(Float)", pToys[playerid][toySelect[playerid]][toy_sx]);
+					ShowPlayerDialog(playerid, DIALOG_TOYPOSSX, DIALOG_STYLE_INPUT, "Edit X Scale", mstr, "Edit", "Cancel");
+				}
+				case 12: //Scale Y
+				{
+					format(mstr, sizeof(mstr), "Current Y Scale: %f\nInput new Y Scale(Float)", pToys[playerid][toySelect[playerid]][toy_sy]);
+					ShowPlayerDialog(playerid, DIALOG_TOYPOSSY, DIALOG_STYLE_INPUT, "Edit Y Scale", mstr, "Edit", "Cancel");
+				}
+				case 13: //Scale Z
+				{
+					format(mstr, sizeof(mstr), "Current Z Scale: %f\nInput new Z Scale(Float)", pToys[playerid][toySelect[playerid]][toy_sz]);
+					ShowPlayerDialog(playerid, DIALOG_TOYPOSSZ, DIALOG_STYLE_INPUT, "Edit Z Scale", mstr, "Edit", "Cancel");
+				}
+			}
+		}
+	}
+
+	if(dialogid == DIALOG_TOY)
+	{
+		if(response)
+		{
+			if(pToys[playerid][listitem][toy_model] == 0)
+				return SendErrorMessage(playerid, "There is no accessory on selected index!");
+
+			
+			new string[512];
+			toySelect[playerid] = listitem;
+			format(string, sizeof(string), "Place %s\nChange Bone\nChange Placement\nRemove from list\nScale Fix\nPosition X: %f\nPosition Y: %f\nPosition Z: %f\nRotation X: %f\nRotation Y: %f\nRotation Z: %f\nScale X: %f\nScale Y: %f\nScale Z: %f",
+			(!toyToggle[playerid][toySelect[playerid]]) ? ("On") : ("Off"), pToys[playerid][toySelect[playerid]][toy_x], pToys[playerid][toySelect[playerid]][toy_y], pToys[playerid][toySelect[playerid]][toy_z],
+			pToys[playerid][toySelect[playerid]][toy_rx], pToys[playerid][toySelect[playerid]][toy_ry], pToys[playerid][toySelect[playerid]][toy_rz], pToys[playerid][toySelect[playerid]][toy_sx], pToys[playerid][toySelect[playerid]][toy_sy], pToys[playerid][toySelect[playerid]][toy_sz]);
+			ShowPlayerDialog(playerid, DIALOG_TOYEDIT, DIALOG_STYLE_LIST, sprintf("Edit Accessory (#%d)", listitem), string, "Select", "Cancel");
+		}
+	}
+	return 1;
+}
+
+public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ)
+{
+	UpdateWeapons(playerid);
+    if(weaponid >= 22 && weaponid <= 38 && PlayerData[playerid][pDurability][g_aWeaponSlots[weaponid]] > 0)
+    {
+        PlayerData[playerid][pDurability][g_aWeaponSlots[weaponid]]--;
+        PlayerData[playerid][pAmmo][g_aWeaponSlots[weaponid]]--;
+	}
+ 	if (weaponid >= 22 && weaponid <= 38 && GetPlayerAmmo(playerid) == 1 || PlayerData[playerid][pDurability][g_aWeaponSlots[weaponid]] <= 0)
+	{
+	    ResetWeapon(playerid, weaponid);
+	}
 	return 1;
 }
 
@@ -1007,16 +1548,20 @@ public OnPlayerPickUpDynamicPickup(playerid, STREAMER_TAG_PICKUP:pickupid)
 			ShowPressButton(playerid, sprintf("Tekan F untuk masuk ke %s", EntranceData[i][entranceName]), 3000);
 		}
 	}
-
-	/*forex(i, 8){
-		if(pickupid == CellPickup[i])
+	forex(i, MAX_HOUSES)
+	{
+		if(pickupid == HouseData[i][housePickup])
 		{
-			if(GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_CUFFED){
-				SetPlayerArrest(playerid, 1, i+1);
-			}
-			
-		}*
-	}*/
+			ShowPressButton(playerid, sprintf("Rumah %s, Tekan F untuk masuk kedalam", HouseData[i][houseAddress]), 3000);
+		}
+	}
+	forex(i, MAX_DYNAMIC_BERANGKAS)
+	{
+		if(pickupid == BerangkasData[i][bPickup])
+		{
+			ShowPressButton(playerid, "Tekan Y untuk mengakses berangkas rumah", 3000);
+		}
+	}
 }
 
 public OnPlayerEditDynamicObject(playerid, objectid, response, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz)
@@ -1048,6 +1593,40 @@ public OnPlayerEditDynamicObject(playerid, objectid, response, Float:x, Float:y,
 }
 
 
+public OnPlayerEditAttachedObject(playerid, response, index, modelid, boneid, Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fScaleX, Float:fScaleY, Float:fScaleZ)
+{
+	if(response == 1)
+	{
+		pToys[playerid][index][toy_x] = fOffsetX;
+		pToys[playerid][index][toy_y] = fOffsetY;
+		pToys[playerid][index][toy_z] = fOffsetZ;
+		pToys[playerid][index][toy_rx] = fRotX;
+		pToys[playerid][index][toy_ry] = fRotY;
+		pToys[playerid][index][toy_rz] = fRotZ;
+		pToys[playerid][index][toy_sx] = fScaleX;
+		pToys[playerid][index][toy_sy] = fScaleY;
+		pToys[playerid][index][toy_sz] = fScaleZ;
+		SavePlayerToys(playerid);
+	}
+	else if(response == 0)
+	{
+		SetPlayerAttachedObject(playerid,
+			index,
+			modelid,
+			boneid,
+			pToys[playerid][index][toy_x],
+			pToys[playerid][index][toy_y],
+			pToys[playerid][index][toy_z],
+			pToys[playerid][index][toy_rx],
+			pToys[playerid][index][toy_ry],
+			pToys[playerid][index][toy_rz],
+			pToys[playerid][index][toy_sx],
+			pToys[playerid][index][toy_sy],
+			pToys[playerid][index][toy_sz]);
+	}
+	return 1;
+}
+
 public OnPlayerEnterDynamicArea(playerid, areaid)
 {
   new extraid = Streamer_GetIntData(STREAMER_TYPE_AREA, areaid, E_STREAMER_EXTRA_ID);
@@ -1065,6 +1644,72 @@ public OnPlayerLeaveDynamicArea(playerid, areaid)
 {
   gPlayerStaticLocation[playerid] = INVALID_AREA_ID;
   return 1;
+}
+
+public OnModelSelectionResponse(playerid, extraid, index, modelid, response)
+{
+	if(extraid == MODEL_SELECTION_BUYSKIN)
+	{
+		if(response)
+		{
+			//benerin nanti
+			// new businessid = Business_Nearest(playerid, 5.0);
+	        GiveMoney(playerid, -PlayerData[playerid][pSkinPrice]);
+			SendNearbyMessage(playerid, 20.0, COLOR_PURPLE, "> %s telah membayar $%s dan membeli pakaian nomor %d.", ReturnName(playerid), FormatNumber(PlayerData[playerid][pSkinPrice]), modelid);
+			// BusinessData[businessid][bizProducts]--;		
+			// BusinessData[businessid][bizVault] += PlayerData[playerid][pSkinPrice];
+			UpdatePlayerSkin(playerid, modelid);	
+		}
+	}
+	if((response) && (extraid == MODEL_SELECTION_ACC))
+	{
+		if(GetPlayerFreeToySlot(playerid) == -1)
+			return SendErrorMessage(playerid, "You already have full slot of Accessory!");
+
+		ShowPlayerDialog(playerid, DIALOG_TOYPOSISIBUY, DIALOG_STYLE_LIST, "Bone Selection", "Spine\nHead\nLeft upper arm\nRight upper arm\nLeft hand\nRight hand\nLeft thigh\nRight thigh\nLeft foot\nRight foot\nRight calf\nLeft calf\nLeft forearm\nRight forearm\nLeft shoulder\nRight shoulder\nNeck\nJaw", "Choose", "Cancel");
+		SendServerMessage(playerid, "Please select Bone for your Accessory");
+		PlayerData[playerid][pTempModel] = modelid;
+	}
+	/*if ((response) && (extraid == MODEL_SELECTION_ADD_SKIN))
+	{
+	    FactionData[PlayerData[playerid][pFactionEdit]][factionSkins][PlayerData[playerid][pSelectedSlot]] = modelid;
+		Faction_Save(PlayerData[playerid][pFactionEdit]);
+
+		SendServerMessage(playerid, "You have set the skin ID in slot %d to %d.", PlayerData[playerid][pSelectedSlot], modelid);
+	}
+	if ((response) && (extraid == MODEL_SELECTION_SKINS))
+	{
+	    Dialog_Show(playerid, FactionSkin, DIALOG_STYLE_LIST, "Edit Skin", "Add by Model ID\nAdd by Thumbnail\nClear Slot", "Select", "Cancel");
+	    PlayerData[playerid][pSelectedSlot] = index;
+	}
+	if ((response) && (extraid == MODEL_SELECTION_ADD_SKIN))
+	{
+	    FactionData[PlayerData[playerid][pFactionEdit]][factionSkins][PlayerData[playerid][pSelectedSlot]] = modelid;
+		Faction_Save(PlayerData[playerid][pFactionEdit]);
+
+		SendServerMessage(playerid, "You have set the skin ID in slot %d to %d.", PlayerData[playerid][pSelectedSlot], modelid);
+	}
+	if ((response) && (extraid == MODEL_SELECTION_FACTION_SKIN))
+	{
+	    new factionid = PlayerData[playerid][pFaction];
+
+		if (factionid == -1 || !IsNearFactionLocker(playerid))
+	    	return 0;
+
+		if (modelid == 19300)
+		    return SendErrorMessage(playerid, "There is no model in the selected slot.");
+
+  		SetPlayerSkin(playerid, modelid);
+		SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "** %s has changed their uniform.", ReturnName(playerid, 0));
+	}*/
+	return 1;
+}
+
+CMD:cursor(playerid, params[])
+{
+	if(!isOnPhone[playerid]) return 1;
+	SelectTextDraw(playerid, X11_RED);
+	return 1;
 }
 
 CMD:makemeadmin(playerid, params[])

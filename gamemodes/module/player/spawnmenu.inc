@@ -166,6 +166,7 @@ hook OnPlayerClickTextDraw(playerid, Text:clickedid)
 {
     if(SpawnTextdraw[playerid][0] != Text:-1)
     {
+
         if(clickedid == SpawnTextdraw[playerid][5])
         {
             SellLastSpawn[playerid] = 0;
@@ -195,7 +196,7 @@ hook OnPlayerClickTextDraw(playerid, Text:clickedid)
         if(clickedid == SpawnTextdraw[playerid][9])
         {
             if(SellLastSpawn[playerid] == -1) return SendTextDrawMessageEx(playerid, NOTIFICATION_INFO, "Pilih salah satu tempat spawn!!");
-            if(!IsPlayerConnected2(playerid)) return SendTextDrawMessageEx(playerid, NOTIFICATION_INFO, "Data belum dimuat!");
+
             SpawnPlayer(playerid);
             HideSpawnTextdraw(playerid);
         }

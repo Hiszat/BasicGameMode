@@ -1,196 +1,3 @@
-CMD:buy(playerid, params[])
-{
-	static
-		id = -1;
-
-	if ((id = Business_Nearest(playerid)) != -1)
-	{
-	    if (Business_GetCount(playerid) >= MAX_OWNABLE_BUSINESSES)
-			return SendErrorMessage(playerid, "You can only own %d businesses at a time.", MAX_OWNABLE_BUSINESSES);
-
-		if (BusinessData[id][bizOwner] != 0)
-		    return SendErrorMessage(playerid, "This business is already owned at the moment.");
-
-		if (BusinessData[id][bizPrice] > GetMoney(playerid))
-		    return SendErrorMessage(playerid, "You have insufficient funds for the purchase.");
-
-	    BusinessData[id][bizOwner] = GetPlayerSQLID(playerid);
-
-		Business_Refresh(id);
-		Business_Save(id);
-
-	    GiveMoney(playerid, -BusinessData[id][bizPrice]);
-	    SendServerMessage(playerid, "You have purchased \"%s\" for %s!", BusinessData[id][bizName], FormatNumber(BusinessData[id][bizPrice]));
-
-		// ShowPlayerFooter(playerid, "You have ~g~purchased~w~ a business!");
-	    // Log_Write("logs/biz_log.txt", "[%s] %s has purchased business ID: %d for %s.", ReturnDate(), ReturnName(playerid), id, FormatNumber(BusinessData[id][bizPrice]));
-	}
-	else if ((id = Business_Inside(playerid)) != -1)
-	{
-		if (BusinessData[id][bizLocked] != 0 || !BusinessData[id][bizOwner])
-		    return SendErrorMessage(playerid, "This business is closed!");
-
-		Business_PurchaseMenu(playerid, id);
-
-	}
-	return 1;
-}
-
-CMD:abandon(playerid, params[])
-{
-	static
-	    id = -1;
-
-    if (!IsPlayerInAnyVehicle(playerid) && (id = Business_Nearest(playerid)) != -1 && Business_IsOwner(playerid, id))
-	{
-	    if (isnull(params) || (!isnull(params) && strcmp(params, "confirm", true) != 0))
-	    {
-	        SendSyntaxMessage(playerid, "/abandon [confirm]");
-	        SendClientMessage(playerid, X11_RED, "[WARNING]:{FFFFFF} You are about to abandon your business with no refund.");
-		}
-		else if (!strcmp(params, "confirm", true))
-		{
-			BusinessData[id][bizOwner] = 0;
-
-			Business_Refresh(id);
-			Business_Save(id);
-
-			SendServerMessage(playerid, "You have abandoned your business: %s.", BusinessData[id][bizName]);
-			// Log_Write("logs/biz_log.txt", "[%s] %s has abandoned business ID: %d.", ReturnDate(), ReturnName(playerid), id);
-		}
-	}
-	else SendErrorMessage(playerid, "You are not in range of anything you can abandon.");
-	return 1;
-}
-
-CMD:lock(playerid, params[])
-{
-	static
-	    id = -1;
-
-	if (!IsPlayerInAnyVehicle(playerid) && (id = (Business_Inside(playerid) == -1) ? (Business_Nearest(playerid)) : (Business_Inside(playerid))) != -1)
-	{
-		if (Business_IsOwner(playerid, id))
-		{
-			if (!BusinessData[id][bizLocked])
-			{
-				BusinessData[id][bizLocked] = true;
-
-				Business_Refresh(id);
-				Business_Save(id);
-
-				SendTextDrawMessageEx(playerid, NOTIFICATION_INFO, "You have ~r~locked~w~ the business!");
-				PlayerPlaySound(playerid, 1145, 0.0, 0.0, 0.0);
-			}
-  			else
-			{
-				BusinessData[id][bizLocked] = false;
-
-				Business_Refresh(id);
-				Business_Save(id);
-
-				SendTextDrawMessageEx(playerid, NOTIFICATION_INFO, "You have ~g~unlocked~w~ the business!");
-				PlayerPlaySound(playerid, 1145, 0.0, 0.0, 0.0);
-			}
-		}
-	}
-	else SendErrorMessage(playerid, "You are not in range of anything you can lock.");
-	return 1;
-}
-
-CMD:sell(playerid, params[])
-{
-	static
-	    targetid,
-	    type[24],
-	    string[128];
-
-	if (sscanf(params, "us[24]S()[128]", targetid, type, string))
-	{
-	    SendSyntaxMessage(playerid, "/sell [playerid/name] [name]");
-	    SendClientMessage(playerid, X11_LIGHTBLUE, "OPTION:{FFFFFF} business");
-	    return 1;
-	}
-	if (targetid == INVALID_PLAYER_ID || !IsPlayerNearPlayer(playerid, targetid, 5.0))
-	{
-		SendErrorMessage(playerid, "The player is disconnected or not near you.");
-		return 1;
-	}
-	if (targetid == playerid)
-	{
-		SendErrorMessage(playerid, "You cannot sell to yourself.");
-		return 1;
-	}
-	if (!strcmp(type, "business", true))
-	{
-		static
-		    price,
-			bizid = -1;
-
-		if (sscanf(string, "d", price))
-			return SendSyntaxMessage(playerid, "/sell [playerid/name] [business] [price]");
-
-		if (price < 1)
-		    return SendErrorMessage(playerid, "The price you've entered cannot below the value of $1.");
-
-		if ((bizid = Business_Nearest(playerid)) != -1 && Business_IsOwner(playerid, bizid)) {
-			PlayerData[targetid][pBusinessSeller] = playerid;
-			PlayerData[targetid][pBusinessOffered] = bizid;
-			PlayerData[targetid][pBusinessValue] = price;
-
-		    SendServerMessage(playerid, "You have requested %s to purchase your business (%s).", ReturnName(targetid, 0), FormatNumber(price));
-            SendServerMessage(targetid, "%s has offered you their business for %s (type \"/approve business\" to accept).", ReturnName(playerid, 0), FormatNumber(price));
-		}
-		else SendErrorMessage(playerid, "You are not in range of any of your businesses.");
-	}
-	return 1;
-}
-
-CMD:approve(playerid, params[])
-{
-	if (isnull(params))
- 	{
-	 	SendSyntaxMessage(playerid, "/approve [name]");
-		SendClientMessage(playerid, X11_LIGHTBLUE, "OPTION:{FFFFFF} business");
-		return 1;
-	}
-	if (!strcmp(params, "business", true) && PlayerData[playerid][pBusinessSeller] != INVALID_PLAYER_ID)
-	{
-	    new
-	        sellerid = PlayerData[playerid][pBusinessSeller],
-	        bizid = PlayerData[playerid][pBusinessOffered],
-	        price = PlayerData[playerid][pBusinessValue];
-
-		if (!IsPlayerNearPlayer(playerid, sellerid, 6.0))
-		    return SendErrorMessage(playerid, "You are not near that player.");
-
-		if (GetMoney(playerid) < price)
-		    return SendErrorMessage(playerid, "You have insufficient funds to purchase this business.");
-
-		if (Business_Nearest(playerid) != bizid)
-		    return SendErrorMessage(playerid, "You must be near the business to purchase it.");
-
-		if (!Business_IsOwner(sellerid, bizid))
-		    return SendErrorMessage(playerid, "This business offer is no longer valid.");
-
-		SendServerMessage(playerid, "You have successfully purchased %s's business for %s.", ReturnName(sellerid, 0), FormatNumber(price));
-		SendServerMessage(sellerid, "%s has successfully purchased your business for %s.", ReturnName(playerid, 0), FormatNumber(price));
-
-		BusinessData[bizid][bizOwner] = GetPlayerSQLID(playerid);
-		Business_Save(bizid);
-
-		GiveMoney(playerid, -price);
-		GiveMoney(playerid, price);
-
-		//Log_Write("logs/offer_log.txt", "[%s] %s (%s) has sold a business to %s (%s) for %s.", ReturnDate(), ReturnName(playerid, 0), PlayerData[playerid][pIP], ReturnName(sellerid, 0), PlayerData[sellerid][pIP], FormatNumber(price));
-
-		PlayerData[playerid][pBusinessSeller] = INVALID_PLAYER_ID;
-		PlayerData[playerid][pBusinessOffered] = -1;
-		PlayerData[playerid][pBusinessValue] = 0;
-	}
-	return 1;
-}
-
 CMD:createbiz(playerid, params[])
 {
     static
@@ -232,7 +39,7 @@ CMD:editbiz(playerid, params[])
 	if (sscanf(params, "ds[24]S()[128]", id, type, string))
  	{
 	 	SendSyntaxMessage(playerid, "/editbiz [id] [name]");
-	    SendClientMessage(playerid, X11_LIGHTBLUE, "OPTION:{FFFFFF} location, interior, deliver, name, price, stock, type, cars, spawn");
+	    SendClientMessage(playerid, X11_LIGHTBLUE, "OPTION:{FFFFFF} location, actor, deliver, name, price, stock, type, cars, spawn");
 		return 1;
 	}
 	if ((id < 0 || id >= MAX_BUSINESSES) || !BusinessData[id][bizExists])
@@ -251,10 +58,10 @@ CMD:editbiz(playerid, params[])
 
 		SendAdminAction(playerid, "%s has adjusted the location of business ID: %d.", ReturnName(playerid, 0), id);
 	}
-	else if (!strcmp(type, "interior", true))
+	else if (!strcmp(type, "actor", true))
 	{
-	    GetPlayerPos(playerid, BusinessData[id][bizInt][0], BusinessData[id][bizInt][1], BusinessData[id][bizInt][2]);
-		GetPlayerFacingAngle(playerid, BusinessData[id][bizInt][3]);
+	    GetPlayerPos(playerid, BusinessData[id][bizActorPosition][0], BusinessData[id][bizActorPosition][1], BusinessData[id][bizActorPosition][2]);
+		GetPlayerFacingAngle(playerid, BusinessData[id][bizActorPosition][3]);
 
 		BusinessData[id][bizInterior] = GetPlayerInterior(playerid);
 
@@ -262,13 +69,14 @@ CMD:editbiz(playerid, params[])
 		{
 			if (PlayerData[i][pBusiness] == BusinessData[id][bizID])
 			{
-				SetPlayerPos(i, BusinessData[id][bizInt][0], BusinessData[id][bizInt][1], BusinessData[id][bizInt][2]);
-				SetPlayerFacingAngle(i, BusinessData[id][bizInt][3]);
+				SetPlayerPos(i, BusinessData[id][bizActorPosition][0], BusinessData[id][bizActorPosition][1], BusinessData[id][bizActorPosition][2]);
+				SetPlayerFacingAngle(i, BusinessData[id][bizActorPosition][3]);
 
 				SetPlayerInterior(i, BusinessData[id][bizInterior]);
 				SetCameraBehindPlayer(i);
 			}
 		}
+		Business_Refresh(id);
 		Business_Save(id);
 		SendAdminAction(playerid, "%s has adjusted the interior spawn of business ID: %d.", ReturnName(playerid, 0), id);
 	}
@@ -345,52 +153,52 @@ CMD:editbiz(playerid, params[])
 
         switch (typeint) {
             case 1: {
-            	BusinessData[id][bizInt][0] = -27.3074;
-           		BusinessData[id][bizInt][1] = -30.8741;
-            	BusinessData[id][bizInt][2] = 1003.5573;
-            	BusinessData[id][bizInt][3] = 0.0000;
+            	BusinessData[id][bizActorPosition][0] = -27.3074;
+           		BusinessData[id][bizActorPosition][1] = -30.8741;
+            	BusinessData[id][bizActorPosition][2] = 1003.5573;
+            	BusinessData[id][bizActorPosition][3] = 0.0000;
 				BusinessData[id][bizInterior] = 4;
             }
             case 2: {
-            	BusinessData[id][bizInt][0] = 316.3963;
-            	BusinessData[id][bizInt][1] = -169.8375;
-            	BusinessData[id][bizInt][2] = 999.6010;
-            	BusinessData[id][bizInt][3] = 0.0000;
+            	BusinessData[id][bizActorPosition][0] = 316.3963;
+            	BusinessData[id][bizActorPosition][1] = -169.8375;
+            	BusinessData[id][bizActorPosition][2] = 999.6010;
+            	BusinessData[id][bizActorPosition][3] = 0.0000;
 				BusinessData[id][bizInterior] = 6;
 			}
 			case 3: {
-            	BusinessData[id][bizInt][0] = 161.4801;
-            	BusinessData[id][bizInt][1] = -96.5368;
-            	BusinessData[id][bizInt][2] = 1001.8047;
-            	BusinessData[id][bizInt][3] = 0.0000;
+            	BusinessData[id][bizActorPosition][0] = 161.4801;
+            	BusinessData[id][bizActorPosition][1] = -96.5368;
+            	BusinessData[id][bizActorPosition][2] = 1001.8047;
+            	BusinessData[id][bizActorPosition][3] = 0.0000;
 				BusinessData[id][bizInterior] = 18;
 			}
 			case 4: {
-            	BusinessData[id][bizInt][0] = 363.3402;
-            	BusinessData[id][bizInt][1] = -74.6679;
-            	BusinessData[id][bizInt][2] = 1001.5078;
-            	BusinessData[id][bizInt][3] = 315.0000;
+            	BusinessData[id][bizActorPosition][0] = 363.3402;
+            	BusinessData[id][bizActorPosition][1] = -74.6679;
+            	BusinessData[id][bizActorPosition][2] = 1001.5078;
+            	BusinessData[id][bizActorPosition][3] = 315.0000;
 				BusinessData[id][bizInterior] = 10;
 			}
 			case 5: {
-            	BusinessData[id][bizInt][0] = 1494.5612;
-            	BusinessData[id][bizInt][1] = 1304.2061;
-            	BusinessData[id][bizInt][2] = 1093.2891;
-            	BusinessData[id][bizInt][3] = 0.0000;
+            	BusinessData[id][bizActorPosition][0] = 1494.5612;
+            	BusinessData[id][bizActorPosition][1] = 1304.2061;
+            	BusinessData[id][bizActorPosition][2] = 1093.2891;
+            	BusinessData[id][bizActorPosition][3] = 0.0000;
 				BusinessData[id][bizInterior] = 3;
 			}
 			case 6: {
-				BusinessData[id][bizInt][0] = -27.3383;
-   				BusinessData[id][bizInt][1] = -57.6909;
-			   	BusinessData[id][bizInt][2] = 1003.5469;
-      			BusinessData[id][bizInt][3] = 0.0000;
+				BusinessData[id][bizActorPosition][0] = -27.3383;
+   				BusinessData[id][bizActorPosition][1] = -57.6909;
+			   	BusinessData[id][bizActorPosition][2] = 1003.5469;
+      			BusinessData[id][bizActorPosition][3] = 0.0000;
 				BusinessData[id][bizInterior] = 6;
 			}
 			case 7: {
-				BusinessData[id][bizInt][0] = -2240.4954;
-   				BusinessData[id][bizInt][1] = 128.3774;
-			   	BusinessData[id][bizInt][2] = 1035.4210;
-      			BusinessData[id][bizInt][3] = 270.0000;
+				BusinessData[id][bizActorPosition][0] = -2240.4954;
+   				BusinessData[id][bizActorPosition][1] = 128.3774;
+			   	BusinessData[id][bizActorPosition][2] = 1035.4210;
+      			BusinessData[id][bizActorPosition][3] = 270.0000;
 				BusinessData[id][bizInterior] = 6;
 			}
 		}
@@ -398,8 +206,8 @@ CMD:editbiz(playerid, params[])
 		{
 			if (PlayerData[i][pBusiness] == BusinessData[id][bizID])
 			{
-				SetPlayerPos(i, BusinessData[id][bizInt][0], BusinessData[id][bizInt][1], BusinessData[id][bizInt][2]);
-				SetPlayerFacingAngle(i, BusinessData[id][bizInt][3]);
+				SetPlayerPos(i, BusinessData[id][bizActorPosition][0], BusinessData[id][bizActorPosition][1], BusinessData[id][bizActorPosition][2]);
+				SetPlayerFacingAngle(i, BusinessData[id][bizActorPosition][3]);
 
 				SetPlayerInterior(i, BusinessData[id][bizInterior]);
 				SetCameraBehindPlayer(i);

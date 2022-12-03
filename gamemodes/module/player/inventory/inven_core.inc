@@ -1,3 +1,10 @@
+enum e_temp_inventory
+{
+	iHouseID,
+	iAmount,
+	iItemName[45]
+}
+new InventoryTemp[MAX_PLAYERS][e_temp_inventory];
 
 new const g_aInventoryItems[][e_InventoryItems] =
 {
@@ -7,7 +14,7 @@ new const g_aInventoryItems[][e_InventoryItems] =
 	{"Portable Radio", 19942},
 	{"Mask", 19036},
 	{"Snack", 19811},
-	{"Water", 1951},
+	{"Es Teh", 19835},
 	{"Milk", 19570},
 	{"Coffe", 19835},
 	{"Juice", 19564},
@@ -18,11 +25,6 @@ new const g_aInventoryItems[][e_InventoryItems] =
 	{"Rolling Paper", 19873},
 	{"Rolled Weed", 3027},
 	{"Weed", 1578},
-	{"Deer Antlers", 6865},
-	{"Animal Blood Pack", 1580},
-	{"Deer Hide", 4070},
-	{"Skinning Knife", 335},
-	{"Deer Meat", 2806},
 	{"Component", 19627},
 	{"Weed Seed", 1279},
 	{"9mm Luger", 19995},
@@ -36,8 +38,16 @@ new const g_aInventoryItems[][e_InventoryItems] =
 	{"Bait", 19566},
 	{"Driving License", 1581},
 	{"Idcard", 1581},
-	{"Bibit Potato", 1575},
-	{"Bibit Wheat", 1575},
-	{"Wheat", 2912},
-	{"Potato", 2912}
+	{"Bibit Kentang", 1575},
+	{"Bibit Gandum", 1575},
+	{"Gandum", 2912},
+	{"Kentang", 2912},
+	{"Deer Antler", 19314},
+	{"Animal Blood Pack", 1580},
+	{"Deer Hide", 19315},
+	{"Pisau", 335},
+	{"Deer Meat", 2806},
+	{"Senapan Berburu", 2036}
 };
+
+

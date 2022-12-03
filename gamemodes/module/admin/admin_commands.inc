@@ -69,26 +69,6 @@ CMD:slap(playerid, params[])
 	return 1;
 }
 
-CMD:gotoco(playerid, params[]){
-	if(PlayerData[playerid][pAdmin] > 5){
-		new Float:a,Float:b,Float:c;
-		if(sscanf(params, "fff", a,b,c)) return SendSyntaxMessage(playerid, "/gotocoord [x] [y] [z]");
-
-		SetPlayerPos(playerid, a,b,c);
-	}
-	return 1;
-}
-
-CMD:setworld(playerid, params[])
-{
-	if(PlayerData[playerid][pAdmin] > 5){
-		new a,b,c;
-		if(sscanf(params, "udd", a,b,c)) return SendSyntaxMessage(playerid, "/setworld [playerid] [interior] [vw]");
-		SetPlayerInterior(a,b);
-		SetPlayerVirtualWorld(a,c);
-	}
-	return 1;
-}
 CMD:getcar(playerid, params[])
 {
 	if(PlayerData[playerid][pAdmin] < 1)
@@ -105,6 +85,62 @@ CMD:getcar(playerid, params[])
 	LinkVehicleToInterior(vehicleid, GetPlayerInterior(playerid));
 	SetVehicleVirtualWorld(vehicleid, GetPlayerVirtualWorld(playerid));
 	SendAdminAction(playerid," %s telah menarik kendaraan ID %d", GetName(playerid), vehicleid);
+	return 1;
+}
+
+CMD:asetmember(playerid, params[])
+{
+	new facid, otherid;
+	if(PlayerData[playerid][pAdmin] < 6)
+		return SendErrorMessage(playerid, "You must be admin!");
+		
+	if(sscanf(params, "ud", otherid, facid))
+        return SendSyntaxMessage(playerid, "/asetmember [playerid/PartOfName] [Faction 1 - 4]");
+		
+	if(otherid == INVALID_PLAYER_ID)
+		return SendErrorMessage(playerid, "Invalid ID.");
+	
+	/*if(PlayerData[otherid][pFaction] > 0)
+		return SendErrorMessage(playerid, "This player is not in any faction!");*/
+	
+	if(facid < 1 || facid > 4)
+		return SendErrorMessage(playerid, "Faction must 1 - 4 only");
+	
+	PlayerData[otherid][pFaction] = facid;
+	PlayerData[otherid][pFactionRank] = 0;
+	PlayerData[otherid][pFacDiv] = 0;
+	new infoo[256];
+	format(infoo, sizeof(infoo), "[Admin]You has set %s faction to %d", PlayerData[otherid][pName], facid);
+	SendServerMessage(playerid, infoo);
+	format(infoo, sizeof(infoo), "[Admin]%s has set your faction to %s", GetName(playerid), GetFactionName(facid));
+	SendServerMessage(otherid, infoo);
+	return 1;
+}
+
+CMD:asetrank(playerid, params[])
+{
+	new rank, otherid;
+	if(PlayerData[playerid][pAdmin] < 6)
+		return SendErrorMessage(playerid, "You must be admin!");
+		
+	if(sscanf(params, "ud", otherid, rank))
+        return SendSyntaxMessage(playerid, "/setrank [playerid/PartOfName] [rank 1-14]");
+		
+	if(otherid == INVALID_PLAYER_ID)
+		return SendErrorMessage(playerid, "Invalid ID.");
+	
+	if(PlayerData[otherid][pFaction] == 0)
+		return SendErrorMessage(playerid, "This player is not in any faction!");
+	
+	if(rank < 1 || rank > 14)
+		return SendErrorMessage(playerid, "Rank must 1 - 14 only");
+	
+	PlayerData[otherid][pFactionRank] = rank;
+	new infoo[256];
+	format(infoo, sizeof(infoo), "[Admin]You has set %s faction rank to level %d", PlayerData[otherid][pName], rank);
+	SendServerMessage(playerid, infoo);
+	format(infoo, sizeof(infoo), "[Admin]%s has set your faction rank to level %d", GetName(playerid), rank);
+	SendServerMessage(otherid, infoo);
 	return 1;
 }
 
@@ -145,7 +181,7 @@ CMD:goto(playerid, params[])
 	if (sscanf(params, "u", id))
  	{
 	 	SendSyntaxMessage(playerid, "/goto [player or name]");
-		SendClientMessage(playerid, X11_LIGHTBLUE, "OPTION:{FFFFFF} entrance, business");
+		SendClientMessage(playerid, X11_LIGHTBLUE, "OPTION:{FFFFFF} entrance, business, house");
 		return 1;
 	}
 
@@ -154,7 +190,7 @@ CMD:goto(playerid, params[])
 	    if (sscanf(params, "s[24]S()[64]", type, string))
 		{
 		    SendSyntaxMessage(playerid, "/goto [player or name]");
-			SendClientMessage(playerid, X11_LIGHTBLUE, "OPTION:{FFFFFF} entrance, business");
+			SendClientMessage(playerid, X11_LIGHTBLUE, "OPTION:{FFFFFF} entrance, business, house");
 			return 1;
 	    }
 		else if (!strcmp(type, "entrance", true))
@@ -187,6 +223,21 @@ CMD:goto(playerid, params[])
 		    SendServerMessage(playerid, "You have teleported to business ID: %d.", id);
 		    return 1;
 		}
+		else if (!strcmp(type, "house", true))
+		{
+		    if (sscanf(string, "d", id))
+		        return SendSyntaxMessage(playerid, "/goto [house] [house ID]");
+
+			if ((id < 0 || id >= MAX_HOUSES) || !HouseData[id][houseExists])
+			    return SendErrorMessage(playerid, "You have specified an invalid house ID.");
+
+		    SetPlayerPos(playerid, HouseData[id][housePos][0], HouseData[id][housePos][1], HouseData[id][housePos][2]);
+		    SetPlayerInterior(playerid, HouseData[id][houseExterior]);
+
+			SetPlayerVirtualWorld(playerid, HouseData[id][houseExteriorVW]);
+		    SendServerMessage(playerid, "You have teleported to house ID: %d.", id);
+		    return 1;
+		}
 	}
 	if (!IsPlayerSpawned(id))
 		return SendErrorMessage(playerid, "You can't teleport to a player that's not spawned.");
@@ -197,58 +248,63 @@ CMD:goto(playerid, params[])
 	return 1;
 }
 
-CMD:asetmember(playerid, params[])
+CMD:gotoco(playerid, params[])
 {
-	new facid, otherid;
-	if(PlayerData[playerid][pAdmin] < 6)
-		return SendErrorMessage(playerid, "You must be admin!");
-		
-	if(sscanf(params, "ud", otherid, facid))
-        return SendSyntaxMessage(playerid, "/asetmember [playerid/PartOfName] [Faction 1 - 4]");
-		
-	if(otherid == INVALID_PLAYER_ID)
-		return SendErrorMessage(playerid, "Invalid ID.");
-	
-	/*if(PlayerData[otherid][pFaction] > 0)
-		return SendErrorMessage(playerid, "This player is not in any faction!");*/
-	
-	if(facid < 1 || facid > 4)
-		return SendErrorMessage(playerid, "Faction must 1 - 4 only");
-	
-	PlayerData[otherid][pFaction] = facid;
-	PlayerData[otherid][pFacRank] = 0;
-	PlayerData[otherid][pFacDiv] = 0;
-	new infoo[256];
-	format(infoo, sizeof(infoo), "[Admin]You has set %s faction to %d", PlayerData[otherid][pName], facid);
-	SendServerMessage(playerid, infoo);
-	format(infoo, sizeof(infoo), "[Admin]%s has set your faction to %s", GetName(playerid), GetFactionName(facid));
-	SendServerMessage(otherid, infoo);
+	if(PlayerData[playerid][pAdmin] >= 2)
+	{
+		new Float: pos[3], int;
+		if(sscanf(params, "fffd", pos[0], pos[1], pos[2], int))
+			return SendSyntaxMessage(playerid, "/gotoco [x coordinate] [y coordinate] [z coordinate] [interior]");
+
+		SendAdminAction(playerid, "You have been teleported to the coordinates specified.");
+		SetPlayerPos(playerid, pos[0], pos[1], pos[2]);
+		SetPlayerInterior(playerid, int);
+	}
 	return 1;
 }
 
-CMD:asetrank(playerid, params[])
+CMD:jetpack(playerid, params[])
+{
+	new userid;
+
+	if (PlayerData[playerid][pAdmin] < 4)
+	    return SendErrorMessage(playerid, "You don't have permission to use this command.");
+
+	if (sscanf(params, "u", userid))
+ 	{
+ 	    PlayerData[playerid][pJetpack] = 1;
+	 	SetPlayerSpecialAction(playerid, SPECIAL_ACTION_USEJETPACK);
+	}
+	else
+	{
+		PlayerData[userid][pJetpack] = 1;
+
+		SetPlayerSpecialAction(userid, SPECIAL_ACTION_USEJETPACK);
+		SendServerMessage(playerid, "You have spawned a jetpack for %s.", ReturnName(userid, 0));
+	}
+	return 1;
+}
+
+CMD:asetjob(playerid, params[])
 {
 	new rank, otherid;
 	if(PlayerData[playerid][pAdmin] < 6)
 		return SendErrorMessage(playerid, "You must be admin!");
 		
 	if(sscanf(params, "ud", otherid, rank))
-        return SendSyntaxMessage(playerid, "/setrank [playerid/PartOfName] [rank 1-14]");
+        return SendSyntaxMessage(playerid, "/asetjob [playerid/PartOfName] [job 1 - 6]");
 		
 	if(otherid == INVALID_PLAYER_ID)
 		return SendErrorMessage(playerid, "Invalid ID.");
 	
-	if(PlayerData[otherid][pFaction] == 0)
-		return SendErrorMessage(playerid, "This player is not in any faction!");
+	if(rank < 1 || rank > 6)
+		return SendErrorMessage(playerid, "Job must 1 - 6 only");
 	
-	if(rank < 1 || rank > 14)
-		return SendErrorMessage(playerid, "Rank must 1 - 14 only");
-	
-	PlayerData[otherid][pFacRank] = rank;
+	PlayerData[otherid][pJob] = rank;
 	new infoo[256];
-	format(infoo, sizeof(infoo), "[Admin]You has set %s faction rank to level %d", PlayerData[otherid][pName], rank);
+	format(infoo, sizeof(infoo), "[Admin]You has set %s job  %d", PlayerData[otherid][pName], rank);
 	SendServerMessage(playerid, infoo);
-	format(infoo, sizeof(infoo), "[Admin]%s has set your faction rank to level %d", GetName(playerid), rank);
+	format(infoo, sizeof(infoo), "[Admin]%s has set your job  %d", GetName(playerid), rank);
 	SendServerMessage(otherid, infoo);
 	return 1;
 }

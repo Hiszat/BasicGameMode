@@ -96,11 +96,9 @@ CMD:editrental(playerid, params[])
 	}
 	else if(!strcmp(type, "spawn", true))
 	{
-	    if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
-	        return SendErrorMessage(playerid, "Kamu harus berada didalam kendaraan!");
 	        
-		GetVehiclePos(GetPlayerVehicleID(playerid), RentData[id][rentSpawn][0], RentData[id][rentSpawn][1], RentData[id][rentSpawn][2]);
-		GetVehicleZAngle(GetPlayerVehicleID(playerid), RentData[id][rentSpawn][3]);
+		GetPlayerPos(GetPlayerVehicleID(playerid), RentData[id][rentSpawn][0], RentData[id][rentSpawn][1], RentData[id][rentSpawn][2]);
+		GetPlayerFacingAngle(GetPlayerVehicleID(playerid), RentData[id][rentSpawn][3]);
 		
 		SendAdminAction(playerid, "Kamu telah mengubah posisi Spawn Rental ID: %d", id);
 		Rental_Save(id);

@@ -20,6 +20,12 @@ static Loading_Remove(playerid)
 	LoadingMaxValue[playerid] = 0;
 	IsLoading[playerid] = false;
 	LoadingCallback[playerid][0] = EOS;
+	
+	if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
+	{
+		TogglePlayerControllable(playerid, 1);
+		ClearAnimations(playerid, 1);
+	}
 	return 1;
 }
 
@@ -57,7 +63,7 @@ public Loading_TimerUpdate(playerid)
 stock IsValidProgressBarTextdraw(playerid)
 	return IsLoading[playerid];
 
-stock StartPlayerProgressBarTextdraw(playerid, value = 3, text[] = "_", interval = 1000, const callback[] = EOS, color = 1687547391)
+stock StartPlayerProgressBarTextdraw(playerid, value = 3, text[] = "_", interval = 1000, const callback[] = EOS, color = 1687547391, library[] = "_", anim[] = "_")
 {
 	if(IsValidProgressBarTextdraw(playerid))
 		StopPlayerProgressBarTextdraw(playerid);
@@ -183,6 +189,12 @@ stock StartPlayerProgressBarTextdraw(playerid, value = 3, text[] = "_", interval
 	IsLoading[playerid] = true;
 	LoadingMaxValue[playerid] = value;
 	LoadingTimer[playerid] = SetTimerEx(#Loading_TimerUpdate, interval, true, "d", playerid);
+
+	if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
+	{
+		TogglePlayerControllable(playerid, 0);
+		ApplyAnimation(playerid, library, anim, 4.0, 0, 0, 0, 0, 0);
+	}
 	return 1;
 }
 

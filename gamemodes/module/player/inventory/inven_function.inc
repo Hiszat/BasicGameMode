@@ -54,20 +54,21 @@ stock InventoryTD_Remove(playerid, modelid, name[], amount)
 	return 1;
 }
 
-Function:RefrestItemTextdraw(playerid, index)
+Function:RefrestItemTextdraw(playerid, before, after)
 {
-	forex(i, 20)
-	{
-		PlayerTextDrawShow(playerid, ITEM[i][playerid]);
-	}
+	PlayerTextDrawShow(playerid, ITEM[before][playerid]);
+	PlayerTextDrawShow(playerid, ITEM[after][playerid]);
 }
 
 stock ShowINVTD(playerid)
 {
-	new Nama[52];
 	forex(i, 10)
 	{
 	    TextDrawShowForPlayer(playerid, INV_TD[i]);
+	}
+	forex(txd, 20)
+	{
+		PlayerTextDrawBackgroundColor(playerid, ITEM[txd][playerid], 150);
 	}
 	forex(i, 20)
 	{
@@ -75,8 +76,6 @@ stock ShowINVTD(playerid)
 		PlayerTextDrawShow(playerid, ITEM[i][playerid]);
 		PlayerTextDrawShow(playerid, INVJUMLAH[playerid][i]);
 	}
-	format(Nama,sizeof(Nama),"%s",GetName(playerid));
-	PlayerTextDrawSetString(playerid, INVNAME[playerid], Nama);
 	PlayerTextDrawShow(playerid, INVNAME[playerid]);
 	PlayerTextDrawShow(playerid, INVBAR[playerid]);
 }
@@ -174,6 +173,15 @@ stock Inventory_HasItem(playerid, item[])
 	return (Inventory_GetItemID(playerid, item) != -1);
 }
 
+stock InvenAdd(playerid, item[], amount){
+	for (new i = 0; i < sizeof(g_aInventoryItems); i ++) if (!strcmp(g_aInventoryItems[i][e_InventoryItem], item, true))
+	{
+		Inventory_Set(playerid, g_aInventoryItems[i][e_InventoryItem], g_aInventoryItems[i][e_InventoryModel], amount);
+		return 1;
+	}
+	return 0;
+}
+
 stock Inventory_Set(playerid, item[], model, amount)
 {
 	new itemid = Inventory_GetItemID(playerid, item);
@@ -190,14 +198,6 @@ stock Inventory_Set(playerid, item[], model, amount)
 	return 1;
 }
 
-stock InvenAdd(playerid, item[], amount){
-	for (new i = 0; i < sizeof(g_aInventoryItems); i ++) if (!strcmp(g_aInventoryItems[i][e_InventoryItem], item, true))
-	{
-		Inventory_Set(playerid, g_aInventoryItems[i][e_InventoryItem], g_aInventoryItems[i][e_InventoryModel], amount);
-		return 1;
-	}
-	return 0;
-}
 stock Inventory_SetQuantity(playerid, item[], quantity)
 {
 	new
@@ -212,6 +212,13 @@ stock Inventory_SetQuantity(playerid, item[], quantity)
 	    InventoryData[playerid][itemid][invQuantity] = quantity;
 	}
 	return 1;
+}
+
+stock ResetInventoryTemp(playerid)
+{
+	InventoryTemp[playerid][iAmount] = 0;
+	InventoryTemp[playerid][iHouseID] = -1;
+	format(InventoryTemp[playerid][iItemName], 45, "_");
 }
 
 stock Inventory_Remove(playerid, item[], quantity = 1)
@@ -238,12 +245,30 @@ stock Inventory_Remove(playerid, item[], quantity = 1)
 
 		    mysql_format(sqlcon, string, sizeof(string), "DELETE FROM `inventory` WHERE `ID` = '%d' AND `invID` = '%d'", PlayerData[playerid][pID], InventoryData[playerid][itemid][invID]);
 	        mysql_tquery(sqlcon, string);
+
+			if(PlayerData[playerid][pInventory] == 1)
+			{
+				PlayerTextDrawBackgroundColor(playerid, ITEM[itemid][playerid], 150);
+				PlayerTextDrawSetPreviewModel(playerid, ITEM[itemid][playerid], -1);
+				PlayerTextDrawSetString(playerid, ITEMTXT[itemid][playerid], "_");
+				PlayerTextDrawSetString(playerid, INVJUMLAH[playerid][itemid], "_");
+
+				PlayerTextDrawHide(playerid, ITEM[itemid][playerid]);
+							
+				SetTimerEx("RefrestItemTextdraw", 100, false, "dddd", playerid, itemid, itemid);
+			}
 		}
 		else if (quantity != -1 && InventoryData[playerid][itemid][invQuantity] > 0)
 		{
 			mysql_format(sqlcon, string, sizeof(string), "UPDATE `inventory` SET `invQuantity` = `invQuantity` - %d WHERE `ID` = '%d' AND `invID` = '%d'", quantity, PlayerData[playerid][pID], InventoryData[playerid][itemid][invID]);
             mysql_tquery(sqlcon, string);
+			
+			if(PlayerData[playerid][pInventory] == 1)
+			{
+				PlayerTextDrawSetString(playerid, INVJUMLAH[itemid][playerid], sprintf("%d (0, 0)", InventoryData[playerid][itemid][invQuantity]));
+			}
 		}
+
 		return 1;
 	}
 	return 0;
@@ -325,7 +350,7 @@ Function:OnPlayerUseItem(playerid, itemid, name[])
     	SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s mengambil camilan dan memakannya.", GetName(playerid));
        	StartPlayerProgressBarTextdraw(playerid, 100, "Memakan Snack", 50, "UseSnack", 1687547391);
 	}
-	else if(!strcmp(name, "Water"))
+	else if(!strcmp(name, "Es Teh"))
 	{
         if (PlayerData[playerid][pThirst] > 90)
             return SendTextDrawMessageEx(playerid, NOTIFICATION_ERROR, "Kamu tidak membutuhkan minum saat ini.");
@@ -362,7 +387,7 @@ Function:OnPlayerUseItem(playerid, itemid, name[])
 		Inventory_Remove(playerid, "Juice", 1);
 		ApplyAnimation(playerid, "VENDING", "VEND_DRINK2_P", 4.1, 0, 0, 0, 0, 0, 1);
         SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s mengambil Jus dan meminumnya.", GetName(playerid));
-	}
+	}*/
 	else if(!strcmp(name, "Cigarette"))
 	{
 		if(PlayerData[playerid][pInjured] == 1) SendTextDrawMessageEx(playerid, NOTIFICATION_ERROR, "You can't do this right now.");
@@ -370,7 +395,7 @@ Function:OnPlayerUseItem(playerid, itemid, name[])
 		SetPlayerSpecialAction(playerid,SPECIAL_ACTION_SMOKE_CIGGY);
 		SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s mengeluarkan cerutu dan menyalakannya.", GetName(playerid));
 		Inventory_Remove(playerid, "Cigarette", 1);
-	}*/
+	}
 	else if(!strcmp(name, "Pizza"))
 	{
 		if (PlayerData[playerid][pHunger] > 90)
@@ -397,7 +422,8 @@ Function:OnPlayerUseItem(playerid, itemid, name[])
 		ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.1, 0, 0, 0, 0, 0, 1);
         SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s mengambil Ayam Goreng dan memakannya.", GetName(playerid));
 		StartPlayerProgressBarTextdraw(playerid, 100, "Memakan Ayam Goreng", 70, "UseAyamGoreng", 1687547391);		
-	}else if(!strcmp(name, "Skinning Knife")){
+	}
+	else if(!strcmp(name, "Pisau")){
 		if(PlayerData[playerid][pJob] == 6){
 		    new Float:x1, Float:y1, Float:z1;
 			new Float:x2, Float:y2, Float:z2;
@@ -566,7 +592,6 @@ CMD:setitem(playerid, params[])
 	new
 	    userid,
 		item[32],
-		infooo[52],
 		amount;
 
 	if (PlayerData[playerid][pAdmin] < 6)
@@ -583,9 +608,8 @@ CMD:setitem(playerid, params[])
 		// if (!strcmp(item, "Mask", true)){
 	    // 	PlayerData[userid][pMaskcode] = PlayerData[userid][pID]+random(90000) + 10000;
 	    // }
-		format(infooo,sizeof(infooo), "You have set %s's \n%s\n to %d.", GetName(userid), item, amount);
 		Inventory_Set(userid, g_aInventoryItems[i][e_InventoryItem], g_aInventoryItems[i][e_InventoryModel], amount);
-		return SendServerMessage(playerid, infooo);
+		return SendServerMessage(playerid, "You have set %s's \"%s\" to %d.", GetName(userid), item, amount);
 	}
 	SendTextDrawMessageEx(playerid, NOTIFICATION_ERROR, "Invalid item name (use /itemlist for a list).");
 	return 1;
@@ -623,6 +647,7 @@ Dialog:DIALOG_INVENTORY(playerid, response, listitem, inputtext[])
     if(response)
     {
 	    new
+			id = -1,
 	        name[48];//, id, str[156];
         
 		strunpack(name, InventoryData[playerid][listitem][invItem]);
@@ -632,7 +657,23 @@ Dialog:DIALOG_INVENTORY(playerid, response, listitem, inputtext[])
         	return SendTextDrawMessageEx(playerid, NOTIFICATION_ERROR, "Tidak ada item di slot yang dipilih!");
 		switch (PlayerData[playerid][pStorageSelect])
 		{
-		    case 0:
+			case 1:
+		    {
+		    	if ((id = House_Inside(playerid)) != -1 && House_IsOwner(playerid, id))
+				{
+					if (InventoryData[playerid][PlayerData[playerid][pListitem]][invQuantity] == 1)
+					{
+		        		House_AddItem(id, name, InventoryData[playerid][PlayerData[playerid][pListitem]][invModel], 1);
+		        		Inventory_Remove(playerid, name);
+
+		        		SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s telah menyimpan \"%s\" ke dalam berangkas rumah.", ReturnName(playerid, 0), name);
+				 		House_ShowItems(playerid, id);
+		        	}
+		        	else Dialog_Show(playerid, HouseDeposit, DIALOG_STYLE_INPUT, "House Deposit", "Barang: %s (Jumlah: %d)\n\n"YELLOW"Silakan masukkan jumlah yang ingin Anda simpan untuk item ini:", "Store", "Back", name, InventoryData[playerid][PlayerData[playerid][pListitem]][invQuantity]);
+				}
+				PlayerData[playerid][pStorageSelect] = 0;
+			}
+		    default:
 		    {
 	            format(name, sizeof(name), "%s (%d)", name, InventoryData[playerid][listitem][invQuantity]);
 	            Dialog_Show(playerid, DIALOG_INVACTION, DIALOG_STYLE_LIST, name, "Use Item\nGive Item\nDrop Item", "Select", "Cancel");
@@ -660,7 +701,7 @@ Dialog:DIALOG_INVENTORY(playerid, response, listitem, inputtext[])
 					}
 					else
 					{
-						format(str, sizeof(str), "Item: %s (Amount: %d)\n\nPlease enter the quantity that you wish to store for this item:", name, InventoryData[playerid][PlayerData[playerid][pListitem]][invQuantity]);
+						format(str, sizeof(str), "Barang: %s (Amount: %d)\n\nPlease enter the quantity that you wish to store for this Barang:", name, InventoryData[playerid][PlayerData[playerid][pListitem]][invQuantity]);
 						Dialog_Show(playerid, DIALOG_HOUSEDEPOSIT, DIALOG_STYLE_INPUT, "House Deposit", str, "Deposit", "Close");
 					}
 				}
@@ -684,7 +725,7 @@ Dialog:DIALOG_INVENTORY(playerid, response, listitem, inputtext[])
 		if (amount < 1 || amount > InventoryData[playerid][PlayerData[playerid][pListitem]][invQuantity])
 		{
 		    new str[152];
-		    format(str, sizeof(str), "Item: %s (Amount: %d)\n\nPlease enter the quantity that you wish to store for this item:", string, InventoryData[playerid][PlayerData[playerid][pListitem]][invQuantity]);
+		    format(str, sizeof(str), "Barang: %s (Amount: %d)\n\nPlease enter the quantity that you wish to store for this Barang:", string, InventoryData[playerid][PlayerData[playerid][pListitem]][invQuantity]);
 			Dialog_Show(playerid, DIALOG_HOUSEDEPOSIT, DIALOG_STYLE_INPUT, "House Deposit", str, "Store", "Back");
 			return 1;
 		}
@@ -740,7 +781,7 @@ Dialog:DIALOG_INVACTION(playerid, response, listitem, inputtext[])
 					DropPlayerItem(playerid, itemid);
 				}
 				else
-					format(str, sizeof(str), "Item: %s - Quantity: %d\n\nHarap tentukan berapa banyak item ini yang ingin Anda drop:", string, InventoryData[playerid][itemid][invQuantity]),
+					format(str, sizeof(str), "Barang: %s - Jumlah: %d\n\n"YELLOW"Harap tentukan berapa banyak item ini yang ingin Anda drop:", string, InventoryData[playerid][itemid][invQuantity]),
 					Dialog_Show(playerid, DIALOG_DROPITEM, DIALOG_STYLE_INPUT, "Drop Item", str, "Drop", "Cancel");
 			}
 		}
@@ -760,10 +801,10 @@ Dialog:DIALOG_DROPITEM(playerid, response, listitem, inputtext[])
 		if (response)
 		{
 		    if (isnull(inputtext))
-		        return format(str, sizeof(str), "Drop Item", "Item: %s - Quantity: %d\n\nHarap tentukan berapa banyak item ini yang ingin Anda Drop:", string, InventoryData[playerid][itemid][invQuantity]),
+		        return format(str, sizeof(str), "Drop Item", "Barang: %s - Jumlah: %d\n\n"YELLOW"Harap tentukan berapa banyak item ini yang ingin Anda Drop:", string, InventoryData[playerid][itemid][invQuantity]),
 				Dialog_Show(playerid, DIALOG_DROPITEM, DIALOG_STYLE_INPUT, "DROP", str, "Drop", "Cancel");
 			if (strval(inputtext) < 1 || strval(inputtext) > InventoryData[playerid][itemid][invQuantity])
-			    return format(str, sizeof(str), "ERROR: Jumlah yang tidak mencukupi yang ditentukan.\n\nItem: %s - Kuantitas: %d\n\nSilakan tentukan berapa banyak item ini yang ingin Anda drop:", string, InventoryData[playerid][itemid][invQuantity]),
+			    return format(str, sizeof(str), "ERROR: Jumlah yang tidak mencukupi yang ditentukan.\n\nBarang: %s - Kuantitas: %d\n\nSilakan tentukan berapa banyak item ini yang ingin Anda drop:", string, InventoryData[playerid][itemid][invQuantity]),
 				Dialog_Show(playerid, DIALOG_DROPITEM, DIALOG_STYLE_INPUT, "DROP", str, "Drop", "Cancel");
 		
 			DropPlayerItem(playerid, itemid, strval(inputtext));
@@ -800,12 +841,12 @@ Dialog:DIALOG_GIVEITEM(playerid, response, listitem, inputtext[])
 		    SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s mengeluarkan %s dan memberikannya kepada %s.", GetName(playerid), string, GetName(userid));
 		    SendServerMessage(userid, "%s telah memberi Anda %s (ditambahkan ke inventory).", GetName(playerid), string);
 			Inventory_Remove(playerid, string);
-		    //Log_Write("logs/give_log.txt", "[%s] %s (%s) has given a %s to %s (%s).", ReturnDate(), GetName(playerid), PlayerData[playerid][pIP], string, GetName(userid, 0), PlayerData[userid][pIP]);
+		    //printf(sprintf("[%s] %s (%s) has given a %s to %s (%s).", ReturnDate(), GetName(playerid), PlayerData[playerid][pIP], string, GetName(userid, 0), PlayerData[userid][pIP]));
   		}
 		else
 		{
 			new str[152];
-			format(str, sizeof(str), "Item: %s (Amount: %d)\n\nSilakan masukkan jumlah item ini yang ingin Anda berikan %s:", string, InventoryData[playerid][itemid][invQuantity], GetName(userid));
+			format(str, sizeof(str), "Barang: %s (Amount: %d)\n\n"YELLOW"Silakan masukkan jumlah item ini yang ingin Anda berikan %s:", string, InventoryData[playerid][itemid][invQuantity], GetName(userid));
 		    Dialog_Show(playerid, DIALOG_GIVEAMOUNT, DIALOG_STYLE_INPUT, "GIVE", str, "Give", "Cancel");
 		    PlayerData[playerid][pTarget] = userid;
 		}
@@ -824,10 +865,10 @@ Dialog:DIALOG_GIVEAMOUNT(playerid, response, listitem, inputtext[])
 			str[352];
 		strunpack(string, InventoryData[playerid][itemid][invItem]);
 		if (isnull(inputtext))
-			return format(str, sizeof(str), "Item: %s (Amount: %d)\n\nSilakan masukkan jumlah item ini yang ingin Anda berikan %s:", string, InventoryData[playerid][itemid][invQuantity], GetName(userid)),
+			return format(str, sizeof(str), "Barang: %s (Amount: %d)\n\n"YELLOW"Silakan masukkan jumlah item ini yang ingin Anda berikan %s:", string, InventoryData[playerid][itemid][invQuantity], GetName(userid)),
 			Dialog_Show(playerid, DIALOG_GIVEAMOUNT, DIALOG_STYLE_INPUT, "GIVE", str, "Give", "Cancel");
 		if (strval(inputtext) < 1 || strval(inputtext) > InventoryData[playerid][itemid][invQuantity])
-		    return format(str, sizeof(str), "ERROR: Anda tidak memiliki sebanyak itu.\n\nItem: %s (Jumlah: %d)nnSilakan masukkan jumlah item ini yang ingin Anda berikan %s:", string, InventoryData[playerid][itemid][invQuantity], GetName(userid)),
+		    return format(str, sizeof(str), "ERROR: Anda tidak memiliki sebanyak itu.\n\nBarang: %s (Jumlah: %d)nn"YELLOW"Silakan masukkan jumlah item ini yang ingin Anda berikan %s:", string, InventoryData[playerid][itemid][invQuantity], GetName(userid)),
 			Dialog_Show(playerid, DIALOG_GIVEAMOUNT, DIALOG_STYLE_INPUT, "GIVE", str, "Give", "Cancel");
         new id = Inventory_Add(userid, string, InventoryData[playerid][itemid][invModel], strval(inputtext));
 	    if (id == -1)
@@ -835,7 +876,7 @@ Dialog:DIALOG_GIVEAMOUNT(playerid, response, listitem, inputtext[])
 	    SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s mengeluarkan %s  dan memberikannya kepada %s.", GetName(playerid), string, GetName(userid));
 	    SendServerMessage(userid, "%s telah memberi Anda  %s  (ditambahkan ke inventory).", GetName(playerid), string);
 		Inventory_Remove(playerid, string, strval(inputtext));
-	  //  Log_Write("logs/give_log.txt", "[%s] %s (%s) has given %d %s to %s (%s).", ReturnDate(), GetName(playerid), PlayerData[playerid][pIP], strval(inputtext), string, GetName(userid, 0), PlayerData[userid][pIP]);
+	    //printf(sprintf("[%s] %s (%s) has given %d %s to %s (%s).", ReturnDate(), GetName(playerid), PlayerData[playerid][pIP], strval(inputtext), string, GetName(userid, 0), PlayerData[userid][pIP]));
 	}
 	return 1;
 }
@@ -912,8 +953,10 @@ hook OnPlayerClickTextDraw(playerid, Text:clickedid)
 	{
 		new
 			itemid = PlayerData[playerid][pListitem],
+			id = -1,
 			string[64],
-			str[256];
+			name[42],
+			str[256];	
 		
 	    strunpack(string, InventoryData[playerid][itemid][invItem]);
 
@@ -932,19 +975,44 @@ hook OnPlayerClickTextDraw(playerid, Text:clickedid)
 		if(!strcmp(string, "Mask"))
 			 return SendErrorMessage(playerid, sprintf("Anda tidak dapat melakukannya pada item ini! (%s)", string));
 
-		else if (InventoryData[playerid][itemid][invQuantity] == 1)
+		switch (PlayerData[playerid][pStorageSelect])
 		{
-			DropPlayerItem(playerid, itemid);
+		    case 1:
+		    {
+		    	if ((id = House_Inside(playerid)) != -1 && House_IsOwner(playerid, id))
+				{
+					if (InventoryData[playerid][itemid][invQuantity] == 1)
+					{				  
+		        		House_AddItem(id, name, InventoryData[playerid][itemid][invModel], 1);
+		        		Inventory_Remove(playerid, name);
+
+		        		SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s telah menyimpan \"%s\" ke dalam penyimpanan rumah mereka.", ReturnName(playerid, 0), name);
+				 		House_ShowItems(playerid, id);
+		        	}
+		        	else Dialog_Show(playerid, HouseDeposit, DIALOG_STYLE_INPUT, "House Deposit", "Barang: %s (Jumlah: %d)\n\n"YELLOW"Silakan masukkan jumlah yang ingin Anda simpan untuk item ini:", "Store", "Back", name, InventoryData[playerid][itemid][invQuantity]);
+				}
+				PlayerData[playerid][pStorageSelect] = 0;
+			}
+			default: 
+			{
+				if (InventoryData[playerid][itemid][invQuantity] == 1)
+				{
+					DropPlayerItem(playerid, itemid);
+				}
+				else
+					format(str, sizeof(str), "Barang: %s - Jumlah: %d\n\n"YELLOW"Harap tentukan berapa banyak item ini yang ingin Anda jatuhkan:", string, InventoryData[playerid][itemid][invQuantity]),
+					Dialog_Show(playerid, DIALOG_DROPITEM, DIALOG_STYLE_INPUT, "DROP", str, "Drop", "Cancel");
+			}
 		}
-		else
-			format(str, sizeof(str), "Item: %s - Quantity: %d\n\nHarap tentukan berapa banyak item ini yang ingin Anda jatuhkan:", string, InventoryData[playerid][itemid][invQuantity]),
-			Dialog_Show(playerid, DIALOG_DROPITEM, DIALOG_STYLE_INPUT, "DROP", str, "Drop", "Cancel");
 	}
 	if(clickedid == INV_TD[6])
 	{
 		new
 			itemid = PlayerData[playerid][pListitem],
 			string[64];
+
+		if(InventoryData[playerid][PlayerData[playerid][pListitem]][invQuantity] < 1)
+                return SendErrorMessage(playerid, "Tidak ada item di slot yang dipilih!");
 
 		strunpack(string, InventoryData[playerid][itemid][invItem]);
 
@@ -972,6 +1040,382 @@ hook OnPlayerClickTextDraw(playerid, Text:clickedid)
 
 		PlayerData[playerid][pListitem] = itemid;
 		Dialog_Show(playerid, DIALOG_GIVEITEM, DIALOG_STYLE_INPUT, "GIVE", "Silakan masukkan nama atau ID pemain:", "Submit", "Cancel");
+	}
+	return 1;
+}
+
+Dialog:HouseWeapons(playerid, response, listitem, inputtext[])
+{
+	static
+	    houseid = -1;
+
+	if ((houseid = House_Inside(playerid)) != -1 && (House_IsOwner(playerid, houseid) || PlayerData[playerid][pFaction] == 1))
+	{
+		if (response)
+		{
+		    if (HouseData[houseid][houseWeapons][listitem] != 0)
+		    {
+				GiveWeaponToPlayer(playerid, HouseData[houseid][houseWeapons][listitem], HouseData[houseid][houseAmmo][listitem]);
+
+				SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s telah mengambil \"%s\" dari berangkas senjata.", ReturnName(playerid, 0), ReturnWeaponName(HouseData[houseid][houseWeapons][listitem]));
+                printf("[%s] %s has taken a \"%s\" from house ID: %d (owner: %s).", ReturnDate(), ReturnName(playerid, 0), ReturnWeaponName(HouseData[houseid][houseWeapons][listitem]), HouseData[houseid][houseID], (House_IsOwner(playerid, houseid)) ? ("Yes") : ("No"));
+
+				HouseData[houseid][houseWeapons][listitem] = 0;
+				HouseData[houseid][houseAmmo][listitem] = 0;
+
+				House_Save(houseid);
+				House_WeaponStorage(playerid, houseid);
+			}
+			else
+			{
+				
+			    new
+					weaponid = GetWeapon(playerid),
+					ammo = GetPlayerAmmo(playerid);
+
+			    if (!weaponid)
+			        return SendErrorMessage(playerid, "You are not holding any weapon!");
+
+       			// if (weaponid == 23 && PlayerData[playerid][pTazer])
+	    		// 	return SendErrorMessage(playerid, "You can't store a tazer into your safe.");
+
+                // if (weaponid == 25 && PlayerData[playerid][pBeanBag])
+	    		// 	return SendErrorMessage(playerid, "You can't store a beanbag shotgun into your safe.");
+
+                ResetWeapon(playerid, weaponid);
+				SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s telah menyimpan %s ke dalam penyimpanan senjata mereka.", ReturnName(playerid, 0), ReturnWeaponName(weaponid));
+
+				HouseData[houseid][houseWeapons][listitem] = weaponid;
+				HouseData[houseid][houseAmmo][listitem] = ammo;
+
+				House_Save(houseid);
+				House_WeaponStorage(playerid, houseid);
+			}
+		}
+		else
+		{
+		    House_OpenStorage(playerid, houseid);
+		}
+	}
+	return 1;
+}
+
+Function:StoreItemToHouse(playerid)
+{
+	printf("%d, %d, %d, %s", playerid, InventoryTemp[playerid][iHouseID], InventoryTemp[playerid][iAmount], InventoryTemp[playerid][iItemName]);
+
+	House_AddItem(InventoryTemp[playerid][iHouseID], InventoryTemp[playerid][iItemName], HouseStorage[InventoryTemp[playerid][iHouseID]][PlayerData[playerid][pStorageItem]][hItemModel], InventoryTemp[playerid][iAmount]);
+
+	Inventory_Remove(playerid, InventoryTemp[playerid][iItemName], InventoryTemp[playerid][iAmount]);
+	SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s telah menyimpan %s ke dalam penyimpanan rumah.", ReturnName(playerid, 0), InventoryTemp[playerid][iItemName]);
+	House_ShowItems(playerid, InventoryTemp[playerid][iHouseID]);
+	
+	ResetInventoryTemp(playerid);
+	printf("[%s] %s has taken \"%s\" from house ID: %d (owner: %s).", ReturnDate(), ReturnName(playerid, 0), InventoryTemp[playerid][iItemName], HouseData[InventoryTemp[playerid][iHouseID]][houseID], (House_IsOwner(playerid, InventoryTemp[playerid][iHouseID])) ? ("Yes") : ("No"));	
+	return 1;
+}
+
+Dialog:HouseDeposit(playerid, response, listitem, inputtext[])
+{
+	static
+	    houseid = -1,
+	    string[45];
+
+	if ((InventoryTemp[playerid][iHouseID] = House_Inside(playerid)) != -1 && (House_IsOwner(playerid, InventoryTemp[playerid][iHouseID]) || PlayerData[playerid][pFaction] == 1))
+	{
+		strunpack(string, InventoryData[playerid][PlayerData[playerid][pListitem]][invItem]);
+
+		format(InventoryTemp[playerid][iItemName], 40, "%s", string);
+		if (response)
+		{
+			InventoryTemp[playerid][iAmount] = strval(inputtext);
+
+			if (InventoryTemp[playerid][iAmount] < 1 || InventoryTemp[playerid][iAmount] > InventoryData[playerid][PlayerData[playerid][pListitem]][invQuantity])
+			    return Dialog_Show(playerid, HouseDeposit, DIALOG_STYLE_INPUT, "House Deposit", "Barang: %s (Jumlah: %d)\n\n"YELLOW"Silakan masukkan jumlah yang ingin Anda simpan untuk Barang ini:", "Store", "Back", InventoryTemp[playerid][iItemName], HouseStorage[InventoryTemp[playerid][iHouseID]][PlayerData[playerid][pListitem]][hItemQuantity]);
+
+			StartPlayerProgressBarTextdraw(playerid, 100, "Menaruh Barang", 50, "StoreItemToHouse", 1687547391);
+		}
+		else House_OpenStorage(playerid, houseid);
+	}
+	return 1;
+}
+
+Function:TakeItemFromHouse(playerid)
+{
+	printf("%d, %d, %d, %s", playerid, InventoryTemp[playerid][iHouseID], InventoryTemp[playerid][iAmount], InventoryTemp[playerid][iItemName]);
+
+	new id = Inventory_Add(playerid, InventoryTemp[playerid][iItemName], HouseStorage[InventoryTemp[playerid][iHouseID]][PlayerData[playerid][pStorageItem]][hItemModel], InventoryTemp[playerid][iAmount]);
+	
+	if (id == -1)
+		return SendErrorMessage(playerid, "You don't have any inventory slots left.");
+
+	House_RemoveItem(InventoryTemp[playerid][iHouseID], InventoryTemp[playerid][iItemName], InventoryTemp[playerid][iAmount]);
+	SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s telah mengambil %s dari penyimpanan rumah.", ReturnName(playerid, 0), InventoryTemp[playerid][iItemName]);
+
+	House_ShowItems(playerid, InventoryTemp[playerid][iHouseID]);
+	ResetInventoryTemp(playerid);
+	printf("[%s] %s has taken \"%s\" from house ID: %d (owner: %s).", ReturnDate(), ReturnName(playerid, 0), InventoryTemp[playerid][iItemName], HouseData[InventoryTemp[playerid][iHouseID]][houseID], (House_IsOwner(playerid, InventoryTemp[playerid][iHouseID])) ? ("Yes") : ("No"));	
+	return 1;
+}
+
+Dialog:HouseTake(playerid, response, listitem, inputtext[])
+{
+	new
+	    houseid = -1,
+	    string[32];
+
+	if ((InventoryTemp[playerid][iHouseID] = House_Inside(playerid)) != -1 && (House_IsOwner(playerid, InventoryTemp[playerid][iHouseID]) || PlayerData[playerid][pFaction] == 1))
+	{
+		strunpack(string, HouseStorage[InventoryTemp[playerid][iHouseID]][PlayerData[playerid][pStorageItem]][hItemName]);
+
+		format(InventoryTemp[playerid][iItemName], 40, "%s", string);
+		if (response)
+		{
+			InventoryTemp[playerid][iAmount] = strval(inputtext);
+
+			if (InventoryTemp[playerid][iAmount] < 1 || InventoryTemp[playerid][iAmount] > HouseStorage[InventoryTemp[playerid][iHouseID]][PlayerData[playerid][pStorageItem]][hItemQuantity])
+			    return Dialog_Show(playerid, HouseTake, DIALOG_STYLE_INPUT, "House Take", "Barang: %s (Jumlah: %d)\n\n"YELLOW"Silakan masukkan jumlah yang ingin Anda ambil untuk Barang ini:", "Take", "Back", InventoryTemp[playerid][iItemName], HouseStorage[InventoryTemp[playerid][iHouseID]][PlayerData[playerid][pListitem]][hItemQuantity]);
+
+			StartPlayerProgressBarTextdraw(playerid, 100, "Menambil Barang", 50, "TakeItemFromHouse", 1687547391);
+		}
+		else House_OpenStorage(playerid, houseid);
+	}
+	return 1;
+}
+
+Dialog:HouseWithdrawCash(playerid, response, listitem, inputtext[])
+{
+    static
+	    houseid = -1;
+
+	if ((houseid = House_Inside(playerid)) != -1 && House_IsOwner(playerid, houseid))
+	{
+		if (response)
+		{
+		    new amount = strval(inputtext);
+
+		    if (isnull(inputtext))
+		        return Dialog_Show(playerid, HouseWithdrawCash, DIALOG_STYLE_INPUT, "AMBIL UANG (BRANGKAS)", "Uang Tersimpan: %s\n\nSilakan masukkan berapa banyak uang yang ingin Anda tarik dari brankas:", "Withdraw", "Back", FormatNumber(HouseData[houseid][houseMoney]));
+
+			if (amount < 1 || amount > HouseData[houseid][houseMoney])
+			    return Dialog_Show(playerid, HouseWithdrawCash, DIALOG_STYLE_INPUT, "AMBIL UANG (BRANGKAS)", "Error: Dana tidak mencukupi.\n\nUang Tersimpan: %s\n\nSilakan masukkan berapa banyak uang yang ingin Anda tarik dari brankas:", "Withdraw", "Back", FormatNumber(HouseData[houseid][houseMoney]));
+
+			HouseData[houseid][houseMoney] -= amount;
+			GiveMoney(playerid, amount);
+
+			House_Save(houseid);
+			House_OpenStorage(playerid, houseid);
+
+			SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s telah menarik %s dari brankas rumah.", ReturnName(playerid, 0), FormatNumber(amount));
+		}
+		else Dialog_Show(playerid, HouseMoney, DIALOG_STYLE_LIST, "BERANGKAS UANG", "Ambil Uang\nSetor Uang", "Select", "Back");
+	}
+	return 1;
+}
+
+Dialog:HouseDepositCash(playerid, response, listitem, inputtext[])
+{
+    static
+	    houseid = -1;
+
+	if ((houseid = House_Inside(playerid)) != -1 && House_IsOwner(playerid, houseid))
+	{
+		if (response)
+		{
+		    new amount = strval(inputtext);
+
+		    if (isnull(inputtext))
+		        return Dialog_Show(playerid, HouseDepositCash, DIALOG_STYLE_INPUT, "SETOR UANG (BRANGKAS)", "Uang Tersimpan: %s\n\nSilakan masukkan berapa banyak uang yang ingin Anda simpan ke brankas:", "Withdraw", "Back", FormatNumber(HouseData[houseid][houseMoney]));
+
+			if (amount < 1 || amount > GetMoney(playerid))
+			    return Dialog_Show(playerid, HouseDepositCash, DIALOG_STYLE_INPUT, "SETOR UANG (BRANGKAS)", "Error: Uang tidak mencukupi.\n\nUang Tersimpan: %s\n\nSilakan masukkan berapa banyak uang yang ingin Anda setorkan ke brankas:", "Withdraw", "Back", FormatNumber(HouseData[houseid][houseMoney]));
+
+			HouseData[houseid][houseMoney] += amount;
+			GiveMoney(playerid, -amount);
+
+			House_Save(houseid);
+			House_OpenStorage(playerid, houseid);
+
+			SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s telah menyetorkan %s ke brankas rumah.", ReturnName(playerid, 0), FormatNumber(amount));
+		}
+		else Dialog_Show(playerid, HouseMoney, DIALOG_STYLE_LIST, "BERANGKAS UANG", "Ambil Uang\nSetor Uang", "Select", "Back");
+	}
+	return 1;
+}
+
+Dialog:HouseMoney(playerid, response, listitem, inputtext[])
+{
+    static
+	    houseid = -1;
+
+	if ((houseid = House_Inside(playerid)) != -1 && House_IsOwner(playerid, houseid))
+	{
+		if (response)
+		{
+			switch (listitem)
+			{
+			    case 0: {
+					Dialog_Show(playerid, HouseWithdrawCash, DIALOG_STYLE_INPUT, "AMBIL UANG (BRANGKAS)", "Uang Tersimpan: %s\n\nSilakan masukkan berapa banyak uang yang ingin Anda tarik dari brankas:", "Withdraw", "Back", FormatNumber(HouseData[houseid][houseMoney]));
+				}
+				case 1: {
+				    Dialog_Show(playerid, HouseDepositCash, DIALOG_STYLE_INPUT, "SETOR UANG (BRANGKAS)", "Uang Tersimpan: %s\n\nSilakan masukkan berapa banyak uang yang ingin Anda setorkan ke brankas:", "Withdraw", "Back", FormatNumber(HouseData[houseid][houseMoney]));
+				}
+			}
+		}
+		else House_OpenStorage(playerid, houseid);
+	}
+	return 1;
+}
+
+Dialog:HouseItems(playerid, response, listitem, inputtext[])
+{
+    static
+	    houseid = -1,
+		string[64];
+
+	if ((houseid = House_Inside(playerid)) != -1 && (House_IsOwner(playerid, houseid) || PlayerData[playerid][pFaction] == 1))
+	{
+		if (response)
+		{
+    		if (HouseStorage[houseid][listitem][hItemExists])
+			{
+   				PlayerData[playerid][pStorageItem] = listitem;
+   				PlayerData[playerid][pListitem] = listitem;
+
+				strunpack(string, HouseStorage[houseid][listitem][hItemName]);
+
+				format(string, sizeof(string), "%s (Jumlah: %d)", string, HouseStorage[houseid][listitem][hItemQuantity]);
+				Dialog_Show(playerid, StorageOptions, DIALOG_STYLE_LIST, string, "Take Item\nStore Item", "Select", "Back");
+			}
+			else {
+   				if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
+				{
+					new invStr[300];
+					forex(inv, 20)
+					{
+						if (!InventoryData[playerid][inv][invExists])
+						{
+							PlayerTextDrawSetPreviewModel(playerid, ITEM[inv][playerid], -1);
+							PlayerTextDrawSetString(playerid, ITEMTXT[inv][playerid], "_");
+							PlayerTextDrawSetString(playerid, INVJUMLAH[playerid][inv], "_");
+						}
+						else
+						{
+							format(invStr, 300, "%d (1, 1)", InventoryData[playerid][inv][invQuantity]);				
+							PlayerTextDrawSetPreviewModel(playerid, ITEM[inv][playerid], InventoryData[playerid][inv][invModel]);
+							PlayerTextDrawSetString(playerid, ITEMTXT[inv][playerid], InventoryData[playerid][inv][invItem]);
+							PlayerTextDrawSetString(playerid, INVJUMLAH[playerid][inv], invStr);
+						}
+					}
+					ShowInventoryTextdraw(playerid, 1);
+					SetTimerEx("ShowingInventory", 1000, false, "d", playerid);
+				}
+				PlayerData[playerid][pStorageSelect] = 1;
+			}
+		}
+		else House_OpenStorage(playerid, houseid);
+	}
+	return 1;
+}
+
+Dialog:HouseStorage(playerid, response, listitem, inputtext[])
+{
+	static
+	    houseid = -1;
+
+	if ((houseid = House_Inside(playerid)) != -1 && (House_IsOwner(playerid, houseid) || PlayerData[playerid][pFaction] == 1))
+	{
+		if (response)
+		{
+		    if (listitem == 0) {
+		        House_ShowItems(playerid, houseid);
+		    }
+      		else if (listitem == 1) {
+				House_WeaponStorage(playerid, houseid);
+		    }
+		    else if (listitem == 2) {
+		        Dialog_Show(playerid, HouseMoney, DIALOG_STYLE_LIST, "BERANGKAS UANG", "Ambil Uang\nSetor Uang", "Select", "Back");
+			}
+			else if (listitem == 3) {
+				House_ClothingStorage(playerid, houseid);
+		    }
+		}
+	}
+	return 1;
+}
+
+Dialog:StorageOptions(playerid, response, listitem, inputtext[])
+{
+    static
+	    houseid = -1,
+		itemid = -1,
+		backpack = -1,
+		string[32];
+
+	if ((houseid = House_Inside(playerid)) != -1 && (House_IsOwner(playerid, houseid) || PlayerData[playerid][pFaction] == 1))
+	{
+	    itemid = PlayerData[playerid][pStorageItem];
+
+	    strunpack(string, HouseStorage[houseid][itemid][hItemName]);
+
+		if (response)
+		{
+			switch (listitem)
+			{
+			    case 0:
+			    {
+			        if (HouseStorage[houseid][itemid][hItemQuantity] == 1)
+			        {
+			            new id = Inventory_Add(playerid, string, HouseStorage[houseid][itemid][hItemModel], 1);
+
+						if (id == -1)
+        					return SendErrorMessage(playerid, "You don't have any inventory slots left.");
+							
+			            House_RemoveItem(houseid, string);
+			            SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s telah mengambil %s dari penyimpanan rumah.", ReturnName(playerid, 0), string);
+
+						House_ShowItems(playerid, houseid);
+						printf("[%s] %s has taken \"%s\" from house ID: %d (owner: %s).", ReturnDate(), ReturnName(playerid, 0), string, HouseData[houseid][houseID], (House_IsOwner(playerid, houseid)) ? ("Yes") : ("No"));
+			        }
+			        else
+			        {
+			            Dialog_Show(playerid, HouseTake, DIALOG_STYLE_INPUT, "House Take", "Barang: %s (Jumlah: %d)\n\n"YELLOW"Silakan masukkan jumlah yang ingin Anda ambil untuk Barang ini:", "Take", "Back", string, HouseStorage[houseid][itemid][hItemQuantity]);
+			        }
+			    }
+				case 1:
+				{
+					new id = Inventory_GetItemID(playerid, string);
+
+					if (!strcmp(string, "Backpack")) {
+					    House_ShowItems(playerid, houseid);
+
+						return SendErrorMessage(playerid, "You can only store one backpack in your house.");
+					}
+					else if (id == -1) {
+						House_ShowItems(playerid, houseid);
+
+						return SendErrorMessage(playerid, "You don't have anymore of this item to store!");
+					}
+					else if (InventoryData[playerid][id][invQuantity] == 1)
+					{
+					    House_AddItem(houseid, string, InventoryData[playerid][id][invModel]);
+						Inventory_Remove(playerid, string);
+
+						SendNearbyMessage(playerid, 30.0, COLOR_PURPLE, "> %s telah menyimpan %s ke dalam penyimpanan rumah mereka.", ReturnName(playerid, 0), string);
+						House_ShowItems(playerid, houseid);
+					}
+					else if (InventoryData[playerid][id][invQuantity] > 1) {
+					    PlayerData[playerid][pListitem] = id;
+
+                        Dialog_Show(playerid, HouseDeposit, DIALOG_STYLE_INPUT, "House Deposit", "Barang: %s (Jumlah: %d)\n\n"YELLOW"Silakan masukkan jumlah yang ingin Anda simpan untuk item ini:", "Store", "Back", string, InventoryData[playerid][id][invQuantity]);
+					}
+				}
+			}
+		}
+		else
+		{
+		    House_ShowItems(playerid, houseid);
+		}
 	}
 	return 1;
 }

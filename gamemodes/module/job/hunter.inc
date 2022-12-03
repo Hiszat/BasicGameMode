@@ -165,6 +165,8 @@ Function:HunterAction(playerid, deerid, action, time)
 						{
 						    format(string, sizeof(string), "SERVER: Animal Blood Pack (%d) has been added to your inventory.", amount);
 							SendServerMessage(playerid, string);
+							ClearAnimations(playerid, 1);
+							ShowSkinningKnifeDialog(playerid);
 						}
 						else
 						{
@@ -190,6 +192,7 @@ Function:HunterAction(playerid, deerid, action, time)
 						{
 						    format(string, sizeof(string), "SERVER: Meat (%d) has been added to your inventory.", amount);
 							SendServerMessage(playerid, string);
+							ClearAnimations(playerid, 1);
 						}
 						else
 						{
@@ -220,6 +223,7 @@ Function:HunterAction(playerid, deerid, action, time)
 						if(InvenAdd(playerid, "Deer Antler", 2))
 						{
 							SendServerMessage(playerid, "Deer Antler (2) has been added to your inventory.");
+							ClearAnimations(playerid, 1);
 						}
 						else
 						{

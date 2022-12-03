@@ -5,17 +5,38 @@ enum
 
 enum
 {
-	DIALOG_RENTAL
+	DIALOG_RENTAL,
+	DIALOG_TOY,
+	DIALOG_TOYEDIT,
+	DIALOG_TOYPOSISI,
+	DIALOG_TOYPOSISIBUY,
+	DIALOG_TOYBUY,
+	DIALOG_TOYVIP,
+	DIALOG_TOYPOSX,
+	DIALOG_TOYPOSY,
+	DIALOG_TOYPOSZ,
+	DIALOG_TOYPOSRX,
+	DIALOG_TOYPOSRY,
+	DIALOG_TOYPOSRZ,
+	DIALOG_TOYPOSSX,
+	DIALOG_TOYPOSSY,
+	DIALOG_TOYPOSSZ
 }
 
 enum
 {
-	MODEL_SELECTION_FURNITURE
+	MODEL_SELECTION_FURNITURE,
+	MODEL_SELECTION_SKINS,
+	MODEL_SELECTION_ADD_SKIN,
+	MODEL_SELECTION_FACTION_SKIN,
+	MODEL_SELECTION_BUYSKIN,
+	MODEL_SELECTION_ACC, 
 }
 
 enum playerTextraws 
 {
-	PlayerText:textdraw_petunjuk
+	PlayerText:textdraw_petunjuk,
+	PlayerText:textdraw_ammo
 };
 
 enum E_STATIC_LOCATION_TYPE
@@ -42,25 +63,6 @@ enum E_STATIC_LOCATION_DATA
   PICKUP_MODEL_ID
 };
 
-enum drInfo{
-    Float:dPosX,
-    Float:dPosY,
-    Float:dPosZ,
-    Float:dAngle,
-    dObject,
-    dCurrPos,
-    dType,
-    dTimer,
-    dDirection,
-    dCondition,
-    dSkinned,
-    bool: dFinalDest,
-    bool: dAntlers,
-    dTimerArea,
-    dAlert,
-    dMovedVar
-};
-
 enum e_player_data
 {
 	pID,
@@ -79,7 +81,7 @@ enum e_player_data
     pInjured,
     pInjuredTime,
     bool:pDead,
-    Text3D:pInjuredLabel,
+    STREAMER_TAG_3D_TEXT_LABEL:pInjuredLabel,
     pAdmin,
     pLevel,
     pMoney,
@@ -89,22 +91,17 @@ enum e_player_data
 	pListitem,
 	pInventory,
 	pStorageSelect,
-	pCP,
 	pTarget,
 	pHunger,
-	pTrackTime,
 	pThirst,
 	pRenting,
-	pEntrance,
-	pFaction,
-	pFacRank,
-	pDuty,
-	pFacDiv,
 	pFreeze,
 	pFreezeTimer,
 	bool:pPressBtn,
 	pPressBtnTime,
+	pEntrance,
 	pBusiness,
+	pHouse,
 	pRefill,
 	pRefillPrice,
 	pBusinessSeller,
@@ -113,18 +110,40 @@ enum e_player_data
 	pGasPump,
 	pGasStation,
 	pEditPump,
-	pJailType,
-	pJailTime,
-	pAJailTime,
 	pFurnitureType,
 	pEditingItem[32 char],
 	pProductModify,
+	pSkinPrice,
+	pTempModel,
+	pIP[16],
+	pHouseSeller,
+	pHouseOffered,
+	pHouseValue,
+	pStorageItem,
+	pGuns[13],
+	pAmmo[13],
+	pDurability[13],
+	pFactionOffer,
+	pFactionOffered,
+	pFaction,
+	pFactionRank,
+	pFacDiv,
+	pSelectedSlot,
+	pOnDuty,
+	pDisableFaction,
+	pJetpack,
+	pClothing,
+	pJailType,
+	pJailTime,
+	pAJailTime,
 	pWanted,
 	pCuffed,
 	pJob,
 	pJob2,
 	pTruckerTimer,
-	pJobDuty  
+	pJobDuty,
+	pTrackTime,
+	pDuty,
 };
 
 enum sStuffData
@@ -144,12 +163,25 @@ enum vCore
 	vehWood,
 	bool:vehHood,
 	bool:vehBoot,
-	vehType, // 0 : Tidak Ada, 1: SAPD, 2: GOV, 3: SAMD, 69: Admin Veh, sisanya sesuai faction ditambahkan nanti '-'
 };
 
-enum vehFac{
-	vfCreated,
-	vfOwner[MAX_PLAYER_NAME],
+enum drInfo{
+    Float:dPosX,
+    Float:dPosY,
+    Float:dPosZ,
+    Float:dAngle,
+    dObject,
+    dCurrPos,
+    dType,
+    dTimer,
+    dDirection,
+    dCondition,
+    dSkinned,
+    bool: dFinalDest,
+    bool: dAntlers,
+    dTimerArea,
+    dAlert,
+    dMovedVar
 };
 
 enum inventoryData
@@ -227,7 +259,7 @@ enum businessData {
 	bizType,
 	bizPrice,
 	Float:bizPos[4],
-	Float:bizInt[4],
+	Float:bizActorPosition[4],
 	Float:bizSpawn[4],
 	Float:bizDeliver[3],
 	bizInterior,
@@ -237,6 +269,7 @@ enum businessData {
 	bizVault,
 	bizProducts,
 	bizPickup,
+	bizActor,
 	bizShipment,
 	bizPrices[20],
 	Text3D:bizText3D,
@@ -253,3 +286,80 @@ enum pumpData {
 	pumpObject,
 	Text3D:pumpText3D
 };
+
+enum houseData {
+	houseID,
+	houseExists,
+	houseOwner,
+	housePrice,
+	houseAddress[32],
+	Float:housePos[4],
+	Float:houseInt[4],
+	houseInterior,
+	houseExterior,
+	houseExteriorVW,
+	houseLocked,
+	houseMoney,
+	houseMapIcon,
+	Text3D:houseText3D,
+	housePickup,
+	houseLights,
+	houseWeapons[10],
+	houseAmmo[10],
+	houseClothing[5],
+};
+
+enum houseStorage {
+	hItemID,
+	hItemExists,
+	hItemName[32 char],
+	hItemModel,
+	hItemQuantity
+};
+
+enum factionData {
+	factionID,
+	factionExists,
+	factionName[32],
+	factionColor,
+	factionType,
+	factionRanks,
+	Float:factionLockerPos[3],
+	factionLockerInt,
+	factionLockerWorld,
+	factionSkins[8],
+	factionWeapons[10],
+	factionAmmo[10],
+	Text3D:factionText3D,
+	factionPickup,
+	Float:SpawnX,
+	Float:SpawnY,
+	Float:SpawnZ,
+	SpawnInterior,
+	SpawnVW
+};
+
+enum e_toy_data
+{
+	toy_id,
+	toy_name[54],
+	toy_model,
+	toy_skin,
+	toy_bone,
+	Float:toy_x,
+	Float:toy_y,
+	Float:toy_z,
+	Float:toy_rx,
+	Float:toy_ry,
+	Float:toy_rz,
+	Float:toy_sx,
+	Float:toy_sy,
+	Float:toy_sz
+}
+
+enum e_clothing_data
+{
+    cID,
+    cSkin,
+    cOwner
+}

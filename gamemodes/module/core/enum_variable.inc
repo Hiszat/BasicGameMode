@@ -1,6 +1,5 @@
 new PlayerData[MAX_PLAYERS][e_player_data];
 new VehCore[MAX_VEHICLES][vCore];
-new VehFac[MAX_VEHICLES][vehFac];
 new InventoryData[MAX_PLAYERS][MAX_INVENTORY][inventoryData];
 new DroppedItems[MAX_DROPPED_ITEMS][droppedItems];
 new NearestItems[MAX_PLAYERS][MAX_LISTED_ITEMS];
@@ -9,5 +8,11 @@ new EntranceData[MAX_ENTRANCES][entranceData];
 new PlayerTextdraws[MAX_PLAYERS][playerTextraws];
 new BusinessData[MAX_BUSINESSES][businessData];
 new PumpData[MAX_GAS_PUMPS][pumpData];
+new HouseData[MAX_HOUSES][houseData];
+new HouseStorage[MAX_HOUSES][MAX_HOUSE_STORAGE][houseStorage];
+new FactionData[MAX_FACTIONS][factionData];
+new FactionRanks[MAX_FACTIONS][15][32];
+new ClothingData[MAX_PLAYERS][e_clothing_data];
+new pToys[MAX_PLAYERS][6][e_toy_data];
 new StuffData[100][sStuffData];
 new DeerInfo[MAX_DEERS][drInfo];

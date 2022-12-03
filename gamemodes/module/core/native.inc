@@ -9,6 +9,7 @@ stock UpdatePlayerSkin(playerid, skinid)
 {
 	SetPlayerSkin(playerid, skinid);
 	PlayerData[playerid][pSkin] = skinid;
+	pToys[playerid][0][toy_skin] = skinid;
 }
 
 stock ResetPlayerData(playerid)
@@ -25,6 +26,10 @@ stock ResetPlayerData(playerid)
 		    PlayerData[i][pBusinessSeller] = INVALID_PLAYER_ID;
 		    PlayerData[i][pBusinessOffered] = -1;
 		}
+		if (PlayerData[i][pHouseSeller] == playerid) {
+		    PlayerData[i][pHouseSeller] = INVALID_PLAYER_ID;
+		    PlayerData[i][pHouseOffered] = -1;
+		}
 	}
 
 	if (PlayerData[playerid][pEditPump] != -1)
@@ -33,6 +38,12 @@ stock ResetPlayerData(playerid)
 		PlayerData[playerid][pGasStation] = -1;
 	}
 
+	for (new i = 0; i < 12; i ++) {
+	    PlayerData[playerid][pGuns][i] = 0;
+	    PlayerData[playerid][pAmmo][i] = 0;
+	}
+
+	PlayerData[playerid][pSpawned] = false;
     PlayerData[playerid][pInjuredTime] = 600;
     PlayerData[playerid][pInjured] = false;
     PlayerData[playerid][pGender] = -1;
@@ -47,6 +58,7 @@ stock ResetPlayerData(playerid)
 	PlayerData[playerid][pFreeze] = 0;
 	PlayerData[playerid][pPressBtn] = false;
 	PlayerData[playerid][pBusiness] = -1;
+	PlayerData[playerid][pHouse] = -1;
 	PlayerData[playerid][pBusinessSeller] = INVALID_PLAYER_ID;
 	PlayerData[playerid][pBusinessOffered] = -1;
 	PlayerData[playerid][pBusinessValue] = 0;
@@ -56,20 +68,19 @@ stock ResetPlayerData(playerid)
 	PlayerData[playerid][pGasStation] = -1;
 	PlayerData[playerid][pFurnitureType] = 0;
 	PlayerData[playerid][pProductModify] = 0;
+	PlayerData[playerid][pSkinPrice] = 0;
+	PlayerData[playerid][pTempModel] = -1;
+	PlayerData[playerid][pHouseSeller] = INVALID_PLAYER_ID;
+	PlayerData[playerid][pHouseOffered] = -1;
+	PlayerData[playerid][pHouseValue] = 0;
+	PlayerData[playerid][pStorageItem] = 0;
 	PlayerData[playerid][pFaction] = 0;
-	PlayerData[playerid][pFacRank] = 0;
-	PlayerData[playerid][pDuty] = 0;
 	PlayerData[playerid][pFacDiv] = 0;
-	PlayerData[playerid][pWanted] = 0;
-	PlayerData[playerid][pCuffed] = 0;
-	PlayerData[playerid][pJob] = 0;
-	PlayerData[playerid][pJob2] = 0;
-	PlayerData[playerid][pJailTime] = 0;
-	PlayerData[playerid][pJailType] = 0;
-	PlayerData[playerid][pAJailTime] = 0;
-	Pagessss[playerid] = 0;
-	NAMAORANGGILA[playerid] = "";
-	//format(NAMAORANGGILA[playerid], sizeof(NAMAORANGGILA[playerid]), "");
+	PlayerData[playerid][pFactionRank] = 0;
+	PlayerData[playerid][pSelectedSlot] = -1;
+	PlayerData[playerid][pOnDuty ] = 0;
+	PlayerData[playerid][pJetpack] = 0;
+	PlayerData[playerid][pClothing] = 0;
 	// Temp Variable
 	SellLastSpawn[playerid] = -1;
 
@@ -78,6 +89,13 @@ stock ResetPlayerData(playerid)
 		PlayerTextDrawSetPreviewModel(playerid, ITEM[inv][playerid], -1);
 		PlayerTextDrawSetString(playerid, ITEMTXT[inv][playerid], "_");
 		PlayerTextDrawSetString(playerid, INVJUMLAH[playerid][inv], "_");
+	}
+
+	forex(i, 13)
+    {
+        PlayerData[playerid][pGuns][i] = 0;
+        PlayerData[playerid][pAmmo][i] = 0;
+        PlayerData[playerid][pDurability][i] = 0;
 	}
 }
 
@@ -166,65 +184,6 @@ stock GetXYZInFrontOfPlayer(playerid, &Float:x, &Float:y, &Float:z, Float:distan
 	y += (distance * floatcos(-a, degrees));
 }
 
-SaveServerStuff(id,amount)
-{
-	new query[1024];
-	format(query, sizeof(query), "UPDATE `Stuff` SET Amount='%d' WHERE id='%d'", amount, id);
-	mysql_tquery(sqlcon, query);
-	return 1;
-}
-
-Function:LoadServerStuff(){
-
-	new rows;
-	cache_get_row_count(rows);
-	if(rows)
-  	{
- 		new id = 0 , i = 0;
-		while(i < rows){
-			if(i < 2)
-			{
-				if(i == 0)
-				{
-					cache_get_value_name_int(i, "ID", id);
-					cache_get_value_name_int(i, "Amount", Tax);
-					//Iter_Add(Stuff, id);
-				}else if(i == 1)
-				{
-					cache_get_value_name_int(i, "ID", id);
-					cache_get_value_name_int(i, "Amount", TaxVault);
-					//Iter_Add(Stuff, id);
-					
-				}
-				i++;
-			}else{
-				cache_get_value_name_int(i, "ID", StuffData[i][sId]);
-				cache_get_value_name(i, "Name", StuffData[i][sName]);
-				cache_get_value_name_int(i, "Amount", StuffData[i][sAmount]);
-				//Iter_Add(Stuff, id);
-				i++;
-			}
-		}
-		printf("[STUFF] Loaded %d rows  %d (Tax) %d (Tax Vault) Stuff from database.", rows,Tax,TaxVault);
-	}
-	return 1;
-}
-
-stock Float:GetDistanceBetweenPoints(Float:X, Float:Y, Float:Z, Float:PointX, Float:PointY, Float:PointZ)
-{
-	new Float:Distance;Distance = floatabs(floatsub(X, PointX)) + floatabs(floatsub(Y, PointY)) + floatabs(floatsub(Z, PointZ));
-	return Distance;
-}
-
-stock GetLSPDEmptyCell(){
-	for(new  i = 1; i < 9; i++){
-		if(CellPrisoners[i] < 3){ // Sel Cuman Muat Dua Orang
-			return i;
-		}
-	}
-	return 0;
-}
-
 stock GetElapsedTime(time, &hours, &minutes, &seconds)
 {
 	hours = 0;
@@ -254,7 +213,6 @@ stock GetFuel(vehicleid)
 {
 	return VehCore[vehicleid][vehFuel];
 }
-
 GetEngineStatus(vehicleid)
 {
 	static
@@ -458,17 +416,6 @@ stock GiveMoney(playerid, amount, reason[] = "unknown")
     return 1;
 }
 
-ProxDetectorS(Float:radi, playerid, targetid) {
-	new
-		Float: fp_playerPos[3];
-	GetPlayerPos(targetid, fp_playerPos[0], fp_playerPos[1], fp_playerPos[2]);
-	if(IsPlayerInRangeOfPoint(playerid, radi, fp_playerPos[0], fp_playerPos[1], fp_playerPos[2]) && GetPlayerVirtualWorld(playerid) == GetPlayerVirtualWorld(targetid))
-	{
-		return 1;
-	}
-	return 0;
-}
-
 stock IsPlayerSpawned(playerid)
 {
 	if (playerid < 0 || playerid >= MAX_PLAYERS)
@@ -497,7 +444,7 @@ SendPlayerToPlayer(playerid, targetid)
 	SetPlayerInterior(playerid, GetPlayerInterior(targetid));
 	SetPlayerVirtualWorld(playerid, GetPlayerVirtualWorld(targetid));
 
-	// PlayerData[playerid][pHouse] = PlayerData[targetid][pHouse];
+	PlayerData[playerid][pHouse] = PlayerData[targetid][pHouse];
 	PlayerData[playerid][pBusiness] = PlayerData[targetid][pBusiness];
 	PlayerData[playerid][pEntrance] = PlayerData[targetid][pEntrance];
 	// PlayerData[playerid][pHospitalInt]  = PlayerData[targetid][pHospitalInt];
@@ -570,4 +517,333 @@ stock CreateAllPlayerTextdraw(playerid)
 	PlayerTextDrawSetProportional(playerid, PlayerTextdraws[playerid][textdraw_petunjuk], 1);
 	PlayerTextDrawSetSelectable(playerid, PlayerTextdraws[playerid][textdraw_petunjuk], 0);
 	return 1;
+}
+
+static GetMonth(bulan)
+{
+    static
+        month[12];
+
+    switch (bulan) {
+        case 1: month = "January";
+        case 2: month = "February";
+        case 3: month = "March";
+        case 4: month = "April";
+        case 5: month = "May";
+        case 6: month = "June";
+        case 7: month = "July";
+        case 8: month = "August";
+        case 9: month = "September";
+        case 10: month = "October";
+        case 11: month = "November";
+        case 12: month = "December";
+    }
+    return month;
+}
+
+ReturnDate()
+{
+    static date[6], string[72];
+
+    getdate(date[2], date[1], date[0]);
+    gettime(date[3], date[4], date[5]);
+
+    format(string, sizeof(string), "%02d %s %d, %02d:%02d:%02d", date[0],GetMonth(date[1]), date[2], date[3], date[4], date[5]);
+    return string;
+}
+
+stock GetMonthName(Month)
+{
+	new month[12];
+
+	switch(Month)
+	{
+        case 1: month = "January";
+        case 2: month = "February";
+        case 3: month = "March";
+        case 4: month = "April";
+        case 5: month = "May";
+        case 6: month = "June";
+        case 7: month = "July";
+        case 8: month = "August";
+        case 9: month = "September";
+        case 10: month = "October";
+        case 11: month = "November";
+        case 12: month = "December";
+	}
+
+	return month;
+}
+
+stock GetShortMonthName(Month)
+{
+	new MonthName[12];
+
+	switch(Month)
+	{
+		case 1: MonthName = "Jan";
+		case 2: MonthName = "Feb";
+		case 3: MonthName = "Mar";
+		case 4: MonthName = "Apr";
+		case 5: MonthName = "May";
+		case 6: MonthName = "Jun";
+		case 7: MonthName = "Jul";
+		case 8: MonthName = "Aug";
+		case 9: MonthName = "Sep";
+		case 10: MonthName = "Oct";
+		case 11: MonthName = "Nov";
+		case 12: MonthName = "Dec";
+	}
+	return MonthName;
+}
+
+stock GetDay(Day)
+{
+	new str[12];
+	switch(Day)
+	{
+		case 1: str = "1";
+		case 2: str = "2";
+		case 3: str = "3";
+		case 4: str = "4";
+		case 5: str = "5";
+		case 6: str = "6";
+		case 7: str = "7";
+		case 8: str = "8";
+		case 9: str = "9";
+		case 10: str = "10";
+		case 11: str = "11";
+		case 12: str = "12";
+		case 13: str = "13";
+		case 14: str = "14";
+		case 15: str = "15";
+		case 16: str = "16";
+		case 17: str = "17";
+		case 18: str = "18";
+		case 19: str = "19";
+		case 20: str = "20";
+		case 21: str = "21";
+		case 22: str = "22";
+		case 23: str = "23";
+		case 24: str = "24";
+		case 25: str = "25";
+		case 26: str = "26";
+		case 27: str = "27";
+		case 28: str = "28";
+		case 29: str = "29";
+		case 30: str = "30";
+		case 31: str = "31";
+	}
+	return str;
+}
+
+stock GetWeekDay(day=0, month=0, year=0)
+{
+	if(!day)
+			getdate(year, month, day);
+	new
+		szWeekDay[17],
+		j,
+		e;
+
+	if(month <= 2)
+	{
+		month += 12;
+		--year;
+	}
+
+	j = year % 100;
+	e = year / 100;
+
+	switch((day + (month+1)*26/10 + j + j/4 + e/4 - 2*e) % 7)
+	{
+		case 0: szWeekDay = "Sat";
+		case 1: szWeekDay = "Sun";
+		case 2: szWeekDay = "Mon";
+		case 3: szWeekDay = "Tue";
+		case 4: szWeekDay = "Wed";
+		case 5: szWeekDay = "Thu";
+		case 6: szWeekDay = "Fri";
+	}
+	return szWeekDay;
+}
+
+stock UnixDate(timestamp)
+{
+	new dateString[50];
+
+	new date[6];
+	TimestampToDate(timestamp, date[2], date[1], date[0], date[3], date[4], date[5]);
+	format(dateString, sizeof(dateString), "%s %s %s %i, %02d:%02d:%02d", GetWeekDay(date[0], date[1], date[2]), GetDay(date[0]), GetShortMonthName(date[1]), date[2], date[3], date[4], date[5]);
+	return dateString;
+}
+
+ReturnWeaponName(weaponid)
+{
+	static
+		name[32];
+
+	GetWeaponName(weaponid, name, sizeof(name));
+
+	if (!weaponid)
+	    name = "None";
+
+	else if (weaponid == 18)
+	    name = "Molotov Cocktail";
+
+	else if (weaponid == 44)
+	    name = "Nightvision";
+
+	else if (weaponid == 45)
+	    name = "Infrared";
+
+	return name;
+}
+
+
+
+
+
+
+stock SendFactionMessage(factionid, color, const str[], {Float,_}:...)
+{
+	static
+	    args,
+	    start,
+	    end,
+	    string[144]
+	;
+	#emit LOAD.S.pri 8
+	#emit STOR.pri args
+
+	if (args > 12)
+	{
+		#emit ADDR.pri str
+		#emit STOR.pri start
+
+	    for (end = start + (args - 12); end > start; end -= 4)
+		{
+	        #emit LREF.pri end
+	        #emit PUSH.pri
+		}
+		#emit PUSH.S str
+		#emit PUSH.C 144
+		#emit PUSH.C string
+		#emit PUSH.C args
+
+		#emit SYSREQ.C format
+		#emit LCTRL 5
+		#emit SCTRL 4
+
+		foreach (new i : Player) if (PlayerData[i][pFaction] == factionid && !PlayerData[i][pDisableFaction]) {
+		    SendClientMessage(i, color, string);
+		}
+		return 1;
+	}
+	foreach (new i : Player) if (PlayerData[i][pFaction] == factionid && !PlayerData[i][pDisableFaction]) {
+ 		SendClientMessage(i, color, str);
+	}
+	return 1;
+}
+
+ResetFaction(playerid)
+{
+    PlayerData[playerid][pFaction] = 0;
+    PlayerData[playerid][pFacDiv] = 0;
+    PlayerData[playerid][pFactionRank] = 0;
+}
+
+stock GetPlayerID(name[], underscore = 1)
+{
+	foreach (new i : Player) if (!strcmp(ReturnName(i, underscore), name, true)) {
+	    return i;
+	}
+	return INVALID_PLAYER_ID;
+}
+
+stock IsPlayerConnected2(playerid){
+    if(IsPlayerConnected(playerid) && PlayerData[playerid][pLoggedIn] == true){
+        return 1;
+    }
+    return 0;
+}
+
+stock IsPlayerConnectedEx(playerid){
+    if(IsPlayerConnected(playerid) && PlayerData[playerid][pLoggedIn] == true && PlayerData[playerid][pSpawned] == true){
+        return 1;
+    }
+    return 0;
+}
+
+IsNumeric(const str[])
+{
+	for (new i = 0, l = strlen(str); i != l; i ++)
+	{
+	    if (i == 0 && str[0] == '-')
+			continue;
+
+	    else if (str[i] < '0' || str[i] > '9')
+			return 0;
+	}
+	return 1;
+}
+
+SaveServerStuff(id,amount)
+{
+	new query[1024];
+	format(query, sizeof(query), "UPDATE `Stuff` SET Amount='%d' WHERE id='%d'", amount, id);
+	mysql_tquery(sqlcon, query);
+	return 1;
+}
+
+Function:LoadServerStuff(){
+
+	new rows;
+	cache_get_row_count(rows);
+	if(rows)
+  	{
+ 		new id = 0 , i = 0;
+		while(i < rows){
+			if(i < 2)
+			{
+				if(i == 0)
+				{
+					cache_get_value_name_int(i, "ID", id);
+					cache_get_value_name_int(i, "Amount", Tax);
+					//Iter_Add(Stuff, id);
+				}else if(i == 1)
+				{
+					cache_get_value_name_int(i, "ID", id);
+					cache_get_value_name_int(i, "Amount", TaxVault);
+					//Iter_Add(Stuff, id);
+					
+				}
+				i++;
+			}else{
+				cache_get_value_name_int(i, "ID", StuffData[i][sId]);
+				cache_get_value_name(i, "Name", StuffData[i][sName]);
+				cache_get_value_name_int(i, "Amount", StuffData[i][sAmount]);
+				//Iter_Add(Stuff, id);
+				i++;
+			}
+		}
+		printf("[STUFF] Loaded %d rows  %d (Tax) %d (Tax Vault) Stuff from database.", rows,Tax,TaxVault);
+	}
+	return 1;
+}
+
+
+stock Float:GetDistanceBetweenPoints(Float:X, Float:Y, Float:Z, Float:PointX, Float:PointY, Float:PointZ)
+{
+	new Float:Distance;Distance = floatabs(floatsub(X, PointX)) + floatabs(floatsub(Y, PointY)) + floatabs(floatsub(Z, PointZ));
+	return Distance;
+}
+
+stock GetLSPDEmptyCell(){
+	for(new  i = 1; i < 9; i++){
+		if(CellPrisoners[i] < 3){ // Sel Cuman Muat Dua Orang
+			return i;
+		}
+	}
+	return 0;
 }
