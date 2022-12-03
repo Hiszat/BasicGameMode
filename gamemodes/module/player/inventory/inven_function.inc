@@ -1349,7 +1349,7 @@ Dialog:StorageOptions(playerid, response, listitem, inputtext[])
     static
 	    houseid = -1,
 		itemid = -1,
-		backpack = -1,
+		//backpack = -1,
 		string[32];
 
 	if ((houseid = House_Inside(playerid)) != -1 && (House_IsOwner(playerid, houseid) || PlayerData[playerid][pFaction] == 1))

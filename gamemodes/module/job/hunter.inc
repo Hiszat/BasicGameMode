@@ -91,6 +91,10 @@ Dialog:DeerKnife(playerid, response, listitem, inputtext[])
 			}
 		}
 		ShowSkinningKnifeDialog(playerid);
+	}else{
+		if(IsPlayerAttachedObjectSlotUsed(playerid, ACTION_SLOT_ATT)){
+			RemovePlayerAttachedObject(playerid, ACTION_SLOT_ATT);
+		}
 	}
 	return 1;
 }
@@ -193,11 +197,17 @@ Function:HunterAction(playerid, deerid, action, time)
 						    format(string, sizeof(string), "SERVER: Meat (%d) has been added to your inventory.", amount);
 							SendServerMessage(playerid, string);
 							ClearAnimations(playerid, 1);
+							if(DeerInfo[deerid][dAntlers] == true){
+								ShowSkinningKnifeDialog(playerid);
+							}else{
+								RemovePlayerAttachedObject(playerid, ACTION_SLOT_ATT);
+							}
 						}
 						else
 						{
 						    format(string, sizeof(string), "You couldn't recieve Meat (%d). Your inventory is full.", amount);
 						   	SendErrorMessage(playerid, string);
+							RemovePlayerAttachedObject(playerid, ACTION_SLOT_ATT);
 						}
 						if(DeerInfo[deerid][dCondition] == 1)
 						{
@@ -216,6 +226,7 @@ Function:HunterAction(playerid, deerid, action, time)
 		            {
 		                GameTextForPlayer(playerid, "~r~Canceled", 2000, 4);
 		                SendErrorMessage(playerid, "The Deer Antlers are already removed.");
+						ShowSkinningKnifeDialog(playerid);
 					}
 					else
 					{
@@ -224,6 +235,7 @@ Function:HunterAction(playerid, deerid, action, time)
 						{
 							SendServerMessage(playerid, "Deer Antler (2) has been added to your inventory.");
 							ClearAnimations(playerid, 1);
+							RemovePlayerAttachedObject(playerid, ACTION_SLOT_ATT);
 						}
 						else
 						{
@@ -797,7 +809,7 @@ stock ShowSkinningKnifeDialog(playerid)
 	ShowInventoryTextdraw(playerid, 0);
 	CancelSelectTextDraw(playerid);
 	new string[118], deerid = GetPVarInt(playerid, "Deer");
-    switch(DeerInfo[deerid][dCondition] )
+    switch(DeerInfo[deerid][dCondition])
     {//Playing Hours - 0(not looted), 1(skinned), 2(meat taken), 3(horns taken), 4(all taken)
         case 0: string = "1. Skin the deer.\n2. Remove and take the Meat.\n3. Remove and take the Deer Antlers.";
         case 1: string = "1. Skin the deer. (Skinned)\n2. Remove and take the Meat.\n3. Remove and take the Deer Antlers.";
@@ -805,7 +817,7 @@ stock ShowSkinningKnifeDialog(playerid)
         case 3: string = "1. Skin the deer. (Skinned)\n2. Remove and take the Meat.\n3. Remove and take the Deer Antlers.";
         case 4: string = "1. Skin the deer. (Skinned)\n2. Remove and take the Meat. (Taken)\n3. Remove and take the Deer Antlers.";
 	}
-	if(!DeerInfo[deerid][dAntlers])
+	if(DeerInfo[deerid][dAntlers] != true)
 	{
 	    strcat(string, " (Not Present)");
 	}
