@@ -32,10 +32,9 @@ Dialog:DeerKnife(playerid, response, listitem, inputtext[])
 				        SendErrorMessage(playerid, "Inventory sudah penuh.");
 				    }
 			        else if(!DeerInfo[GetPVarInt(playerid, "Deer")][dCondition])
-			        {//speed: 2.7; lockx: 1; locky 1; freeze 0; time 0;
+			        {
 			            ApplyAnimation(playerid,"KNIFE","KNIFE_G",1.1,1,1,1,0,0,1);//(playerid, animlib[], animname[], Float:fDelta, loop, lockx, locky, freeze, time, forcesync)
-			            SetTimerEx("HunterAction", 1000, false, "iiii", playerid, GetPVarInt(playerid, "Deer"), 1, 30);
-						return GameTextForPlayer(playerid, "~g~Skinning...~n~~w~30 seconds remaining", 2000, 4);
+						return StartPlayerProgressBarTextdraw(playerid, 100, "Menguliti Rusa", 70, "SkinningDeer", 0xFFCD9575);	
 					}
 					else
 					{
@@ -51,8 +50,7 @@ Dialog:DeerKnife(playerid, response, listitem, inputtext[])
 			        else if(DeerInfo[GetPVarInt(playerid, "Deer")][dCondition] == 1 || DeerInfo[GetPVarInt(playerid, "Deer")][dCondition] == 3)
 			        {
 			            ApplyAnimation(playerid,"KNIFE","KNIFE_G",1.1,1,1,1,0,0,1);//(playerid, animlib[], animname[], Float:fDelta, loop, lockx, locky, freeze, time, forcesync)
-			            SetTimerEx("HunterAction", 1000, false, "iiii", playerid, GetPVarInt(playerid, "Deer"), 2, 30);
-						return GameTextForPlayer(playerid, "~g~Cutting the Meat...~n~~w~30 seconds remaining", 2000, 4);
+						return StartPlayerProgressBarTextdraw(playerid, 100, "Mengambil Daging", 70, "TakingMeatDeer", 0xFFCD9575);
 					}
 					else if(!DeerInfo[GetPVarInt(playerid, "Deer")][dCondition])
 					{
@@ -70,10 +68,9 @@ Dialog:DeerKnife(playerid, response, listitem, inputtext[])
 				        SendErrorMessage(playerid, "Inventory sudah penuh.");
 				    }
 			        else if(DeerInfo[GetPVarInt(playerid, "Deer")][dAntlers] && (DeerInfo[GetPVarInt(playerid, "Deer")][dCondition] == 1 || DeerInfo[GetPVarInt(playerid, "Deer")][dCondition] == 2))
-			        {
+			        {	
 			            ApplyAnimation(playerid,"KNIFE","KNIFE_G",1.1,1,1,1,0,0,1);//(playerid, animlib[], animname[], Float:fDelta, loop, lockx, locky, freeze, time, forcesync)
-			            SetTimerEx("HunterAction", 1000, false, "iiii", playerid,  GetPVarInt(playerid, "Deer"), 3, 30);
-						return GameTextForPlayer(playerid, "~g~Removing the Deer Antlers...~n~~w~30 seconds remaining", 2000, 4);
+						return StartPlayerProgressBarTextdraw(playerid, 100, "Mengambil Daging", 70, "TakingDeerAntler", 0xFFCD9575);
 					}
 					else if(!DeerInfo[GetPVarInt(playerid, "Deer")][dCondition])
 					{
@@ -99,8 +96,127 @@ Dialog:DeerKnife(playerid, response, listitem, inputtext[])
 	return 1;
 }
 
+Function:SkinningDeer(playerid)
+{
+	new deerid = GetPVarInt(playerid, "Deer"), string[86];
+	if(IsPlayerConnected2(playerid)){
+		if(DeerInfo[deerid][dCondition])
+		{
+		    GameTextForPlayer(playerid, "~r~Canceled", 2000, 4);
+		  	SendErrorMessage(playerid, "That deer is already skinned.");
+		}
+		else
+		{
+			GameTextForPlayer(playerid, "~g~Deer Skinned", 2000, 4);
+			if(InvenAdd(playerid, "Deer Hide", 1))
+			{
+				SendServerMessage(playerid, "Deer Hide (1) has been added to your inventory.");
+			}
+			else
+			{
+			    SendErrorMessage(playerid, "You couldn't recieve Deer Hide (1). Your inventory is full.");
+			}
+			new amount = 2+random(3);//2-4
+			if(InvenAdd(playerid, "Animal Blood Pack", amount))
+			{
+			    format(string, sizeof(string), "SERVER: Animal Blood Pack (%d) has been added to your inventory.", amount);
+				SendServerMessage(playerid, string);
+				ClearAnimations(playerid, 1);
+				ShowSkinningKnifeDialog(playerid);
+			}
+			else
+			{
+			    format(string, sizeof(string), "You couldn't recieve Animal Blood Pack (%d). Your inventory is full.", amount);
+			    SendErrorMessage(playerid, string);
+			}
+			DeerInfo[deerid][dCondition] = 1;
+		}
+		SetPVarInt(playerid, "Deer", deerid);
+	}
+	return 1;
+}
 
+Function:TakingMeatDeer(playerid)
+{
+	new deerid = GetPVarInt(playerid, "Deer"), string[86];
+	if(IsPlayerConnected2(playerid)){
+		if(DeerInfo[deerid][dCondition] == 2 || DeerInfo[deerid][dCondition] == 4)
+		{
+		    GameTextForPlayer(playerid, "~r~Canceled", 2000, 4);
+		    SendErrorMessage(playerid, "There is no Meat to take.");
+		}
+		else
+		{
+			GameTextForPlayer(playerid, "~g~Meat Cut", 2000, 4);
+			new amount = 5+random(6);//5-10
+			if(InvenAdd(playerid, "Deer Meat", amount))
+			{
+			    format(string, sizeof(string), "SERVER: Meat (%d) has been added to your inventory.", amount);
+				SendServerMessage(playerid, string);
+				ClearAnimations(playerid, 1);
+				if(DeerInfo[deerid][dAntlers] == true){
+					ShowSkinningKnifeDialog(playerid);
+				}else{
+					RemovePlayerAttachedObject(playerid, ACTION_SLOT_ATT);
+				}
+			}
+			else
+			{
+			    format(string, sizeof(string), "You couldn't recieve Meat (%d). Your inventory is full.", amount);
+			   	SendErrorMessage(playerid, string);
+				RemovePlayerAttachedObject(playerid, ACTION_SLOT_ATT);
+			}
+			if(DeerInfo[deerid][dCondition] == 1)
+			{
+			    DeerInfo[deerid][dCondition] = 2;
+			}
+			else
+			{
+			    DeerInfo[deerid][dCondition] = 4;
+			}
+		}
+		SetPVarInt(playerid, "Deer", deerid);
+	}
+	return 1;
+}
 
+Function:TakingDeerAntler(playerid)
+{
+	new deerid = GetPVarInt(playerid, "Deer");
+	if(IsPlayerConnected2(playerid))
+	{
+		if(DeerInfo[deerid][dCondition] > 2)
+		{
+		    GameTextForPlayer(playerid, "~r~Canceled", 2000, 4);
+		    SendErrorMessage(playerid, "The Deer Antlers are already removed.");
+			ShowSkinningKnifeDialog(playerid);
+		}
+		else
+		{
+			GameTextForPlayer(playerid, "~g~Deer Antlers Removed", 2000, 4);
+			if(InvenAdd(playerid, "Deer Antler", 2))
+			{
+				SendServerMessage(playerid, "Deer Antler (2) has been added to your inventory.");
+				ClearAnimations(playerid, 1);
+				RemovePlayerAttachedObject(playerid, ACTION_SLOT_ATT);
+			}
+			else
+			{
+			    SendErrorMessage(playerid, "You couldn't recieve Deer Antler (2). Your inventory is full.");
+			}
+			if(DeerInfo[deerid][dCondition] == 1)
+			{
+			    DeerInfo[deerid][dCondition] = 3;
+			}
+			else
+			{
+			    DeerInfo[deerid][dCondition] = 4;
+			}
+		}
+		SetPVarInt(playerid, "Deer", deerid);
+	}
+	return 1;
+}
 
 hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {//IsPlayerAimingAt(playerid, Float:x, Float:y, Float:z, Float:radius)
@@ -128,145 +244,6 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	}
     return 1;
 }
-Function:HunterAction(playerid, deerid, action, time)
-{
-    if(IsPlayerConnected2(playerid))
-	{
-	    /*if(GetPlayerAnimationIndex(playerid) != 754)
-	    {
-	        //ShowSkinningKnifeDialog(playerid);
-	        RemovePlayerAttachedObject(playerid, ACTION_SLOT_ATT);
-	        //ApplyAnimation(playerid, "BOMBER", "BOM_Plant_Crouch_Out", 4.0, 0, 0, 0, 0, 0, 1);
-	        //ApplyAnimation(playerid, "CARRY", "crry_prtial", 4.0, 0, 0, 0, 0, 0, 1);//Resetanim
-	        return GameTextForPlayer(playerid, "~r~Canceled", 2000, 4);
-	    }*/
-	    time--;
-	    new string[66];
-		if(!time)
-		{
-		    switch(action)
-		    {//dCondition - 0(not looted), 1(skinned), 2(meat taken), 3(horns taken), 4(all taken)
-		        case 1://Skinning
-		        {
-		            if(DeerInfo[deerid][dCondition])
-		            {
-		                GameTextForPlayer(playerid, "~r~Canceled", 2000, 4);
-		              	SendErrorMessage(playerid, "That deer is already skinned.");
-					}
-					else
-					{
-						GameTextForPlayer(playerid, "~g~Deer Skinned", 2000, 4);
-						if(InvenAdd(playerid, "Deer Hide", 1))
-						{
-							SendServerMessage(playerid, "Deer Hide (1) has been added to your inventory.");
-						}
-						else
-						{
-						    SendErrorMessage(playerid, "You couldn't recieve Deer Hide (1). Your inventory is full.");
-						}
-						new amount = 2+random(3);//2-4
-						if(InvenAdd(playerid, "Animal Blood Pack", amount))
-						{
-						    format(string, sizeof(string), "SERVER: Animal Blood Pack (%d) has been added to your inventory.", amount);
-							SendServerMessage(playerid, string);
-							ClearAnimations(playerid, 1);
-							ShowSkinningKnifeDialog(playerid);
-						}
-						else
-						{
-						    format(string, sizeof(string), "You couldn't recieve Animal Blood Pack (%d). Your inventory is full.", amount);
-						    SendErrorMessage(playerid, string);
-						}
-						DeerInfo[deerid][dCondition] = 1;
-					}
-					SetPVarInt(playerid, "Deer", deerid);
-				}
-				case 2://Cutting Meat
-		        {
-		            if(DeerInfo[deerid][dCondition] == 2 || DeerInfo[deerid][dCondition] == 4)
-		            {
-		                GameTextForPlayer(playerid, "~r~Canceled", 2000, 4);
-		                SendErrorMessage(playerid, "There is no Meat to take.");
-					}
-					else
-					{
-						GameTextForPlayer(playerid, "~g~Meat Cut", 2000, 4);
-						new amount = 5+random(6);//5-10
-						if(InvenAdd(playerid, "Deer Meat", amount))
-						{
-						    format(string, sizeof(string), "SERVER: Meat (%d) has been added to your inventory.", amount);
-							SendServerMessage(playerid, string);
-							ClearAnimations(playerid, 1);
-							if(DeerInfo[deerid][dAntlers] == true){
-								ShowSkinningKnifeDialog(playerid);
-							}else{
-								RemovePlayerAttachedObject(playerid, ACTION_SLOT_ATT);
-							}
-						}
-						else
-						{
-						    format(string, sizeof(string), "You couldn't recieve Meat (%d). Your inventory is full.", amount);
-						   	SendErrorMessage(playerid, string);
-							RemovePlayerAttachedObject(playerid, ACTION_SLOT_ATT);
-						}
-						if(DeerInfo[deerid][dCondition] == 1)
-						{
-						    DeerInfo[deerid][dCondition] = 2;
-						}
-						else
-						{
-						    DeerInfo[deerid][dCondition] = 4;
-						}
-					}
-					SetPVarInt(playerid, "Deer", deerid);
-				}
-				case 3://Removing Antlers
-		        {
-		            if(DeerInfo[deerid][dCondition] > 2)
-		            {
-		                GameTextForPlayer(playerid, "~r~Canceled", 2000, 4);
-		                SendErrorMessage(playerid, "The Deer Antlers are already removed.");
-						ShowSkinningKnifeDialog(playerid);
-					}
-					else
-					{
-						GameTextForPlayer(playerid, "~g~Deer Antlers Removed", 2000, 4);
-						if(InvenAdd(playerid, "Deer Antler", 2))
-						{
-							SendServerMessage(playerid, "Deer Antler (2) has been added to your inventory.");
-							ClearAnimations(playerid, 1);
-							RemovePlayerAttachedObject(playerid, ACTION_SLOT_ATT);
-						}
-						else
-						{
-						    SendErrorMessage(playerid, "You couldn't recieve Deer Antler (2). Your inventory is full.");
-						}
-						if(DeerInfo[deerid][dCondition] == 1)
-						{
-						    DeerInfo[deerid][dCondition] = 3;
-						}
-						else
-						{
-						    DeerInfo[deerid][dCondition] = 4;
-						}
-					}
-					SetPVarInt(playerid, "Deer", deerid);
-				}
-		    }
-		    return 1;
-		}
-		SetTimerEx("HunterAction", 1000, false, "iiii", playerid, deerid, action, time);
-		switch(action)
-		{
-		    case 1: format(string, sizeof(string), "~g~Skinning...~n~~w~%d seconds remaining", time);
-		    case 2: format(string, sizeof(string), "~g~Cutting the Meat...~n~~w~%d seconds remaining", time);
-		    case 3: format(string, sizeof(string), "~g~Removing the Deer Antlers...~n~~w~%d seconds remaining", time);
-		}
-		GameTextForPlayer(playerid, string, 2000, 4);
-	}
-	return 1;
-}
-
 
 Function:SpawnDeer(deerid)
 {
