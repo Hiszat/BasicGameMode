@@ -1,3 +1,7 @@
 .vscode/tasks.json
 .vscode/settings.json
 
+pawno/*
+announce.exe
+samp-server.exe
+samp-npc.exe
