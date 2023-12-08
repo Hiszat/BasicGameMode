@@ -1,14 +1,14 @@
 //============================== SERVER CONFIGURATION =============================
-#define SERVER_NAME                     "Dewata Roleplay"
+#define SERVER_NAME                     "Altherlife Roleplay"
 #define SERVER_URL                      "ComingSoon"
 #define SERVER_DISCORD					"Soon"
-#define SERVER_REVISION                 "Dewata 1.0 FiveM Inspiration"
+#define SERVER_REVISION                 "v0.0.1 Alpha Test"
 
 //============================== MYSQL CONFIGURATION =============================
 #define DATABASE_ADDRESS "localhost" //Change this to your Database Address
 #define DATABASE_USERNAME "root" // Change this to your database username
 #define DATABASE_PASSWORD "" //Change this to your database password
-#define DATABASE_NAME "dewata-new" // Change this to your database name
+#define DATABASE_NAME "altertest" // Change this to your database name
 
 //==============================   SERVER MACROS 	=============================
 #define Function:%0(%1)                 forward %0(%1); public %0(%1)

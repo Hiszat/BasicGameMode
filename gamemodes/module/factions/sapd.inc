@@ -547,7 +547,7 @@ Function:OnViewCharges(extraid, name[], pages)
 		for (new i = 0; i < 10; i ++) {
 	    	cache_get_value_name(i, "Description", desc);
 	    	cache_get_value_name(i, "Date", date);
-	    	format(string, sizeof(string), "%s%d. %s (%s)\n", string, desc, date);
+	    	format(string, sizeof(string), "%s%d. %s (%s)\n", string, i,desc, date);
 		}
 		format(desc, sizeof(desc), "Nama Penduduk: %s", name);
 		Dialog_Show(extraid, ChargeList, DIALOG_STYLE_LIST, desc, string, "Close", "");
@@ -556,7 +556,7 @@ Function:OnViewCharges(extraid, name[], pages)
 		for (new i = pages*10; i < ((pages+1)*10); i ++) {
 	    	cache_get_value_name(i, "Description", desc);
 	    	cache_get_value_name(i, "Date", date);
-	    	format(string, sizeof(string), "%s%d. %s (%s)\n", string, desc, date);
+	    	format(string, sizeof(string), "%s%d. %s (%s)\n", string, i,desc, date);
 		}
 		format(desc, sizeof(desc), "Nama Penduduk: %s", name);
 		Dialog_Show(extraid, ChargeList, DIALOG_STYLE_LIST, desc, string, "Next", "Back");

@@ -9916,3 +9916,1058 @@ v0.3.7-R2, (C)2005-2015 SA-MP Team
 [00:56:50] berhasil
 [01:00:07] [ACOUNT] Akun atas nama Alex_Mike dan ID: 6 berhasil di simpan
 [01:00:07] [part] Alex_Mike has left the server (0:1)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[00:51:18] password = ""  (string)
+[00:51:18] filterscripts = ""  (string)
+[00:51:18] 
+[00:51:18] Server Plugins
+[00:51:18] --------------
+[00:51:18]  Loading plugin: sscanf
+[00:51:19] 
+[00:51:19]  ===============================
+[00:51:19] 
+[00:51:19]       sscanf plugin loaded.     
+[00:51:19] 
+[00:51:19]          Version: 2.13.2
+[00:51:19] 
+[00:51:19]    (c) 2022 Alex "Y_Less" Cole  
+[00:51:19] 
+[00:51:19]  ===============================
+[00:51:19] 
+[00:51:19]   Loaded.
+[00:51:19]  Loading plugin: streamer
+[00:51:19] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[00:51:19]   Loaded.
+[00:51:19]  Loading plugin: samp_bcrypt
+[00:51:20] [SampBcrypt] [info]: Version: 0.3.2
+[00:51:20]   Loaded.
+[00:51:20]  Loading plugin: mysql
+[00:51:21]  >> plugin.mysql: R41-4 successfully loaded.
+[00:51:21]   Loaded.
+[00:51:21]  Loaded 4 plugins.
+
+[00:51:21] 
+[00:51:21] Filterscripts
+[00:51:21] ---------------
+[00:51:21]   Loaded 0 filterscripts.
+
+[00:51:21]  
+[00:51:21]  
+[00:51:21]  
+[00:51:21]  ======================================= 
+[00:51:21]  |                                     | 
+[00:51:21]  |        YSI version 4.00.0001        | 
+[00:51:21]  |        By Alex "Y_Less" Cole        | 
+[00:51:21]  |                                     | 
+[00:51:21]  ======================================= 
+[00:51:21]  
+[00:51:21] [ADM] Info: Load EVF v3.3.3 for SA:MP 0.3.7 by Abyss Morgan
+[00:51:21] text: [Black Market]
+  {FFFFFF}Type {FFFF00}/creategun{FFFFFF} to create illegal items
+  {FFFFFF}Type {FFFF00}/createammo{FFFFFF} to create ammmo
+  {FFFFFF}Type {FFFF00}/repairgun{FFFFFF} to repair gun's durability
+  {FFFFFF}Type {FFFF00}/craft{FFFFFF} to craft illegal items  , x: -50.38, y: -232.85, z: 6.76, worldid: 0, interiorid: 0
+[00:51:21] text: [Seeds Shop]
+  {FFFFFF}Type {FFFF00}/buyseeds{FFFFFF} to buy seeds
+  {00FF00}$999/seed  , x: 870.39, y: -25.11, z: 63.97, worldid: 0, interiorid: 0
+[00:51:24] [MySQL] - Connection Estabilished!
+[00:51:24] [SCRIPT] Semua script berhasil di load.
+[00:51:24] Number of vehicle models: 0
+[00:51:24] [GARKOT] Loaded 1 Public Garage from database.
+[00:51:24] [DROPITEM] Loaded 9 Dropped items from database.
+[00:51:24] [RENTAL] Loaded 1 Rental from database.
+[00:51:24] [ENTRANCE] Loaded 7 Entrance from database.
+[00:51:24] [BUSINESS] Loaded 2 Business from database.
+[00:51:24] [HOUSE] Loaded 271 House from database.
+[00:51:24] [BERANGKAS] Loaded 1 Berangkas from database.
+[00:51:24] [STUFF] Loaded 21 rows  50 (Tax) 100000000 (Tax Vault) Stuff from database.
+[01:00:31] [connection] incoming connection: 192.168.90.228:57658 id: 0
+[01:00:32] [join] Alex_Mike has joined the server (0:192.168.90.228)
+[01:00:47] [part] Alex_Mike has left the server (0:2)
+[01:01:14] [connection] incoming connection: 192.168.90.228:54719 id: 0
+[01:01:15] [join] Izat_Ganteng has joined the server (0:192.168.90.228)
+[01:01:26] [ACOUNT] Pemain dengan nama Izat_Ganteng, dengan id 7 berhasil terdaftar.
+[01:04:02] [ACOUNT] Akun atas nama Izat_Ganteng dan ID: 7 berhasil di simpan
+[01:04:02] [part] Izat_Ganteng has left the server (0:1)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[10:51:37] password = ""  (string)
+[10:51:37] filterscripts = ""  (string)
+[10:51:37] 
+[10:51:37] Server Plugins
+[10:51:37] --------------
+[10:51:37]  Loading plugin: sscanf
+[10:51:37] 
+[10:51:37]  ===============================
+[10:51:37] 
+[10:51:37]       sscanf plugin loaded.     
+[10:51:37] 
+[10:51:37]          Version: 2.13.2
+[10:51:37] 
+[10:51:37]    (c) 2022 Alex "Y_Less" Cole  
+[10:51:37] 
+[10:51:37]  ===============================
+[10:51:37] 
+[10:51:37]   Loaded.
+[10:51:37]  Loading plugin: streamer
+[10:51:37] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[10:51:37]   Loaded.
+[10:51:37]  Loading plugin: samp_bcrypt
+[10:51:37] [SampBcrypt] [info]: Version: 0.3.2
+[10:51:37]   Loaded.
+[10:51:37]  Loading plugin: mysql
+[10:51:37]  >> plugin.mysql: R41-4 successfully loaded.
+[10:51:37]   Loaded.
+[10:51:37]  Loaded 4 plugins.
+
+[10:51:37] 
+[10:51:37] Filterscripts
+[10:51:37] ---------------
+[10:51:37]   Loaded 0 filterscripts.
+
+[10:51:37]  
+[10:51:37]  
+[10:51:37]  
+[10:51:37]  ======================================= 
+[10:51:37]  |                                     | 
+[10:51:37]  |        YSI version 4.00.0001        | 
+[10:51:37]  |        By Alex "Y_Less" Cole        | 
+[10:51:37]  |                                     | 
+[10:51:37]  ======================================= 
+[10:51:37]  
+[10:51:37] [ADM] Info: Load EVF v3.3.3 for SA:MP 0.3.7 by Abyss Morgan
+[10:51:37] text: [Black Market]
+  {FFFFFF}Type {FFFF00}/creategun{FFFFFF} to create illegal items
+  {FFFFFF}Type {FFFF00}/createammo{FFFFFF} to create ammmo
+  {FFFFFF}Type {FFFF00}/repairgun{FFFFFF} to repair gun's durability
+  {FFFFFF}Type {FFFF00}/craft{FFFFFF} to craft illegal items  , x: -50.38, y: -232.85, z: 6.76, worldid: 0, interiorid: 0
+[10:51:37] text: [Seeds Shop]
+  {FFFFFF}Type {FFFF00}/buyseeds{FFFFFF} to buy seeds
+  {00FF00}$999/seed  , x: 870.39, y: -25.11, z: 63.97, worldid: 0, interiorid: 0
+[10:51:37] [MySQL] - Connection Estabilished!
+[10:51:37] [SCRIPT] Semua script berhasil di load.
+[10:51:37] Number of vehicle models: 0
+[10:51:37] [GARKOT] Loaded 1 Public Garage from database.
+[10:51:37] [DROPITEM] Loaded 9 Dropped items from database.
+[10:51:37] [RENTAL] Loaded 1 Rental from database.
+[10:51:37] [ENTRANCE] Loaded 7 Entrance from database.
+[10:51:37] [BUSINESS] Loaded 2 Business from database.
+[10:51:37] [HOUSE] Loaded 271 House from database.
+[10:51:37] [BERANGKAS] Loaded 1 Berangkas from database.
+[10:51:37] [STUFF] Loaded 21 rows  50 (Tax) 100000000 (Tax Vault) Stuff from database.
+[10:52:15] [connection] incoming connection: 192.168.90.228:55699 id: 0
+[10:52:15] [join] Izat_Ganteng has joined the server (0:192.168.90.228)
+[10:52:25] [part] Izat_Ganteng has left the server (0:2)
+[10:52:53] [connection] incoming connection: 192.168.90.228:50871 id: 0
+[10:52:53] [join] Izat_Gantengs has joined the server (0:192.168.90.228)
+[10:53:06] [ACOUNT] Pemain dengan nama Izat_Gantengs, dengan id 8 berhasil terdaftar.
+[10:54:22] [chat] [Izat_Gantengs]: a
+[11:14:05] [ACOUNT] Akun atas nama Izat_Gantengs dan ID: 8 berhasil di simpan
+[11:14:05] [part] Izat_Gantengs has left the server (0:1)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[11:14:53] password = ""  (string)
+[11:14:53] filterscripts = ""  (string)
+[11:14:53] 
+[11:14:53] Server Plugins
+[11:14:53] --------------
+[11:14:53]  Loading plugin: sscanf
+[11:14:53] 
+[11:14:53]  ===============================
+[11:14:53] 
+[11:14:53]       sscanf plugin loaded.     
+[11:14:53] 
+[11:14:53]          Version: 2.13.2
+[11:14:53] 
+[11:14:53]    (c) 2022 Alex "Y_Less" Cole  
+[11:14:53] 
+[11:14:53]  ===============================
+[11:14:53] 
+[11:14:53]   Loaded.
+[11:14:53]  Loading plugin: streamer
+[11:14:53] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[11:14:53]   Loaded.
+[11:14:53]  Loading plugin: samp_bcrypt
+[11:14:53] [SampBcrypt] [info]: Version: 0.3.2
+[11:14:53]   Loaded.
+[11:14:53]  Loading plugin: mysql
+[11:14:53]  >> plugin.mysql: R41-4 successfully loaded.
+[11:14:53]   Loaded.
+[11:14:53]  Loaded 4 plugins.
+
+[11:14:53] 
+[11:14:53] Filterscripts
+[11:14:53] ---------------
+[11:14:53]   Loaded 0 filterscripts.
+
+[11:14:53]  
+[11:14:53]  
+[11:14:53]  
+[11:14:53]  ======================================= 
+[11:14:53]  |                                     | 
+[11:14:53]  |        YSI version 4.00.0001        | 
+[11:14:53]  |        By Alex "Y_Less" Cole        | 
+[11:14:53]  |                                     | 
+[11:14:53]  ======================================= 
+[11:14:53]  
+[11:14:54] [ADM] Info: Load EVF v3.3.3 for SA:MP 0.3.7 by Abyss Morgan
+[11:14:54] text: [Black Market]
+  {FFFFFF}Type {FFFF00}/creategun{FFFFFF} to create illegal items
+  {FFFFFF}Type {FFFF00}/createammo{FFFFFF} to create ammmo
+  {FFFFFF}Type {FFFF00}/repairgun{FFFFFF} to repair gun's durability
+  {FFFFFF}Type {FFFF00}/craft{FFFFFF} to craft illegal items  , x: -50.38, y: -232.85, z: 6.76, worldid: 0, interiorid: 0
+[11:14:54] text: [Seeds Shop]
+  {FFFFFF}Type {FFFF00}/buyseeds{FFFFFF} to buy seeds
+  {00FF00}$999/seed  , x: 870.39, y: -25.11, z: 63.97, worldid: 0, interiorid: 0
+[11:14:54] [MySQL] - Connection Estabilished!
+[11:14:54] [SCRIPT] Semua script berhasil di load.
+[11:14:54] Number of vehicle models: 0
+[11:14:54] [GARKOT] Loaded 1 Public Garage from database.
+[11:14:54] [DROPITEM] Loaded 9 Dropped items from database.
+[11:14:54] [RENTAL] Loaded 1 Rental from database.
+[11:14:54] [ENTRANCE] Loaded 7 Entrance from database.
+[11:14:54] [BUSINESS] Loaded 2 Business from database.
+[11:14:54] [HOUSE] Loaded 271 House from database.
+[11:14:54] [BERANGKAS] Loaded 1 Berangkas from database.
+[11:14:54] [STUFF] Loaded 21 rows  50 (Tax) 100000000 (Tax Vault) Stuff from database.
+[11:15:27] [connection] incoming connection: 192.168.90.228:54048 id: 0
+[11:15:28] [join] Izat_Ganteng has joined the server (0:192.168.90.228)
+[11:19:56] [part] Izat_Ganteng has left the server (0:2)
+[11:21:47] [connection] incoming connection: 192.168.90.228:63756 id: 0
+[11:21:48] [join] Izat_Ganteng has joined the server (0:192.168.90.228)
+[11:21:57] [ACOUNT] Pemain dengan nama Izat_Ganteng, dengan id 9 berhasil terdaftar.
+[11:22:52] [part] Izat_Ganteng has left the server (0:2)
+[11:23:13] [connection] incoming connection: 192.168.90.228:58787 id: 0
+[11:23:13] [join] Izat_Ganteng has joined the server (0:192.168.90.228)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[11:24:15] password = ""  (string)
+[11:24:15] filterscripts = ""  (string)
+[11:24:15] 
+[11:24:15] Server Plugins
+[11:24:15] --------------
+[11:24:15]  Loading plugin: sscanf
+[11:24:15] 
+[11:24:15]  ===============================
+[11:24:15] 
+[11:24:15]       sscanf plugin loaded.     
+[11:24:15] 
+[11:24:15]          Version: 2.13.2
+[11:24:15] 
+[11:24:15]    (c) 2022 Alex "Y_Less" Cole  
+[11:24:15] 
+[11:24:15]  ===============================
+[11:24:15] 
+[11:24:15]   Loaded.
+[11:24:15]  Loading plugin: streamer
+[11:24:15] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[11:24:15]   Loaded.
+[11:24:15]  Loading plugin: samp_bcrypt
+[11:24:15] [SampBcrypt] [info]: Version: 0.3.2
+[11:24:15]   Loaded.
+[11:24:15]  Loading plugin: mysql
+[11:24:16]  >> plugin.mysql: R41-4 successfully loaded.
+[11:24:16]   Loaded.
+[11:24:16]  Loaded 4 plugins.
+
+[11:24:16] 
+[11:24:16] Filterscripts
+[11:24:16] ---------------
+[11:24:16]   Loaded 0 filterscripts.
+
+[11:24:16]  
+[11:24:16]  
+[11:24:16]  
+[11:24:16]  ======================================= 
+[11:24:16]  |                                     | 
+[11:24:16]  |        YSI version 4.00.0001        | 
+[11:24:16]  |        By Alex "Y_Less" Cole        | 
+[11:24:16]  |                                     | 
+[11:24:16]  ======================================= 
+[11:24:16]  
+[11:24:16] [ADM] Info: Load EVF v3.3.3 for SA:MP 0.3.7 by Abyss Morgan
+[11:24:16] text: [Black Market]
+  {FFFFFF}Type {FFFF00}/creategun{FFFFFF} to create illegal items
+  {FFFFFF}Type {FFFF00}/createammo{FFFFFF} to create ammmo
+  {FFFFFF}Type {FFFF00}/repairgun{FFFFFF} to repair gun's durability
+  {FFFFFF}Type {FFFF00}/craft{FFFFFF} to craft illegal items  , x: -50.38, y: -232.85, z: 6.76, worldid: 0, interiorid: 0
+[11:24:16] text: [Seeds Shop]
+  {FFFFFF}Type {FFFF00}/buyseeds{FFFFFF} to buy seeds
+  {00FF00}$999/seed  , x: 870.39, y: -25.11, z: 63.97, worldid: 0, interiorid: 0
+[11:24:16] [MySQL] - Connection Estabilished!
+[11:24:16] [SCRIPT] Semua script berhasil di load.
+[11:24:16] Number of vehicle models: 0
+[11:24:16] [GARKOT] Loaded 1 Public Garage from database.
+[11:24:16] [DROPITEM] Loaded 9 Dropped items from database.
+[11:24:16] [RENTAL] Loaded 1 Rental from database.
+[11:24:16] [ENTRANCE] Loaded 7 Entrance from database.
+[11:24:16] [BUSINESS] Loaded 2 Business from database.
+[11:24:16] [HOUSE] Loaded 271 House from database.
+[11:24:16] [BERANGKAS] Loaded 1 Berangkas from database.
+[11:24:16] [STUFF] Loaded 21 rows  50 (Tax) 100000000 (Tax Vault) Stuff from database.
+[11:24:21] [connection] incoming connection: 192.168.90.228:52653 id: 0
+[11:24:21] [join] Izat_Ganteng has joined the server (0:192.168.90.228)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[11:25:53] password = ""  (string)
+[11:25:53] filterscripts = ""  (string)
+[11:25:53] 
+[11:25:53] Server Plugins
+[11:25:53] --------------
+[11:25:53]  Loading plugin: sscanf
+[11:25:53] 
+[11:25:53]  ===============================
+[11:25:53] 
+[11:25:53]       sscanf plugin loaded.     
+[11:25:53] 
+[11:25:53]          Version: 2.13.2
+[11:25:53] 
+[11:25:53]    (c) 2022 Alex "Y_Less" Cole  
+[11:25:53] 
+[11:25:53]  ===============================
+[11:25:53] 
+[11:25:53]   Loaded.
+[11:25:53]  Loading plugin: streamer
+[11:25:53] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[11:25:53]   Loaded.
+[11:25:53]  Loading plugin: samp_bcrypt
+[11:25:53] [SampBcrypt] [info]: Version: 0.3.2
+[11:25:53]   Loaded.
+[11:25:53]  Loading plugin: mysql
+[11:25:53]  >> plugin.mysql: R41-4 successfully loaded.
+[11:25:53]   Loaded.
+[11:25:53]  Loaded 4 plugins.
+
+[11:25:53] 
+[11:25:53] Filterscripts
+[11:25:53] ---------------
+[11:25:53]   Loaded 0 filterscripts.
+
+[11:25:53]  
+[11:25:53]  
+[11:25:53]  
+[11:25:53]  ======================================= 
+[11:25:53]  |                                     | 
+[11:25:53]  |        YSI version 4.00.0001        | 
+[11:25:53]  |        By Alex "Y_Less" Cole        | 
+[11:25:53]  |                                     | 
+[11:25:53]  ======================================= 
+[11:25:53]  
+[11:25:53] [ADM] Info: Load EVF v3.3.3 for SA:MP 0.3.7 by Abyss Morgan
+[11:25:53] text: [Black Market]
+  {FFFFFF}Type {FFFF00}/creategun{FFFFFF} to create illegal items
+  {FFFFFF}Type {FFFF00}/createammo{FFFFFF} to create ammmo
+  {FFFFFF}Type {FFFF00}/repairgun{FFFFFF} to repair gun's durability
+  {FFFFFF}Type {FFFF00}/craft{FFFFFF} to craft illegal items  , x: -50.38, y: -232.85, z: 6.76, worldid: 0, interiorid: 0
+[11:25:53] text: [Seeds Shop]
+  {FFFFFF}Type {FFFF00}/buyseeds{FFFFFF} to buy seeds
+  {00FF00}$999/seed  , x: 870.39, y: -25.11, z: 63.97, worldid: 0, interiorid: 0
+[11:25:53] [MySQL] - Connection Estabilished!
+[11:25:53] [SCRIPT] Semua script berhasil di load.
+[11:25:53] Number of vehicle models: 0
+[11:25:53] [GARKOT] Loaded 1 Public Garage from database.
+[11:25:53] [DROPITEM] Loaded 9 Dropped items from database.
+[11:25:53] [RENTAL] Loaded 1 Rental from database.
+[11:25:53] [ENTRANCE] Loaded 7 Entrance from database.
+[11:25:53] [BUSINESS] Loaded 2 Business from database.
+[11:25:53] [HOUSE] Loaded 271 House from database.
+[11:25:53] [BERANGKAS] Loaded 1 Berangkas from database.
+[11:25:53] [STUFF] Loaded 21 rows  50 (Tax) 100000000 (Tax Vault) Stuff from database.
+[11:25:58] [connection] incoming connection: 192.168.90.228:55363 id: 0
+[11:25:58] [join] Izat_Ganteng has joined the server (0:192.168.90.228)
+[11:26:00] [part] Izat_Ganteng has left the server (0:2)
+[11:26:02] [connection] incoming connection: 192.168.90.228:55364 id: 0
+[11:26:02] [join] Izat_Ganteng has joined the server (0:192.168.90.228)
+[13:00:50] [ACOUNT] Akun atas nama Izat_Ganteng dan ID: 9 berhasil di simpan
+[13:00:50] [part] Izat_Ganteng has left the server (0:1)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[13:09:15] password = ""  (string)
+[13:09:15] filterscripts = ""  (string)
+[13:09:15] 
+[13:09:15] Server Plugins
+[13:09:15] --------------
+[13:09:15]  Loading plugin: sscanf
+[13:09:15] 
+[13:09:15]  ===============================
+[13:09:15] 
+[13:09:15]       sscanf plugin loaded.     
+[13:09:15] 
+[13:09:15]          Version: 2.13.2
+[13:09:15] 
+[13:09:15]    (c) 2022 Alex "Y_Less" Cole  
+[13:09:15] 
+[13:09:15]  ===============================
+[13:09:15] 
+[13:09:15]   Loaded.
+[13:09:15]  Loading plugin: streamer
+[13:09:15] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[13:09:15]   Loaded.
+[13:09:15]  Loading plugin: samp_bcrypt
+[13:09:15] [SampBcrypt] [info]: Version: 0.3.2
+[13:09:15]   Loaded.
+[13:09:15]  Loading plugin: mysql
+[13:09:16]  >> plugin.mysql: R41-4 successfully loaded.
+[13:09:16]   Loaded.
+[13:09:16]  Loaded 4 plugins.
+
+[13:09:16] 
+[13:09:16] Filterscripts
+[13:09:16] ---------------
+[13:09:16]   Loaded 0 filterscripts.
+
+[13:09:16]  
+[13:09:16]  
+[13:09:16]  
+[13:09:16]  ======================================= 
+[13:09:16]  |                                     | 
+[13:09:16]  |        YSI version 4.00.0001        | 
+[13:09:16]  |        By Alex "Y_Less" Cole        | 
+[13:09:16]  |                                     | 
+[13:09:16]  ======================================= 
+[13:09:16]  
+[13:09:16] [ADM] Info: Load EVF v3.3.3 for SA:MP 0.3.7 by Abyss Morgan
+[13:09:16] text: [Black Market]
+  {FFFFFF}Type {FFFF00}/creategun{FFFFFF} to create illegal items
+  {FFFFFF}Type {FFFF00}/createammo{FFFFFF} to create ammmo
+  {FFFFFF}Type {FFFF00}/repairgun{FFFFFF} to repair gun's durability
+  {FFFFFF}Type {FFFF00}/craft{FFFFFF} to craft illegal items  , x: -50.38, y: -232.85, z: 6.76, worldid: 0, interiorid: 0
+[13:09:16] text: [Seeds Shop]
+  {FFFFFF}Type {FFFF00}/buyseeds{FFFFFF} to buy seeds
+  {00FF00}$999/seed  , x: 870.39, y: -25.11, z: 63.97, worldid: 0, interiorid: 0
+[13:09:16] [MySQL] - Connection Estabilished!
+[13:09:16] [SCRIPT] Semua script berhasil di load.
+[13:09:16] Number of vehicle models: 0
+[13:09:16] [GARKOT] Loaded 1 Public Garage from database.
+[13:09:16] [DROPITEM] Loaded 9 Dropped items from database.
+[13:09:16] [RENTAL] Loaded 1 Rental from database.
+[13:09:16] [ENTRANCE] Loaded 7 Entrance from database.
+[13:09:16] [BUSINESS] Loaded 2 Business from database.
+[13:09:16] [HOUSE] Loaded 271 House from database.
+[13:09:16] [BERANGKAS] Loaded 1 Berangkas from database.
+[13:09:16] [STUFF] Loaded 21 rows  50 (Tax) 100000000 (Tax Vault) Stuff from database.
+[13:09:37] [connection] incoming connection: 192.168.90.228:52704 id: 0
+[13:09:37] [join] Izat_Ganteng has joined the server (0:192.168.90.228)
+[13:14:32] [part] Izat_Ganteng has left the server (0:1)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[13:14:49] password = ""  (string)
+[13:14:49] filterscripts = ""  (string)
+[13:14:49] 
+[13:14:49] Server Plugins
+[13:14:49] --------------
+[13:14:49]  Loading plugin: sscanf
+[13:14:49] 
+[13:14:49]  ===============================
+[13:14:49] 
+[13:14:49]       sscanf plugin loaded.     
+[13:14:49] 
+[13:14:49]          Version: 2.13.2
+[13:14:49] 
+[13:14:49]    (c) 2022 Alex "Y_Less" Cole  
+[13:14:49] 
+[13:14:49]  ===============================
+[13:14:49] 
+[13:14:49]   Loaded.
+[13:14:49]  Loading plugin: streamer
+[13:14:49] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[13:14:49]   Loaded.
+[13:14:49]  Loading plugin: samp_bcrypt
+[13:14:49] [SampBcrypt] [info]: Version: 0.3.2
+[13:14:49]   Loaded.
+[13:14:49]  Loading plugin: mysql
+[13:14:49]  >> plugin.mysql: R41-4 successfully loaded.
+[13:14:49]   Loaded.
+[13:14:49]  Loaded 4 plugins.
+
+[13:14:49] 
+[13:14:49] Filterscripts
+[13:14:49] ---------------
+[13:14:49]   Loaded 0 filterscripts.
+
+[13:14:49]  
+[13:14:49]  
+[13:14:49]  
+[13:14:49]  ======================================= 
+[13:14:49]  |                                     | 
+[13:14:49]  |        YSI version 4.00.0001        | 
+[13:14:49]  |        By Alex "Y_Less" Cole        | 
+[13:14:49]  |                                     | 
+[13:14:49]  ======================================= 
+[13:14:49]  
+[13:14:49] [ADM] Info: Load EVF v3.3.3 for SA:MP 0.3.7 by Abyss Morgan
+[13:14:49] text: [Black Market]
+  {FFFFFF}Type {FFFF00}/creategun{FFFFFF} to create illegal items
+  {FFFFFF}Type {FFFF00}/createammo{FFFFFF} to create ammmo
+  {FFFFFF}Type {FFFF00}/repairgun{FFFFFF} to repair gun's durability
+  {FFFFFF}Type {FFFF00}/craft{FFFFFF} to craft illegal items  , x: -50.38, y: -232.85, z: 6.76, worldid: 0, interiorid: 0
+[13:14:49] text: [Seeds Shop]
+  {FFFFFF}Type {FFFF00}/buyseeds{FFFFFF} to buy seeds
+  {00FF00}$999/seed  , x: 870.39, y: -25.11, z: 63.97, worldid: 0, interiorid: 0
+[13:14:49] [MySQL] - Connection Estabilished!
+[13:14:49] [SCRIPT] Semua script berhasil di load.
+[13:14:49] Number of vehicle models: 0
+[13:14:49] [GARKOT] Loaded 1 Public Garage from database.
+[13:14:49] [DROPITEM] Loaded 9 Dropped items from database.
+[13:14:49] [RENTAL] Loaded 1 Rental from database.
+[13:14:49] [ENTRANCE] Loaded 7 Entrance from database.
+[13:14:49] [BUSINESS] Loaded 2 Business from database.
+[13:14:49] [HOUSE] Loaded 271 House from database.
+[13:14:49] [BERANGKAS] Loaded 1 Berangkas from database.
+[13:14:49] [STUFF] Loaded 21 rows  50 (Tax) 100000000 (Tax Vault) Stuff from database.
+[13:15:08] [connection] incoming connection: 192.168.90.228:57213 id: 0
+[13:15:08] [join] Izat_Ganteng has joined the server (0:192.168.90.228)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[13:22:57] password = ""  (string)
+[13:22:57] filterscripts = ""  (string)
+[13:22:57] 
+[13:22:57] Server Plugins
+[13:22:57] --------------
+[13:22:57]  Loading plugin: sscanf
+[13:22:57] 
+[13:22:57]  ===============================
+[13:22:57] 
+[13:22:57]       sscanf plugin loaded.     
+[13:22:57] 
+[13:22:57]          Version: 2.13.2
+[13:22:57] 
+[13:22:57]    (c) 2022 Alex "Y_Less" Cole  
+[13:22:57] 
+[13:22:57]  ===============================
+[13:22:57] 
+[13:22:57]   Loaded.
+[13:22:57]  Loading plugin: streamer
+[13:22:57] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[13:22:57]   Loaded.
+[13:22:57]  Loading plugin: samp_bcrypt
+[13:22:57] [SampBcrypt] [info]: Version: 0.3.2
+[13:22:57]   Loaded.
+[13:22:57]  Loading plugin: mysql
+[13:22:57]  >> plugin.mysql: R41-4 successfully loaded.
+[13:22:57]   Loaded.
+[13:22:57]  Loaded 4 plugins.
+
+[13:22:57] 
+[13:22:57] Filterscripts
+[13:22:57] ---------------
+[13:22:57]   Loaded 0 filterscripts.
+
+[13:22:57]  
+[13:22:57]  
+[13:22:57]  
+[13:22:57]  ======================================= 
+[13:22:57]  |                                     | 
+[13:22:57]  |        YSI version 4.00.0001        | 
+[13:22:57]  |        By Alex "Y_Less" Cole        | 
+[13:22:57]  |                                     | 
+[13:22:57]  ======================================= 
+[13:22:57]  
+[13:22:58] [ADM] Info: Load EVF v3.3.3 for SA:MP 0.3.7 by Abyss Morgan
+[13:22:58] text: [Black Market]
+  {FFFFFF}Type {FFFF00}/creategun{FFFFFF} to create illegal items
+  {FFFFFF}Type {FFFF00}/createammo{FFFFFF} to create ammmo
+  {FFFFFF}Type {FFFF00}/repairgun{FFFFFF} to repair gun's durability
+  {FFFFFF}Type {FFFF00}/craft{FFFFFF} to craft illegal items  , x: -50.38, y: -232.85, z: 6.76, worldid: 0, interiorid: 0
+[13:22:58] text: [Seeds Shop]
+  {FFFFFF}Type {FFFF00}/buyseeds{FFFFFF} to buy seeds
+  {00FF00}$999/seed  , x: 870.39, y: -25.11, z: 63.97, worldid: 0, interiorid: 0
+[13:22:58] [MySQL] - Connection Estabilished!
+[13:22:58] [SCRIPT] Semua script berhasil di load.
+[13:22:58] Number of vehicle models: 0
+[13:22:58] [GARKOT] Loaded 1 Public Garage from database.
+[13:22:58] [DROPITEM] Loaded 9 Dropped items from database.
+[13:22:58] [RENTAL] Loaded 1 Rental from database.
+[13:22:58] [ENTRANCE] Loaded 7 Entrance from database.
+[13:22:58] [BUSINESS] Loaded 2 Business from database.
+[13:22:58] [HOUSE] Loaded 271 House from database.
+[13:22:58] [BERANGKAS] Loaded 1 Berangkas from database.
+[13:22:58] [STUFF] Loaded 21 rows  50 (Tax) 100000000 (Tax Vault) Stuff from database.
+[13:23:17] [connection] incoming connection: 192.168.90.228:60616 id: 0
+[13:23:17] [join] Izat_Ganteng has joined the server (0:192.168.90.228)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[13:24:30] password = ""  (string)
+[13:24:30] filterscripts = ""  (string)
+[13:24:30] 
+[13:24:30] Server Plugins
+[13:24:30] --------------
+[13:24:30]  Loading plugin: sscanf
+[13:24:30] 
+[13:24:30]  ===============================
+[13:24:30] 
+[13:24:30]       sscanf plugin loaded.     
+[13:24:30] 
+[13:24:30]          Version: 2.13.2
+[13:24:30] 
+[13:24:30]    (c) 2022 Alex "Y_Less" Cole  
+[13:24:30] 
+[13:24:30]  ===============================
+[13:24:30] 
+[13:24:30]   Loaded.
+[13:24:30]  Loading plugin: streamer
+[13:24:30] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[13:24:30]   Loaded.
+[13:24:30]  Loading plugin: samp_bcrypt
+[13:24:30] [SampBcrypt] [info]: Version: 0.3.2
+[13:24:30]   Loaded.
+[13:24:30]  Loading plugin: mysql
+[13:24:30]  >> plugin.mysql: R41-4 successfully loaded.
+[13:24:30]   Loaded.
+[13:24:30]  Loaded 4 plugins.
+
+[13:24:30] 
+[13:24:30] Filterscripts
+[13:24:30] ---------------
+[13:24:30]   Loaded 0 filterscripts.
+
+[13:24:30]  
+[13:24:30]  
+[13:24:30]  
+[13:24:30]  ======================================= 
+[13:24:30]  |                                     | 
+[13:24:30]  |        YSI version 4.00.0001        | 
+[13:24:30]  |        By Alex "Y_Less" Cole        | 
+[13:24:30]  |                                     | 
+[13:24:30]  ======================================= 
+[13:24:30]  
+[13:24:30] [ADM] Info: Load EVF v3.3.3 for SA:MP 0.3.7 by Abyss Morgan
+[13:24:30] text: [Black Market]
+  {FFFFFF}Type {FFFF00}/creategun{FFFFFF} to create illegal items
+  {FFFFFF}Type {FFFF00}/createammo{FFFFFF} to create ammmo
+  {FFFFFF}Type {FFFF00}/repairgun{FFFFFF} to repair gun's durability
+  {FFFFFF}Type {FFFF00}/craft{FFFFFF} to craft illegal items  , x: -50.38, y: -232.85, z: 6.76, worldid: 0, interiorid: 0
+[13:24:30] text: [Seeds Shop]
+  {FFFFFF}Type {FFFF00}/buyseeds{FFFFFF} to buy seeds
+  {00FF00}$999/seed  , x: 870.39, y: -25.11, z: 63.97, worldid: 0, interiorid: 0
+[13:24:30] [MySQL] - Connection Estabilished!
+[13:24:30] [SCRIPT] Semua script berhasil di load.
+[13:24:30] Number of vehicle models: 0
+[13:24:30] [GARKOT] Loaded 1 Public Garage from database.
+[13:24:30] [DROPITEM] Loaded 9 Dropped items from database.
+[13:24:30] [RENTAL] Loaded 1 Rental from database.
+[13:24:30] [ENTRANCE] Loaded 7 Entrance from database.
+[13:24:30] [BUSINESS] Loaded 2 Business from database.
+[13:24:30] [HOUSE] Loaded 271 House from database.
+[13:24:30] [BERANGKAS] Loaded 1 Berangkas from database.
+[13:24:30] [STUFF] Loaded 21 rows  50 (Tax) 100000000 (Tax Vault) Stuff from database.
+[13:24:42] [connection] incoming connection: 192.168.90.228:58020 id: 0
+[13:24:42] [join] Izat_Ganteng has joined the server (0:192.168.90.228)
+[13:25:07] [ACOUNT] Akun atas nama Izat_Ganteng dan ID: 9 berhasil di simpan
+[13:25:07] [part] Izat_Ganteng has left the server (0:1)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[13:27:17] password = ""  (string)
+[13:27:17] filterscripts = ""  (string)
+[13:27:17] 
+[13:27:17] Server Plugins
+[13:27:17] --------------
+[13:27:17]  Loading plugin: sscanf
+[13:27:17] 
+[13:27:17]  ===============================
+[13:27:17] 
+[13:27:17]       sscanf plugin loaded.     
+[13:27:17] 
+[13:27:17]          Version: 2.13.2
+[13:27:17] 
+[13:27:17]    (c) 2022 Alex "Y_Less" Cole  
+[13:27:17] 
+[13:27:17]  ===============================
+[13:27:17] 
+[13:27:17]   Loaded.
+[13:27:17]  Loading plugin: streamer
+[13:27:17] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[13:27:17]   Loaded.
+[13:27:17]  Loading plugin: samp_bcrypt
+[13:27:17] [SampBcrypt] [info]: Version: 0.3.2
+[13:27:17]   Loaded.
+[13:27:17]  Loading plugin: mysql
+[13:27:17]  >> plugin.mysql: R41-4 successfully loaded.
+[13:27:17]   Loaded.
+[13:27:17]  Loaded 4 plugins.
+
+[13:27:17] 
+[13:27:17] Filterscripts
+[13:27:17] ---------------
+[13:27:17]   Loaded 0 filterscripts.
+
+[13:27:17]  
+[13:27:17]  
+[13:27:17]  
+[13:27:17]  ======================================= 
+[13:27:17]  |                                     | 
+[13:27:17]  |        YSI version 4.00.0001        | 
+[13:27:17]  |        By Alex "Y_Less" Cole        | 
+[13:27:17]  |                                     | 
+[13:27:17]  ======================================= 
+[13:27:17]  
+[13:27:18] [ADM] Info: Load EVF v3.3.3 for SA:MP 0.3.7 by Abyss Morgan
+[13:27:18] text: [Black Market]
+  {FFFFFF}Type {FFFF00}/creategun{FFFFFF} to create illegal items
+  {FFFFFF}Type {FFFF00}/createammo{FFFFFF} to create ammmo
+  {FFFFFF}Type {FFFF00}/repairgun{FFFFFF} to repair gun's durability
+  {FFFFFF}Type {FFFF00}/craft{FFFFFF} to craft illegal items  , x: -50.38, y: -232.85, z: 6.76, worldid: 0, interiorid: 0
+[13:27:18] text: [Seeds Shop]
+  {FFFFFF}Type {FFFF00}/buyseeds{FFFFFF} to buy seeds
+  {00FF00}$999/seed  , x: 870.39, y: -25.11, z: 63.97, worldid: 0, interiorid: 0
+[13:27:18] [MySQL] - Connection Estabilished!
+[13:27:18] [SCRIPT] Semua script berhasil di load.
+[13:27:18] Number of vehicle models: 0
+[13:27:18] [GARKOT] Loaded 1 Public Garage from database.
+[13:27:18] [DROPITEM] Loaded 9 Dropped items from database.
+[13:27:18] [RENTAL] Loaded 1 Rental from database.
+[13:27:18] [ENTRANCE] Loaded 7 Entrance from database.
+[13:27:18] [BUSINESS] Loaded 2 Business from database.
+[13:27:18] [HOUSE] Loaded 271 House from database.
+[13:27:18] [BERANGKAS] Loaded 1 Berangkas from database.
+[13:27:18] [STUFF] Loaded 21 rows  50 (Tax) 100000000 (Tax Vault) Stuff from database.
+[13:27:38] [connection] incoming connection: 192.168.90.228:61262 id: 0
+[13:27:38] [join] Izat_Ganteng has joined the server (0:192.168.90.228)
+[13:27:51] [ACOUNT] Akun atas nama Izat_Ganteng dan ID: 9 berhasil di simpan
+[13:27:51] [part] Izat_Ganteng has left the server (0:1)
+[13:28:10] [connection] incoming connection: 192.168.90.228:60880 id: 0
+[13:28:11] [join] Izat_Gantengs has joined the server (0:192.168.90.228)
+[13:28:16] [ACOUNT] Pemain dengan nama Izat_Gantengs, dengan id 10 berhasil terdaftar.
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[13:30:00] password = ""  (string)
+[13:30:00] filterscripts = ""  (string)
+[13:30:00] 
+[13:30:00] Server Plugins
+[13:30:00] --------------
+[13:30:00]  Loading plugin: sscanf
+[13:30:00] 
+[13:30:00]  ===============================
+[13:30:00] 
+[13:30:00]       sscanf plugin loaded.     
+[13:30:00] 
+[13:30:00]          Version: 2.13.2
+[13:30:00] 
+[13:30:00]    (c) 2022 Alex "Y_Less" Cole  
+[13:30:00] 
+[13:30:00]  ===============================
+[13:30:00] 
+[13:30:00]   Loaded.
+[13:30:00]  Loading plugin: streamer
+[13:30:00] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[13:30:00]   Loaded.
+[13:30:00]  Loading plugin: samp_bcrypt
+[13:30:00] [SampBcrypt] [info]: Version: 0.3.2
+[13:30:00]   Loaded.
+[13:30:00]  Loading plugin: mysql
+[13:30:00]  >> plugin.mysql: R41-4 successfully loaded.
+[13:30:00]   Loaded.
+[13:30:00]  Loaded 4 plugins.
+
+[13:30:00] 
+[13:30:00] Filterscripts
+[13:30:00] ---------------
+[13:30:00]   Loaded 0 filterscripts.
+
+[13:30:00]  
+[13:30:00]  
+[13:30:00]  
+[13:30:00]  ======================================= 
+[13:30:00]  |                                     | 
+[13:30:00]  |        YSI version 4.00.0001        | 
+[13:30:00]  |        By Alex "Y_Less" Cole        | 
+[13:30:00]  |                                     | 
+[13:30:00]  ======================================= 
+[13:30:00]  
+[13:30:00] [ADM] Info: Load EVF v3.3.3 for SA:MP 0.3.7 by Abyss Morgan
+[13:30:00] text: [Black Market]
+  {FFFFFF}Type {FFFF00}/creategun{FFFFFF} to create illegal items
+  {FFFFFF}Type {FFFF00}/createammo{FFFFFF} to create ammmo
+  {FFFFFF}Type {FFFF00}/repairgun{FFFFFF} to repair gun's durability
+  {FFFFFF}Type {FFFF00}/craft{FFFFFF} to craft illegal items  , x: -50.38, y: -232.85, z: 6.76, worldid: 0, interiorid: 0
+[13:30:00] text: [Seeds Shop]
+  {FFFFFF}Type {FFFF00}/buyseeds{FFFFFF} to buy seeds
+  {00FF00}$999/seed  , x: 870.39, y: -25.11, z: 63.97, worldid: 0, interiorid: 0
+[13:30:00] [MySQL] - Connection Estabilished!
+[13:30:00] [SCRIPT] Semua script berhasil di load.
+[13:30:00] Number of vehicle models: 0
+[13:30:00] [GARKOT] Loaded 1 Public Garage from database.
+[13:30:00] [DROPITEM] Loaded 9 Dropped items from database.
+[13:30:00] [RENTAL] Loaded 1 Rental from database.
+[13:30:00] [ENTRANCE] Loaded 7 Entrance from database.
+[13:30:00] [BUSINESS] Loaded 2 Business from database.
+[13:30:00] [HOUSE] Loaded 271 House from database.
+[13:30:00] [BERANGKAS] Loaded 1 Berangkas from database.
+[13:30:00] [STUFF] Loaded 21 rows  50 (Tax) 100000000 (Tax Vault) Stuff from database.
+[13:30:31] [connection] incoming connection: 192.168.90.228:51183 id: 0
+[13:30:32] [join] Izat_Gantengss has joined the server (0:192.168.90.228)
+[13:30:38] [ACOUNT] Pemain dengan nama Izat_Gantengss, dengan id 11 berhasil terdaftar.
+[13:32:02] [part] Izat_Gantengss has left the server (0:1)
+[13:32:20] [connection] incoming connection: 192.168.90.228:53017 id: 0
+[13:32:20] [join] Izat_Gantengss has joined the server (0:192.168.90.228)
+[13:32:35] [part] Izat_Gantengss has left the server (0:1)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[13:32:46] password = ""  (string)
+[13:32:46] filterscripts = ""  (string)
+[13:32:46] 
+[13:32:46] Server Plugins
+[13:32:46] --------------
+[13:32:46]  Loading plugin: sscanf
+[13:32:46] 
+[13:32:46]  ===============================
+[13:32:46] 
+[13:32:46]       sscanf plugin loaded.     
+[13:32:46] 
+[13:32:46]          Version: 2.13.2
+[13:32:46] 
+[13:32:46]    (c) 2022 Alex "Y_Less" Cole  
+[13:32:46] 
+[13:32:46]  ===============================
+[13:32:46] 
+[13:32:46]   Loaded.
+[13:32:46]  Loading plugin: streamer
+[13:32:46] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[13:32:46]   Loaded.
+[13:32:46]  Loading plugin: samp_bcrypt
+[13:32:46] [SampBcrypt] [info]: Version: 0.3.2
+[13:32:46]   Loaded.
+[13:32:46]  Loading plugin: mysql
+[13:32:46]  >> plugin.mysql: R41-4 successfully loaded.
+[13:32:46]   Loaded.
+[13:32:46]  Loaded 4 plugins.
+
+[13:32:46] 
+[13:32:46] Filterscripts
+[13:32:46] ---------------
+[13:32:46]   Loaded 0 filterscripts.
+
+[13:32:46]  
+[13:32:46]  
+[13:32:46]  
+[13:32:46]  ======================================= 
+[13:32:46]  |                                     | 
+[13:32:46]  |        YSI version 4.00.0001        | 
+[13:32:46]  |        By Alex "Y_Less" Cole        | 
+[13:32:46]  |                                     | 
+[13:32:46]  ======================================= 
+[13:32:46]  
+[13:32:46] [ADM] Info: Load EVF v3.3.3 for SA:MP 0.3.7 by Abyss Morgan
+[13:32:46] text: [Black Market]
+  {FFFFFF}Type {FFFF00}/creategun{FFFFFF} to create illegal items
+  {FFFFFF}Type {FFFF00}/createammo{FFFFFF} to create ammmo
+  {FFFFFF}Type {FFFF00}/repairgun{FFFFFF} to repair gun's durability
+  {FFFFFF}Type {FFFF00}/craft{FFFFFF} to craft illegal items  , x: -50.38, y: -232.85, z: 6.76, worldid: 0, interiorid: 0
+[13:32:46] text: [Seeds Shop]
+  {FFFFFF}Type {FFFF00}/buyseeds{FFFFFF} to buy seeds
+  {00FF00}$999/seed  , x: 870.39, y: -25.11, z: 63.97, worldid: 0, interiorid: 0
+[13:32:46] [MySQL] - Connection Estabilished!
+[13:32:46] [SCRIPT] Semua script berhasil di load.
+[13:32:46] Number of vehicle models: 0
+[13:32:46] [GARKOT] Loaded 1 Public Garage from database.
+[13:32:46] [DROPITEM] Loaded 9 Dropped items from database.
+[13:32:46] [RENTAL] Loaded 1 Rental from database.
+[13:32:46] [ENTRANCE] Loaded 7 Entrance from database.
+[13:32:46] [BUSINESS] Loaded 2 Business from database.
+[13:32:47] [HOUSE] Loaded 271 House from database.
+[13:32:47] [BERANGKAS] Loaded 1 Berangkas from database.
+[13:32:47] [STUFF] Loaded 21 rows  50 (Tax) 100000000 (Tax Vault) Stuff from database.
+[13:33:06] [connection] incoming connection: 192.168.90.228:54576 id: 0
+[13:33:06] [join] Izat_Gantengss has joined the server (0:192.168.90.228)
+[13:33:44] [part] Izat_Gantengss has left the server (0:1)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[13:34:59] password = ""  (string)
+[13:34:59] filterscripts = ""  (string)
+[13:34:59] 
+[13:34:59] Server Plugins
+[13:34:59] --------------
+[13:34:59]  Loading plugin: sscanf
+[13:34:59] 
+[13:34:59]  ===============================
+[13:34:59] 
+[13:34:59]       sscanf plugin loaded.     
+[13:34:59] 
+[13:34:59]          Version: 2.13.2
+[13:34:59] 
+[13:34:59]    (c) 2022 Alex "Y_Less" Cole  
+[13:34:59] 
+[13:34:59]  ===============================
+[13:34:59] 
+[13:34:59]   Loaded.
+[13:34:59]  Loading plugin: streamer
+[13:34:59] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[13:34:59]   Loaded.
+[13:34:59]  Loading plugin: samp_bcrypt
+[13:34:59] [SampBcrypt] [info]: Version: 0.3.2
+[13:34:59]   Loaded.
+[13:34:59]  Loading plugin: mysql
+[13:34:59]  >> plugin.mysql: R41-4 successfully loaded.
+[13:34:59]   Loaded.
+[13:34:59]  Loaded 4 plugins.
+
+[13:34:59] 
+[13:34:59] Filterscripts
+[13:34:59] ---------------
+[13:34:59]   Loaded 0 filterscripts.
+
+[13:34:59]  
+[13:34:59]  
+[13:34:59]  
+[13:34:59]  ======================================= 
+[13:34:59]  |                                     | 
+[13:34:59]  |        YSI version 4.00.0001        | 
+[13:34:59]  |        By Alex "Y_Less" Cole        | 
+[13:34:59]  |                                     | 
+[13:34:59]  ======================================= 
+[13:34:59]  
+[13:34:59] [ADM] Info: Load EVF v3.3.3 for SA:MP 0.3.7 by Abyss Morgan
+[13:34:59] text: [Black Market]
+  {FFFFFF}Type {FFFF00}/creategun{FFFFFF} to create illegal items
+  {FFFFFF}Type {FFFF00}/createammo{FFFFFF} to create ammmo
+  {FFFFFF}Type {FFFF00}/repairgun{FFFFFF} to repair gun's durability
+  {FFFFFF}Type {FFFF00}/craft{FFFFFF} to craft illegal items  , x: -50.38, y: -232.85, z: 6.76, worldid: 0, interiorid: 0
+[13:34:59] text: [Seeds Shop]
+  {FFFFFF}Type {FFFF00}/buyseeds{FFFFFF} to buy seeds
+  {00FF00}$999/seed  , x: 870.39, y: -25.11, z: 63.97, worldid: 0, interiorid: 0
+[13:34:59] [MySQL] - Connection Estabilished!
+[13:34:59] [SCRIPT] Semua script berhasil di load.
+[13:34:59] Number of vehicle models: 0
+[13:34:59] [GARKOT] Loaded 1 Public Garage from database.
+[13:34:59] [DROPITEM] Loaded 9 Dropped items from database.
+[13:34:59] [RENTAL] Loaded 1 Rental from database.
+[13:34:59] [ENTRANCE] Loaded 7 Entrance from database.
+[13:34:59] [BUSINESS] Loaded 2 Business from database.
+[13:34:59] [HOUSE] Loaded 271 House from database.
+[13:34:59] [BERANGKAS] Loaded 1 Berangkas from database.
+[13:34:59] [STUFF] Loaded 21 rows  50 (Tax) 100000000 (Tax Vault) Stuff from database.
+[13:35:20] [connection] incoming connection: 192.168.90.228:65126 id: 0
+[13:35:20] [join] Izat_Gantengss has joined the server (0:192.168.90.228)
+[13:36:01] [ACOUNT] Akun atas nama Izat_Gantengss dan ID: 11 berhasil di simpan
+[13:36:01] [part] Izat_Gantengss has left the server (0:1)

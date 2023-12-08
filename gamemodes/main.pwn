@@ -29,6 +29,7 @@
 #include "module/core/function.inc"
 #include "module/core/timer.inc"
 
+
 // misc
 #include "module/misc/staticLocation.inc"
 
@@ -129,6 +130,8 @@
 #include "module/job/hunter.inc"
 #include "module/job/taxi.inc"
 #include "module/job/trucker.inc"
+
+#include "module/core/dialogresponse.inc"
 
 /* Functions */
 
@@ -288,12 +291,12 @@ Function:CheckUsers(playerid)
 	if (rows)
 	{
 	    format(str, sizeof(str), "Selamat datang kembali di server "SERVER_NAME"!\n\nUsername: %s\nVersion: "SERVER_REVISION"\n\n"YELLOW"Silakan masukkan Kata Sandi Anda di bawah ini untuk masuk:", GetName(playerid));
-		Dialog_Show(playerid, LoginScreen, DIALOG_STYLE_PASSWORD, "MASUK", str, "Select", "Cancel");
+		ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_PASSWORD, "MASUK", str, "Select", "Cancel");
 	}
 	else
 	{
 	    format(str, sizeof(str), "Selamat datang di server: "SERVER_NAME"\n\nUsername: %s\nVersion: "SERVER_REVISION"\n\n"YELLOW"Silakan masukkan Kata Sandi Anda di bawah ini untuk mendaftar:", GetName(playerid));
-		Dialog_Show(playerid, RegisterScreen, DIALOG_STYLE_PASSWORD, "DAFTAR", str, "Select", "Cancel");
+		ShowPlayerDialog(playerid, DIALOG_REGISTER, DIALOG_STYLE_PASSWORD, "DAFTAR", str, "Select", "Cancel");
 	}
 	return 1;
 }
@@ -377,7 +380,6 @@ Function:LoadCharacterData(playerid)
 	cache_get_value_name_float(0, "Health", PlayerData[playerid][pHealth]);
 	cache_get_value_name_int(0, "Interior", PlayerData[playerid][pInterior]);
 	cache_get_value_name_int(0, "World", PlayerData[playerid][pWorld]);
-	cache_get_value_name_int(0, "Heigth", PlayerData[playerid][pHeigth]);
 	cache_get_value_name_int(0, "Gender", PlayerData[playerid][pGender]);
 	cache_get_value_name_int(0, "Skin", PlayerData[playerid][pSkin]);
 	cache_get_value_name_int(0, "Injured", PlayerData[playerid][pInjured]);
@@ -411,9 +413,9 @@ Function:LoadCharacterData(playerid)
 		cache_get_value_name_int(0, query, PlayerData[playerid][pDurability][i]);
 	}
 
-	if(PlayerData[playerid][pGender] != -1) ShowSpawnTextdraw(playerid);
+	if(PlayerData[playerid][pGender] > 0) ShowSpawnTextdraw(playerid);
 
-	if(PlayerData[playerid][pGender] == -1) ShowPassport_1(playerid);
+	if(PlayerData[playerid][pGender] < 1) InputAge(playerid);
 
 	StartPlayerProgressBarTextdraw(playerid, 100, "Memuat Data", 100, "loadsukses", 1687547391);
 
@@ -479,7 +481,7 @@ Function:OnPlayerRegister(playerid)
 
 	PlayerData[playerid][pID] = cache_insert_id();
 	printf("[ACOUNT] Pemain dengan nama %s, dengan id %d berhasil terdaftar.", GetName(playerid), PlayerData[playerid][pID]);
-	// Dialog_Show(playerid, DialogAge, DIALOG_STYLE_INPUT, "Character Age", "Please Insert your Character Age", "Continue", "Cancel");
+	// ShowPlayerDialog(playerid, DIALOG_AGE, DIALOG_STYLE_INPUT, "Character Age", "Please Insert your Character Age", "Continue", "Cancel");
 
 	ShowPassport_1(playerid);
 	return 1;
@@ -491,7 +493,7 @@ Function:OnPlayerPasswordChecked(playerid, bool:success)
     format(str, sizeof(str), "Selamat datang kembali di server "SERVER_NAME"!\n\nUsername: %s\nVersion: "SERVER_REVISION"\n\n"YELLOW"Silakan masukkan Kata Sandi Anda di bawah ini untuk masuk:", GetName(playerid));
     
 	if(!success)
-        return Dialog_Show(playerid, LoginScreen, DIALOG_STYLE_PASSWORD, "MASUK", str, "Login", "Exit");
+        return ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_PASSWORD, "MASUK", str, "Login", "Exit");
 
 	PlayerData[playerid][pLogged] = true;	
 	new cQuery[256];
@@ -655,45 +657,15 @@ public OnPlayerEnterRaceCheckpoint(playerid){
 }
 
 
-Dialog:RegisterScreen(playerid, response, listitem, inputtext[])
+public OnPlayerRequestSpawn(playerid)
 {
-	if(!response)
-	    return Kick(playerid);
-
-	new str[256];
-	format(str, sizeof(str), "Selamat datang di server: "SERVER_NAME"\n\nUsername: %s\nVersion: "SERVER_REVISION"\n\nERROR: Panjang kata sandi tidak boleh di bawah 7 atau di atas 32!n"YELLOW"Silakan masukkan Kata Sandi Anda di bawah ini untuk mendaftar:", GetName(playerid));
-
-    if(strlen(inputtext) < 7)
-		return Dialog_Show(playerid, RegisterScreen, DIALOG_STYLE_PASSWORD, "DAFTAR", str, "Select", "Cancel");
-
-    if(strlen(inputtext) > 32)
-		return Dialog_Show(playerid, RegisterScreen, DIALOG_STYLE_PASSWORD, "DAFTAR", str, "Select", "Cancel");
-
-    bcrypt_hash(playerid, "HashPlayerPassword", inputtext, BCRYPT_COST);
-	return 1;
-}
-
-Dialog:LoginScreen(playerid, response, listitem, inputtext[])
-{
-	if(!response)
-	    return Kick(playerid);
-	        
-    if(strlen(inputtext) < 1)
+    if (!PlayerData[playerid][pLoggedIn])
     {
-		new str[256];
-        format(str, sizeof(str), "Selamat datang kembali di server "SERVER_NAME"!\n\nUsername: %s\nVersion: "SERVER_REVISION"\n\n"YELLOW"Silakan masukkan Kata Sandi Anda di bawah ini untuk masuk:", GetName(playerid));
-        Dialog_Show(playerid, LoginScreen, DIALOG_STYLE_PASSWORD, "MASUK", str, "Login", "Exit");
-        return 1;
-	}
-	new pwQuery[256], hash[BCRYPT_HASH_LENGTH];
-	mysql_format(sqlcon, pwQuery, sizeof(pwQuery), "SELECT Password FROM users WHERE username = '%e' LIMIT 1", GetName(playerid));
-	mysql_query(sqlcon, pwQuery);
-		
-    cache_get_value_name(0, "Password", hash, sizeof(hash));
-        
-    bcrypt_verify(playerid, "OnPlayerPasswordChecked", inputtext, hash);
-	return 1;
+        return 0;
+    }
+    return 1;
 }
+
 
 public OnPlayerSpawn(playerid)
 {
@@ -707,6 +679,7 @@ public OnPlayerSpawn(playerid)
 		SetPlayerInterior(playerid, PlayerData[playerid][pInterior]);
 		SetPlayerScore(playerid, PlayerData[playerid][pLevel]);
 		SetWeapons(playerid);
+		return 1;
 	}
 	// if(PlayerData[playerid][pJailTime] > 0)
 	// {
@@ -750,6 +723,7 @@ public OnPlayerSpawn(playerid)
 		// ResetWeapons(playerid);
 		GiveMoney(playerid, -5000, "Bayar rumah sakit");
 		// ResetDamages(playerid);
+		return 1;
 	}
 	else
 	{
@@ -772,8 +746,9 @@ public OnPlayerSpawn(playerid)
 
 			PlayerData[playerid][pInjuredLabel] = CreateDynamic3DTextLabel("(( THIS PLAYER IS INJURED ))", X11_RED, 0.0, 0.0, 0.50, 15.0, playerid);
 		}
+		return 1;
 	}
-	return 1;
+	return 0;
 }
 
 
@@ -827,29 +802,29 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 			}
 		}
 	}
-	if(PassportTD_2[playerid][0] != PlayerText:-1)
-	{
-		if(playertextid == PassportTD_2[playerid][32])
-		{
-			InputAge(playerid);
-		}
-		if(playertextid == PassportTD_2[playerid][36])
-		{
-			InputGender(playerid);
-		}
-		if(playertextid == PassportTD_2[playerid][38])
-		{
-			InputTinggi(playerid);
-		}
-		if(playertextid == PassportTD_2[playerid][13])
-		{
-			SubmitPassport(playerid);
-		}
-		if(playertextid == PassportTD_1[playerid][6])
-		{
-			SubmitPassport1(playerid);
-		}
-	}
+	// if(PassportTD_2[playerid][0] != PlayerText:-1)
+	// {
+	// 	if(playertextid == PassportTD_2[playerid][32])
+	// 	{
+	// 		InputAge(playerid);
+	// 	}
+	// 	if(playertextid == PassportTD_2[playerid][36])
+	// 	{
+	// 		InputGender(playerid);
+	// 	}
+	// 	if(playertextid == PassportTD_2[playerid][38])
+	// 	{
+	// 		InputTinggi(playerid);
+	// 	}
+	// 	if(playertextid == PassportTD_2[playerid][13])
+	// 	{
+	// 		SubmitPassport(playerid);
+	// 	}
+	// 	if(playertextid == PassportTD_1[playerid][6])
+	// 	{
+	// 		SubmitPassport1(playerid);
+	// 	}
+	// }
 	// SYSTEM HANDPHONE
 	if(PhonePage[playerid] == PHONE_LOCKSCREEN)
 	{
@@ -1037,490 +1012,10 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 					else
 						SendErrorMessage(playerid, "Anda tidak memiliki slot tersisa di inventaris Anda.");
 				}
-				else Dialog_Show(playerid, DIALOG_PICKITEM, DIALOG_STYLE_LIST, "AMBIL BARANG", string, "Pickup", "Cancel");
+				else ShowPlayerDialog(playerid, DIALOG_PICKITEM, DIALOG_STYLE_LIST, "AMBIL BARANG", string, "Pickup", "Cancel");
 			}
 		}
     }
-	return 1;
-}
-
-public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
-{
-	if(dialogid == DIALOG_RENTAL)
-	{
-	    if(response)
-	    {
-	        new rentid = PlayerData[playerid][pRenting];
-	        if(GetMoney(playerid) < RentData[rentid][rentPrice][listitem])
-	            return SendErrorMessage(playerid, "Kamu tidak memiliki cukup uang!");
-	            
-			new str[256];
-			format(str, sizeof(str), "{FFFFFF}Berapa jam kamu ingin menggunakan kendaraan Rental ini ?\n{FFFFFF}Maksimal adalah {FFFF00}4 jam\n\n{FFFFFF}Harga per Jam: {009000}%s", FormatNumber(RentData[rentid][rentPrice][listitem]));
-			Dialog_Show(playerid, DIALOG_RENTTIME, DIALOG_STYLE_INPUT, "{FFFFFF}Rental Time", str, "Rental", "Close");
-			PlayerData[playerid][pListitem] = listitem;
-		}
-	}
-	if(dialogid == DIALOG_TOYPOSX)
-	{
-		if(response)
-		{
-			if(!toyToggle[playerid][toySelect[playerid]])
-				return SendErrorMessage(playerid, "Please attach your accessory first!");
-
-			new Float:posisi = floatstr(inputtext);
-
-			SetPlayerAttachedObject(playerid,
-				toySelect[playerid],
-				pToys[playerid][toySelect[playerid]][toy_model],
-				pToys[playerid][toySelect[playerid]][toy_bone],
-				posisi,
-				pToys[playerid][toySelect[playerid]][toy_y],
-				pToys[playerid][toySelect[playerid]][toy_z],
-				pToys[playerid][toySelect[playerid]][toy_rx],
-				pToys[playerid][toySelect[playerid]][toy_ry],
-				pToys[playerid][toySelect[playerid]][toy_rz],
-				pToys[playerid][toySelect[playerid]][toy_sx],
-				pToys[playerid][toySelect[playerid]][toy_sy],
-				pToys[playerid][toySelect[playerid]][toy_sz]);
-			
-			pToys[playerid][toySelect[playerid]][toy_x] = posisi;
-
-			cmd_acc(playerid, "");
-
-			SavePlayerToys(playerid);
-		}
-	}
-	if(dialogid == DIALOG_TOYPOSY)
-	{
-		if(response)
-		{
-
-			if(!toyToggle[playerid][toySelect[playerid]])
-				return SendErrorMessage(playerid, "Please attach your accessory first!");
-
-			new Float:posisi = floatstr(inputtext);
-			
-			SetPlayerAttachedObject(playerid,
-				toySelect[playerid],
-				pToys[playerid][toySelect[playerid]][toy_model],
-				pToys[playerid][toySelect[playerid]][toy_bone],
-				pToys[playerid][toySelect[playerid]][toy_x],
-				posisi,
-				pToys[playerid][toySelect[playerid]][toy_z],
-				pToys[playerid][toySelect[playerid]][toy_rx],
-				pToys[playerid][toySelect[playerid]][toy_ry],
-				pToys[playerid][toySelect[playerid]][toy_rz],
-				pToys[playerid][toySelect[playerid]][toy_sx],
-				pToys[playerid][toySelect[playerid]][toy_sy],
-				pToys[playerid][toySelect[playerid]][toy_sz]);
-			
-			pToys[playerid][toySelect[playerid]][toy_y] = posisi;
-			cmd_acc(playerid, "");
-
-			SavePlayerToys(playerid);
-		}
-	}
-	if(dialogid == DIALOG_TOYPOSZ)
-	{
-		if(response)
-		{
-			if(!toyToggle[playerid][toySelect[playerid]])
-				return SendErrorMessage(playerid, "Please attach your accessory first!");
-
-			new Float:posisi = floatstr(inputtext);
-			
-			SetPlayerAttachedObject(playerid,
-				toySelect[playerid],
-				pToys[playerid][toySelect[playerid]][toy_model],
-				pToys[playerid][toySelect[playerid]][toy_bone],
-				pToys[playerid][toySelect[playerid]][toy_x],
-				pToys[playerid][toySelect[playerid]][toy_y],
-				posisi,
-				pToys[playerid][toySelect[playerid]][toy_rx],
-				pToys[playerid][toySelect[playerid]][toy_ry],
-				pToys[playerid][toySelect[playerid]][toy_rz],
-				pToys[playerid][toySelect[playerid]][toy_sx],
-				pToys[playerid][toySelect[playerid]][toy_sy],
-				pToys[playerid][toySelect[playerid]][toy_sz]);
-			
-			pToys[playerid][toySelect[playerid]][toy_z] = posisi;
-			cmd_acc(playerid, "");
-
-			SavePlayerToys(playerid);
-		}
-	}
-	if(dialogid == DIALOG_TOYPOSRX)
-	{
-		if(response)
-		{
-			if(!toyToggle[playerid][toySelect[playerid]])
-				return SendErrorMessage(playerid, "Please attach your accessory first!");
-
-			new Float:posisi = floatstr(inputtext);
-			
-			SetPlayerAttachedObject(playerid,
-				toySelect[playerid],
-				pToys[playerid][toySelect[playerid]][toy_model],
-				pToys[playerid][toySelect[playerid]][toy_bone],
-				pToys[playerid][toySelect[playerid]][toy_x],
-				pToys[playerid][toySelect[playerid]][toy_y],
-				pToys[playerid][toySelect[playerid]][toy_z],
-				posisi,
-				pToys[playerid][toySelect[playerid]][toy_ry],
-				pToys[playerid][toySelect[playerid]][toy_rz],
-				pToys[playerid][toySelect[playerid]][toy_sx],
-				pToys[playerid][toySelect[playerid]][toy_sy],
-				pToys[playerid][toySelect[playerid]][toy_sz]);
-			
-			pToys[playerid][toySelect[playerid]][toy_rx] = posisi;
-			cmd_acc(playerid, "");
-
-			SavePlayerToys(playerid);
-		}
-	}
-	if(dialogid == DIALOG_TOYPOSRY)
-	{
-		if(response)
-		{
-			if(!toyToggle[playerid][toySelect[playerid]])
-				return SendErrorMessage(playerid, "Please attach your accessory first!");
-
-			new Float:posisi = floatstr(inputtext);
-			
-			SetPlayerAttachedObject(playerid,
-				toySelect[playerid],
-				pToys[playerid][toySelect[playerid]][toy_model],
-				pToys[playerid][toySelect[playerid]][toy_bone],
-				pToys[playerid][toySelect[playerid]][toy_x],
-				pToys[playerid][toySelect[playerid]][toy_y],
-				pToys[playerid][toySelect[playerid]][toy_z],
-				pToys[playerid][toySelect[playerid]][toy_rx],
-				posisi,
-				pToys[playerid][toySelect[playerid]][toy_rz],
-				pToys[playerid][toySelect[playerid]][toy_sx],
-				pToys[playerid][toySelect[playerid]][toy_sy],
-				pToys[playerid][toySelect[playerid]][toy_sz]);
-			
-			pToys[playerid][toySelect[playerid]][toy_ry] = posisi;
-			cmd_acc(playerid, "");
-
-			SavePlayerToys(playerid);
-		}
-	}
-	if(dialogid == DIALOG_TOYPOSRZ)
-	{
-		if(response)
-		{
-			if(!toyToggle[playerid][toySelect[playerid]])
-				return SendErrorMessage(playerid, "Please attach your accessory first!");
-
-			new Float:posisi = floatstr(inputtext);
-			
-			SetPlayerAttachedObject(playerid,
-				toySelect[playerid],
-				pToys[playerid][toySelect[playerid]][toy_model],
-				pToys[playerid][toySelect[playerid]][toy_bone],
-				pToys[playerid][toySelect[playerid]][toy_x],
-				pToys[playerid][toySelect[playerid]][toy_y],
-				pToys[playerid][toySelect[playerid]][toy_z],
-				pToys[playerid][toySelect[playerid]][toy_rx],
-				pToys[playerid][toySelect[playerid]][toy_ry],
-				posisi,
-				pToys[playerid][toySelect[playerid]][toy_sx],
-				pToys[playerid][toySelect[playerid]][toy_sy],
-				pToys[playerid][toySelect[playerid]][toy_sz]);
-			
-			pToys[playerid][toySelect[playerid]][toy_rz] = posisi;
-			cmd_acc(playerid, "");
-
-			SavePlayerToys(playerid);
-		}
-	}
-	if(dialogid == DIALOG_TOYPOSSX)
-	{
-		if(response)
-		{
-			if(!toyToggle[playerid][toySelect[playerid]])
-				return SendErrorMessage(playerid, "Please attach your accessory first!");
-
-			new Float:posisi = floatstr(inputtext);
-			
-			SetPlayerAttachedObject(playerid,
-				toySelect[playerid],
-				pToys[playerid][toySelect[playerid]][toy_model],
-				pToys[playerid][toySelect[playerid]][toy_bone],
-				pToys[playerid][toySelect[playerid]][toy_x],
-				pToys[playerid][toySelect[playerid]][toy_y],
-				pToys[playerid][toySelect[playerid]][toy_z],
-				pToys[playerid][toySelect[playerid]][toy_rx],
-				pToys[playerid][toySelect[playerid]][toy_ry],
-				pToys[playerid][toySelect[playerid]][toy_rz],
-				posisi,
-				pToys[playerid][toySelect[playerid]][toy_sy],
-				pToys[playerid][toySelect[playerid]][toy_sz]);
-			
-			pToys[playerid][toySelect[playerid]][toy_sx] = posisi;
-			cmd_acc(playerid, "");
-
-			SavePlayerToys(playerid);
-		}
-	}
-	if(dialogid == DIALOG_TOYPOSSY)
-	{
-		if(response)
-		{
-			if(!toyToggle[playerid][toySelect[playerid]])
-				return SendErrorMessage(playerid, "Please attach your accessory first!");
-
-			new Float:posisi = floatstr(inputtext);
-			
-			SetPlayerAttachedObject(playerid,
-				toySelect[playerid],
-				pToys[playerid][toySelect[playerid]][toy_model],
-				pToys[playerid][toySelect[playerid]][toy_bone],
-				pToys[playerid][toySelect[playerid]][toy_x],
-				pToys[playerid][toySelect[playerid]][toy_y],
-				pToys[playerid][toySelect[playerid]][toy_z],
-				pToys[playerid][toySelect[playerid]][toy_rx],
-				pToys[playerid][toySelect[playerid]][toy_ry],
-				pToys[playerid][toySelect[playerid]][toy_rz],
-				pToys[playerid][toySelect[playerid]][toy_sx],
-				posisi,
-				pToys[playerid][toySelect[playerid]][toy_sz]);
-			
-			pToys[playerid][toySelect[playerid]][toy_sy] = posisi;
-			cmd_acc(playerid, "");
-
-			SavePlayerToys(playerid);
-		}
-	}
-	if(dialogid == DIALOG_TOYPOSSZ)
-	{
-		if(response)
-		{
-			if(!toyToggle[playerid][toySelect[playerid]])
-				return SendErrorMessage(playerid, "Please attach your accessory first!");
-
-			new Float:posisi = floatstr(inputtext);
-			
-			SetPlayerAttachedObject(playerid,
-				toySelect[playerid],
-				pToys[playerid][toySelect[playerid]][toy_model],
-				pToys[playerid][toySelect[playerid]][toy_bone],
-				pToys[playerid][toySelect[playerid]][toy_x],
-				pToys[playerid][toySelect[playerid]][toy_y],
-				pToys[playerid][toySelect[playerid]][toy_z],
-				pToys[playerid][toySelect[playerid]][toy_rx],
-				pToys[playerid][toySelect[playerid]][toy_ry],
-				pToys[playerid][toySelect[playerid]][toy_rz],
-				pToys[playerid][toySelect[playerid]][toy_sx],
-				pToys[playerid][toySelect[playerid]][toy_sy],
-				posisi);
-			
-			pToys[playerid][toySelect[playerid]][toy_sz] = posisi;
-			cmd_acc(playerid, "");
-
-			SavePlayerToys(playerid);
-		}
-	}
-	if(dialogid == DIALOG_TOYPOSISIBUY)
-	{
-		if(response)
-		{
-	        GiveMoney(playerid, -PlayerData[playerid][pSkinPrice]);
-			SendNearbyMessage(playerid, 20.0, COLOR_PURPLE, "> %s telah membayar $%s dan mengambil toys", ReturnName(playerid), FormatNumber(PlayerData[playerid][pSkinPrice]));
-			// benerin nanti
-			// BusinessData[PlayerData[playerid][pBusiness]][bizProducts]--;		
-			// BusinessData[PlayerData[playerid][pBusiness]][bizVault] += PlayerData[playerid][pSkinPrice];
-			new slot = GetPlayerFreeToySlot(playerid);
-			printf("%s", PlayerData[playerid][pTempModel]);
-			pToys[playerid][slot][toy_model] = PlayerData[playerid][pTempModel];
-			pToys[playerid][slot][toy_bone] = listitem + 1;
-			pToys[playerid][slot][toy_sx] = 1.0;
-			pToys[playerid][slot][toy_sy] = 1.0;
-			pToys[playerid][slot][toy_sz] = 1.0;
-			toySelect[playerid] = slot;
-			SetPlayerAttachedObject(playerid, slot, pToys[playerid][slot][toy_model], listitem + 1);
-			EditAttachedObject(playerid, toySelect[playerid]);
-		}
-	}
-	if(dialogid == DIALOG_TOYPOSISI)
-	{
-		if(response)
-		{
-			pToys[playerid][toySelect[playerid]][toy_bone] = listitem + 1;
-			if(toyToggle[playerid][toySelect[playerid]])
-			{
-				RemovePlayerAttachedObject(playerid, toySelect[playerid]);
-			}
-			SetPlayerAttachedObject(playerid,
-					toySelect[playerid],
-					pToys[playerid][toySelect[playerid]][toy_model],
-					pToys[playerid][toySelect[playerid]][toy_bone],
-					pToys[playerid][toySelect[playerid]][toy_x],
-					pToys[playerid][toySelect[playerid]][toy_y],
-					pToys[playerid][toySelect[playerid]][toy_z],
-					pToys[playerid][toySelect[playerid]][toy_rx],
-					pToys[playerid][toySelect[playerid]][toy_ry],
-					pToys[playerid][toySelect[playerid]][toy_rz],
-					pToys[playerid][toySelect[playerid]][toy_sx],
-					pToys[playerid][toySelect[playerid]][toy_sy],
-					pToys[playerid][toySelect[playerid]][toy_sz]);
-			SendServerMessage(playerid, "Accessory new bone position now is {FFFF00}%s", Bone_Name[listitem + 1]);
-		}
-	}
-	if(dialogid == DIALOG_TOYEDIT)
-	{
-		if(response)
-		{
-			new mstr[156];
-			switch(listitem)
-			{
-				case 0: // toggle attach
-				{
-					if(!toyToggle[playerid][toySelect[playerid]])
-					{
-						SendInfoMessage(playerid, "Accessory ~g~attached", 3);
-
-						SetPlayerAttachedObject(playerid,
-						toySelect[playerid],
-						pToys[playerid][toySelect[playerid]][toy_model],
-						pToys[playerid][toySelect[playerid]][toy_bone],
-						pToys[playerid][toySelect[playerid]][toy_x],
-						pToys[playerid][toySelect[playerid]][toy_y],
-						pToys[playerid][toySelect[playerid]][toy_z],
-						pToys[playerid][toySelect[playerid]][toy_rx],
-						pToys[playerid][toySelect[playerid]][toy_ry],
-						pToys[playerid][toySelect[playerid]][toy_rz],
-						pToys[playerid][toySelect[playerid]][toy_sx],
-						pToys[playerid][toySelect[playerid]][toy_sy],
-						pToys[playerid][toySelect[playerid]][toy_sz]);
-
-						toyToggle[playerid][toySelect[playerid]] = true;
-					}
-					else
-					{
-						RemovePlayerAttachedObject(playerid, toySelect[playerid]);
-						SendInfoMessage(playerid, "~w~Accessory ~r~deattached", 3);
-
-						toyToggle[playerid][toySelect[playerid]] = false;
-					}
-					SavePlayerToys(playerid);
-				}
-				case 1: // change bone
-				{
-				    ShowPlayerDialog(playerid, DIALOG_TOYPOSISI, DIALOG_STYLE_LIST, "Bone Selection", "Spine\nHead\nLeft upper arm\nRight upper arm\nLeft hand\nRight hand\nLeft thigh\nRight thigh\nLeft foot\nRight foot\nRight calf\nLeft calf\nLeft forearm\nRight forearm\nLeft shoulder\nRight shoulder\nNeck\nJaw", "Choose", "Cancel");
-				}
-				case 2: // change placement
-				{
-
-					EditAttachedObject(playerid, toySelect[playerid]);
-
-				}
-				case 3:	//remove from list
-				{
-					if(IsPlayerAttachedObjectSlotUsed(playerid, toySelect[playerid]))
-					{
-						RemovePlayerAttachedObject(playerid, toySelect[playerid]);
-					}
-					pToys[playerid][toySelect[playerid]][toy_model] = 0;
-					SendInfoMessage(playerid, "~w~Accessory ~y~removed!", 3);
-					SavePlayerToys(playerid);
-				}
-				case 4: //Scale Fix
-				{
-
-					SendInfoMessage(playerid, "~w~Accessory scale ~y~Fixed", 3);
-
-					pToys[playerid][toySelect[playerid]][toy_sx] = 1.0;
-					pToys[playerid][toySelect[playerid]][toy_sy] = 1.0;
-					pToys[playerid][toySelect[playerid]][toy_sz] = 1.0;
-
-					if(!toyToggle[playerid][toySelect[playerid]])
-					{
-						RemovePlayerAttachedObject(playerid, toySelect[playerid]);
-						SetPlayerAttachedObject(playerid,
-						toySelect[playerid],
-						pToys[playerid][toySelect[playerid]][toy_model],
-						pToys[playerid][toySelect[playerid]][toy_bone],
-						pToys[playerid][toySelect[playerid]][toy_x],
-						pToys[playerid][toySelect[playerid]][toy_y],
-						pToys[playerid][toySelect[playerid]][toy_z],
-						pToys[playerid][toySelect[playerid]][toy_rx],
-						pToys[playerid][toySelect[playerid]][toy_ry],
-						pToys[playerid][toySelect[playerid]][toy_rz],
-						pToys[playerid][toySelect[playerid]][toy_sx],
-						pToys[playerid][toySelect[playerid]][toy_sy],
-						pToys[playerid][toySelect[playerid]][toy_sz]);
-
-						toyToggle[playerid][toySelect[playerid]] = true;
-					}
-				}
-				case 5: //Pos X
-				{
-					format(mstr, sizeof(mstr), "Current X Position: %f\nInput new X Position:(Float)", pToys[playerid][toySelect[playerid]][toy_x]);
-					ShowPlayerDialog(playerid, DIALOG_TOYPOSX, DIALOG_STYLE_INPUT, "Edit X Position", mstr, "Edit", "Cancel");
-				}
-				case 6: //Pos Y
-				{
-					format(mstr, sizeof(mstr), "Current Y Position: %f\nInput new Y Position:(Float)", pToys[playerid][toySelect[playerid]][toy_y]);
-					ShowPlayerDialog(playerid, DIALOG_TOYPOSY, DIALOG_STYLE_INPUT, "Edit Y Position", mstr, "Edit", "Cancel");
-				}
-				case 7: //Pos Z
-				{
-					format(mstr, sizeof(mstr), "Current Z Position: %f\nInput new Z Position:(Float)", pToys[playerid][toySelect[playerid]][toy_z]);
-					ShowPlayerDialog(playerid, DIALOG_TOYPOSZ, DIALOG_STYLE_INPUT, "Edit Z Position", mstr, "Edit", "Cancel");
-				}
-				case 8: //Pos RX
-				{
-					format(mstr, sizeof(mstr), "Current X Rotation: %f\nInput new X Rotation:(Float)", pToys[playerid][toySelect[playerid]][toy_rx]);
-					ShowPlayerDialog(playerid, DIALOG_TOYPOSRX, DIALOG_STYLE_INPUT, "Edit X Rotation", mstr, "Edit", "Cancel");
-				}
-				case 9: //Pos RY
-				{
-					format(mstr, sizeof(mstr), "Current Y Rotation: %f\nInput new Y Rotation:(Float)", pToys[playerid][toySelect[playerid]][toy_ry]);
-					ShowPlayerDialog(playerid, DIALOG_TOYPOSRY, DIALOG_STYLE_INPUT, "Edit Y Rotation", mstr, "Edit", "Cancel");
-				}
-				case 10: //Pos RZ
-				{
-					format(mstr, sizeof(mstr), "Current Z Rotation: %f\nInput new Z Rotation(Float)", pToys[playerid][toySelect[playerid]][toy_rz]);
-					ShowPlayerDialog(playerid, DIALOG_TOYPOSRZ, DIALOG_STYLE_INPUT, "Edit Z Rotation", mstr, "Edit", "Cancel");
-				}
-				case 11: //Scale X
-				{
-					format(mstr, sizeof(mstr), "Current X Scale: %f\nInput new X Scale(Float)", pToys[playerid][toySelect[playerid]][toy_sx]);
-					ShowPlayerDialog(playerid, DIALOG_TOYPOSSX, DIALOG_STYLE_INPUT, "Edit X Scale", mstr, "Edit", "Cancel");
-				}
-				case 12: //Scale Y
-				{
-					format(mstr, sizeof(mstr), "Current Y Scale: %f\nInput new Y Scale(Float)", pToys[playerid][toySelect[playerid]][toy_sy]);
-					ShowPlayerDialog(playerid, DIALOG_TOYPOSSY, DIALOG_STYLE_INPUT, "Edit Y Scale", mstr, "Edit", "Cancel");
-				}
-				case 13: //Scale Z
-				{
-					format(mstr, sizeof(mstr), "Current Z Scale: %f\nInput new Z Scale(Float)", pToys[playerid][toySelect[playerid]][toy_sz]);
-					ShowPlayerDialog(playerid, DIALOG_TOYPOSSZ, DIALOG_STYLE_INPUT, "Edit Z Scale", mstr, "Edit", "Cancel");
-				}
-			}
-		}
-	}
-
-	if(dialogid == DIALOG_TOY)
-	{
-		if(response)
-		{
-			if(pToys[playerid][listitem][toy_model] == 0)
-				return SendErrorMessage(playerid, "There is no accessory on selected index!");
-
-			
-			new string[512];
-			toySelect[playerid] = listitem;
-			format(string, sizeof(string), "Place %s\nChange Bone\nChange Placement\nRemove from list\nScale Fix\nPosition X: %f\nPosition Y: %f\nPosition Z: %f\nRotation X: %f\nRotation Y: %f\nRotation Z: %f\nScale X: %f\nScale Y: %f\nScale Z: %f",
-			(!toyToggle[playerid][toySelect[playerid]]) ? ("On") : ("Off"), pToys[playerid][toySelect[playerid]][toy_x], pToys[playerid][toySelect[playerid]][toy_y], pToys[playerid][toySelect[playerid]][toy_z],
-			pToys[playerid][toySelect[playerid]][toy_rx], pToys[playerid][toySelect[playerid]][toy_ry], pToys[playerid][toySelect[playerid]][toy_rz], pToys[playerid][toySelect[playerid]][toy_sx], pToys[playerid][toySelect[playerid]][toy_sy], pToys[playerid][toySelect[playerid]][toy_sz]);
-			ShowPlayerDialog(playerid, DIALOG_TOYEDIT, DIALOG_STYLE_LIST, sprintf("Edit Accessory (#%d)", listitem), string, "Select", "Cancel");
-		}
-	}
 	return 1;
 }
 
@@ -1679,7 +1174,7 @@ public OnModelSelectionResponse(playerid, extraid, index, modelid, response)
 	}
 	if ((response) && (extraid == MODEL_SELECTION_SKINS))
 	{
-	    Dialog_Show(playerid, FactionSkin, DIALOG_STYLE_LIST, "Edit Skin", "Add by Model ID\nAdd by Thumbnail\nClear Slot", "Select", "Cancel");
+	    ShowPlayerDialog(playerid, FactionSkin, DIALOG_STYLE_LIST, "Edit Skin", "Add by Model ID\nAdd by Thumbnail\nClear Slot", "Select", "Cancel");
 	    PlayerData[playerid][pSelectedSlot] = index;
 	}
 	if ((response) && (extraid == MODEL_SELECTION_ADD_SKIN))

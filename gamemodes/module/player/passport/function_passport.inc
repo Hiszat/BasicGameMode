@@ -1,221 +1,224 @@
 stock ShowPassport_1(playerid)
 {
-    SelectTextDraw(playerid, X11_LIGHTBLUE);
+    // SelectTextDraw(playerid, X11_LIGHTBLUE);
 
-    PassportTD_1[playerid][0] = CreatePlayerTextDraw(playerid, 312.000000, 45.000000, "_");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][0], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][0], 0.600000, 32.999980);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][0], 298.500000, 189.500000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][0], 1);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][0], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][0], 2);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][0], -1);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][0], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][0], 246);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][0], 1);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][0], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][0], 0);
+    // PassportTD_1[playerid][0] = CreatePlayerTextDraw(playerid, 312.000000, 45.000000, "_");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][0], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][0], 0.600000, 32.999980);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][0], 298.500000, 189.500000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][0], 1);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][0], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][0], 2);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][0], -1);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][0], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][0], 246);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][0], 1);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][0], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][0], 0);
 
-    PassportTD_1[playerid][1] = CreatePlayerTextDraw(playerid, 312.000000, 45.000000, "_");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][1], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][1], 0.600000, 32.999980);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][1], 298.500000, 189.500000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][1], 1);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][1], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][1], 2);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][1], -1);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][1], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][1], 9109541);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][1], 1);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][1], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][1], 0);
+    // PassportTD_1[playerid][1] = CreatePlayerTextDraw(playerid, 312.000000, 45.000000, "_");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][1], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][1], 0.600000, 32.999980);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][1], 298.500000, 189.500000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][1], 1);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][1], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][1], 2);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][1], -1);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][1], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][1], 9109541);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][1], 1);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][1], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][1], 0);
 
-    PassportTD_1[playerid][2] = CreatePlayerTextDraw(playerid, 318.000000, 75.000000, "Los Santos");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][2], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][2], 0.404166, 1.899999);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][2], 400.000000, 17.000000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][2], 0);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][2], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][2], 1);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][2], -2686801);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][2], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][2], 50);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][2], 0);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][2], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][2], 0);
+    // PassportTD_1[playerid][2] = CreatePlayerTextDraw(playerid, 318.000000, 75.000000, "Los Santos");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][2], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][2], 0.404166, 1.899999);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][2], 400.000000, 17.000000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][2], 0);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][2], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][2], 1);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][2], -2686801);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][2], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][2], 50);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][2], 0);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][2], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][2], 0);
 
-    PassportTD_1[playerid][3] = CreatePlayerTextDraw(playerid, 338.000000, 94.000000, "Passport");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][3], 2);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][3], 0.216664, 1.000000);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][3], 400.000000, 17.000000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][3], 0);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][3], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][3], 1);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][3], -126);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][3], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][3], 50);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][3], 0);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][3], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][3], 0);
+    // PassportTD_1[playerid][3] = CreatePlayerTextDraw(playerid, 338.000000, 94.000000, "Passport");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][3], 2);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][3], 0.216664, 1.000000);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][3], 400.000000, 17.000000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][3], 0);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][3], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][3], 1);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][3], -126);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][3], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][3], 50);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][3], 0);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][3], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][3], 0);
 
-    PassportTD_1[playerid][4] = CreatePlayerTextDraw(playerid, 255.000000, 204.000000, "Klik menu di bawah");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][4], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][4], 0.316666, 1.149999);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][4], 545.000000, 245.000000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][4], 0);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][4], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][4], 1);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][4], -1);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][4], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][4], 50);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][4], 0);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][4], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][4], 0);
+    // PassportTD_1[playerid][4] = CreatePlayerTextDraw(playerid, 255.000000, 204.000000, "Klik menu di bawah");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][4], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][4], 0.316666, 1.149999);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][4], 545.000000, 245.000000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][4], 0);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][4], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][4], 1);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][4], -1);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][4], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][4], 50);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][4], 0);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][4], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][4], 0);
 
-    PassportTD_1[playerid][5] = CreatePlayerTextDraw(playerid, 232.000000, 192.000000, "Untuk melakukan Pendaftaran");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][5], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][5], 0.316666, 1.149999);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][5], 545.000000, 245.000000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][5], 0);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][5], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][5], 1);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][5], -1);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][5], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][5], 50);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][5], 0);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][5], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][5], 0);
+    // PassportTD_1[playerid][5] = CreatePlayerTextDraw(playerid, 232.000000, 192.000000, "Untuk melakukan Pendaftaran");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][5], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][5], 0.316666, 1.149999);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][5], 545.000000, 245.000000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][5], 0);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][5], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][5], 1);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][5], -1);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][5], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][5], 50);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][5], 0);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][5], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][5], 0);
 
-    PassportTD_1[playerid][6] = CreatePlayerTextDraw(playerid, 309.000000, 223.000000, "Submit");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][6], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][6], 0.166666, 1.700000);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][6], 16.500000, 27.000000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][6], 1);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][6], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][6], 2);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][6], -1);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][6], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][6], 200);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][6], 1);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][6], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][6], 1);
+    // PassportTD_1[playerid][6] = CreatePlayerTextDraw(playerid, 309.000000, 223.000000, "Submit");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][6], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][6], 0.166666, 1.700000);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][6], 16.500000, 27.000000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][6], 1);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][6], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][6], 2);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][6], -1);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][6], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][6], 200);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][6], 1);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][6], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][6], 1);
 
-    PassportTD_1[playerid][7] = CreatePlayerTextDraw(playerid, 390.000000, 316.000000, "_");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][7], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][7], 0.570833, 1.649996);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][7], 239.500000, 18.000000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][7], 1);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][7], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][7], 2);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][7], -1);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][7], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][7], 255);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][7], 1);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][7], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][7], 0);
+    // PassportTD_1[playerid][7] = CreatePlayerTextDraw(playerid, 390.000000, 316.000000, "_");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][7], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][7], 0.570833, 1.649996);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][7], 239.500000, 18.000000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][7], 1);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][7], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][7], 2);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][7], -1);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][7], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][7], 255);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][7], 1);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][7], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][7], 0);
 
-    PassportTD_1[playerid][8] = CreatePlayerTextDraw(playerid, 390.000000, 317.000000, "_");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][8], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][8], 0.570833, 1.349997);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][8], 239.500000, 14.500000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][8], 1);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][8], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][8], 2);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][8], -1);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][8], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][8], -764862721);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][8], 1);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][8], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][8], 0);
+    // PassportTD_1[playerid][8] = CreatePlayerTextDraw(playerid, 390.000000, 317.000000, "_");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][8], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][8], 0.570833, 1.349997);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][8], 239.500000, 14.500000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][8], 1);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][8], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][8], 2);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][8], -1);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][8], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][8], -764862721);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][8], 1);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][8], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][8], 0);
 
-    PassportTD_1[playerid][9] = CreatePlayerTextDraw(playerid, 382.000000, 326.000000, "_");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][9], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][9], 0.570833, -0.400002);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][9], 239.500000, 0.000000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][9], 1);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][9], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][9], 2);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][9], -1);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][9], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][9], 255);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][9], 1);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][9], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][9], 0);
+    // PassportTD_1[playerid][9] = CreatePlayerTextDraw(playerid, 382.000000, 326.000000, "_");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][9], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][9], 0.570833, -0.400002);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][9], 239.500000, 0.000000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][9], 1);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][9], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][9], 2);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][9], -1);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][9], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][9], 255);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][9], 1);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][9], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][9], 0);
 
-    PassportTD_1[playerid][10] = CreatePlayerTextDraw(playerid, 390.000000, 331.000000, "_");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][10], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][10], 0.570833, -0.450002);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][10], 236.000000, 6.500000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][10], 1);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][10], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][10], 2);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][10], -1);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][10], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][10], 255);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][10], 1);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][10], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][10], 0);
+    // PassportTD_1[playerid][10] = CreatePlayerTextDraw(playerid, 390.000000, 331.000000, "_");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][10], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][10], 0.570833, -0.450002);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][10], 236.000000, 6.500000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][10], 1);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][10], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][10], 2);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][10], -1);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][10], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][10], 255);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][10], 1);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][10], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][10], 0);
 
-    PassportTD_1[playerid][11] = CreatePlayerTextDraw(playerid, 390.000000, 321.000000, "_");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][11], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][11], 0.570833, -0.450002);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][11], 236.000000, 6.500000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][11], 1);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][11], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][11], 2);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][11], -1);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][11], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][11], 255);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][11], 1);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][11], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][11], 0);
+    // PassportTD_1[playerid][11] = CreatePlayerTextDraw(playerid, 390.000000, 321.000000, "_");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][11], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][11], 0.570833, -0.450002);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][11], 236.000000, 6.500000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][11], 1);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][11], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][11], 2);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][11], -1);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][11], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][11], 255);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][11], 1);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][11], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][11], 0);
 
-    PassportTD_1[playerid][12] = CreatePlayerTextDraw(playerid, 397.000000, 326.000000, "_");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][12], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][12], 0.570833, -0.400002);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][12], 239.500000, 0.000000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][12], 1);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][12], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][12], 2);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][12], -1);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][12], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][12], 255);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][12], 1);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][12], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][12], 0);
+    // PassportTD_1[playerid][12] = CreatePlayerTextDraw(playerid, 397.000000, 326.000000, "_");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][12], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][12], 0.570833, -0.400002);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][12], 239.500000, 0.000000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][12], 1);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][12], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][12], 2);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][12], -1);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][12], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][12], 255);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][12], 1);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][12], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][12], 0);
 
-    PassportTD_1[playerid][13] = CreatePlayerTextDraw(playerid, 384.000000, 323.000000, "_");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][13], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][13], 0.570833, 0.349999);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][13], 298.500000, -7.500000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][13], 1);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][13], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][13], 2);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][13], -1);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][13], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][13], 135);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][13], 1);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][13], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][13], 0);
+    // PassportTD_1[playerid][13] = CreatePlayerTextDraw(playerid, 384.000000, 323.000000, "_");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][13], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][13], 0.570833, 0.349999);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][13], 298.500000, -7.500000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][13], 1);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][13], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][13], 2);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][13], -1);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][13], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][13], 135);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][13], 1);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][13], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][13], 0);
 
-    PassportTD_1[playerid][14] = CreatePlayerTextDraw(playerid, 396.000000, 323.000000, "_");
-    PlayerTextDrawFont(playerid, PassportTD_1[playerid][14], 1);
-    PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][14], 0.570833, 0.349999);
-    PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][14], 298.500000, -7.500000);
-    PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][14], 1);
-    PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][14], 0);
-    PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][14], 2);
-    PlayerTextDrawColor(playerid, PassportTD_1[playerid][14], -1);
-    PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][14], 255);
-    PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][14], 135);
-    PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][14], 1);
-    PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][14], 1);
-    PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][14], 0);
+    // PassportTD_1[playerid][14] = CreatePlayerTextDraw(playerid, 396.000000, 323.000000, "_");
+    // PlayerTextDrawFont(playerid, PassportTD_1[playerid][14], 1);
+    // PlayerTextDrawLetterSize(playerid, PassportTD_1[playerid][14], 0.570833, 0.349999);
+    // PlayerTextDrawTextSize(playerid, PassportTD_1[playerid][14], 298.500000, -7.500000);
+    // PlayerTextDrawSetOutline(playerid, PassportTD_1[playerid][14], 1);
+    // PlayerTextDrawSetShadow(playerid, PassportTD_1[playerid][14], 0);
+    // PlayerTextDrawAlignment(playerid, PassportTD_1[playerid][14], 2);
+    // PlayerTextDrawColor(playerid, PassportTD_1[playerid][14], -1);
+    // PlayerTextDrawBackgroundColor(playerid, PassportTD_1[playerid][14], 255);
+    // PlayerTextDrawBoxColor(playerid, PassportTD_1[playerid][14], 135);
+    // PlayerTextDrawUseBox(playerid, PassportTD_1[playerid][14], 1);
+    // PlayerTextDrawSetProportional(playerid, PassportTD_1[playerid][14], 1);
+    // PlayerTextDrawSetSelectable(playerid, PassportTD_1[playerid][14], 0);
 
-    forex(txd, 15)
-    {
-        PlayerTextDrawShow(playerid, PassportTD_1[playerid][txd]);
-    }
+    // forex(txd, 15)
+    // {
+    //     PlayerTextDrawShow(playerid, PassportTD_1[playerid][txd]);
+    // }
+    
+    InputAge(playerid);
+
     return 1;
 }
 
@@ -907,44 +910,43 @@ stock SubmitPassport1(playerid)
 }
 stock InputAge(playerid)
 {
-    if(PassportTD_2[playerid][32] != PlayerText:-1)
-    {
-        Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Please enter your date of birth below (DD/MM/YYYY):", "Submit", "Cancel");
-    }
+    // if(PassportTD_2[playerid][32] != PlayerText:-1)
+    // {
+    ShowPlayerDialog(playerid, DIALOG_DATEB, DIALOG_STYLE_INPUT, "Date of Birth", "Please enter your date of birth below (DD/MM/YYYY):", "Submit", "Cancel");
+    
+    // }
     return 1;
 }
 
 stock InputGender(playerid)
 {
-    if(PassportTD_2[playerid][36] != PlayerText:-1)
-    {
-        Dialog_Show(playerid, Gender, DIALOG_STYLE_LIST, "Input Your Character Gender", "Male | Laki - Laki\nFemale | Perempuan", "Select", "Close");
-    }
+    // if(PassportTD_2[playerid][36] != PlayerText:-1)
+    // {
+    ShowPlayerDialog(playerid, DIALOG_GENDER, DIALOG_STYLE_LIST, "Input Your Character Gender", "Male | Laki - Laki\nFemale | Perempuan", "Select", "Close");
+    // }
     return 1;
 }
 
-stock InputTinggi(playerid)
-{
-    if(PassportTD_2[playerid][38] != PlayerText:-1)
-    {
-        Dialog_Show(playerid, Tinggi, DIALOG_STYLE_INPUT, "Tinggi", "Masukan tinggi badan karaktermu\nCATATAN: Hanya boleh memasukan dari angka 120 - 220", "Select", "Close");
-    }
-    return 1;
-}
+// stock InputTinggi(playerid)
+// {
+//     if(PassportTD_2[playerid][38] != PlayerText:-1)
+//     {
+//         ShowPlayerDialog(playerid, Tinggi, DIALOG_STYLE_INPUT, "Tinggi", "Masukan tinggi badan karaktermu\nCATATAN: Hanya boleh memasukan dari angka 120 - 220", "Select", "Close");
+//     }
+//     return 1;
+// }
 
 stock SubmitPassport(playerid)
 {
-    if(PassportTD_2[playerid][13] != PlayerText:-1)
-    {
-        if (PlayerData[playerid][pGender] == -1) return SendTextDrawMessageEx(playerid, NOTIFICATION_ERROR, "Kamu belum memilih jenis kelamin.");	
+    // if(PassportTD_2[playerid][13] != PlayerText:-1)
+    // {
+        if (PlayerData[playerid][pGender] < 1) return SendTextDrawMessageEx(playerid, NOTIFICATION_ERROR, "Kamu belum memilih jenis kelamin.");	
         else if (!strlen(PlayerData[playerid][pAge])) return SendTextDrawMessageEx(playerid, NOTIFICATION_ERROR, "Kamu belum memasukan tanggal lahir.");
-        else if(PlayerData[playerid][pHeigth] < 120 || PlayerData[playerid][pHeigth] > 220) return SendTextDrawMessageEx(playerid, NOTIFICATION_ERROR, "Kamu belum memasukan tinggi badan.");
 
-        CancelSelectTextDraw(playerid);
-        DestoryPassport_2(playerid);
+        // CancelSelectTextDraw(playerid);
+        // DestoryPassport_2(playerid);
 
-        if(PlayerData[playerid][pGender] == 1) PlayerData[playerid][pSkin] = maleskin[random(177)];
-        else PlayerData[playerid][pSkin] = femaleskin[random(54)];
+        PlayerData[playerid][pSkin] = PlayerData[playerid][pGender] == 2 ? femaleskin[random(54)] : maleskin[random(177)] ;
 
         UpdatePlayerSkin(playerid, PlayerData[playerid][pSkin]);
         SetPlayerPos(playerid, 1682.8376,-2241.0151,13.5469);
@@ -967,72 +969,19 @@ stock SubmitPassport(playerid)
         SetCameraBehindPlayer(playerid);
         SetSpawnInfo(playerid, 0, PlayerData[playerid][pSkin], 1682.8376, -2241.0151, 13.5469, 178.1388, 0, 0, 0, 0, 0, 0);
         SpawnPlayer(playerid);
-    }
-    return 1;
+    // }
+        return 1;
 }
 
 // =====
-Dialog:Gender(playerid, response, listitem, inputtext[])
-{
-	if(listitem == 0)
-	{
-		PlayerData[playerid][pGender] = 1;
-        PlayerTextDrawSetString(playerid, PassportTD_2[playerid][36], "M");
-        SetTimerEx("SelectTD", 200, false, "d", playerid);
-	}
-	else if(listitem == 1)
-	{
-		PlayerData[playerid][pGender] = 2;
-        PlayerTextDrawSetString(playerid, PassportTD_2[playerid][36], "F");
-        SetTimerEx("SelectTD", 200, false, "d", playerid);
-	}
-    SetTimerEx("SelectTD", 200, false, "d", playerid);
-	return 1;
-}
 
-Dialog:Tinggi(playerid, response, listitem, inputtext[])
-{
-    if(response)
-    {
-        if(strval(inputtext) < 120 || strval(inputtext) > 220) return SendTextDrawMessageEx(playerid, NOTIFICATION_ERROR, "Angka yang kamu masukan tidak valid!");
-        PlayerData[playerid][pHeigth] = strval(inputtext);
-        PlayerTextDrawSetString(playerid, PassportTD_2[playerid][38], sprintf("%d_CM", PlayerData[playerid][pHeigth]));
-    }
-    return 1;
-}
-
-Dialog:DateBirth(playerid, response, listitem, inputtext[])
-{
-	if (response)
-	{
-	    new
-			iDay,
-			iMonth,
-			iYear,
-			str[64];
-
-	    static const
-	        arrMonthDays[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-	    if (sscanf(inputtext, "p</>ddd", iDay, iMonth, iYear)) {
-	        Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Error: Invalid format specified!\n\nPlease enter your date of birth below (DD/MM/YYYY):", "Submit", "Cancel");
-		}
-		else if (iYear < 1900 || iYear > 2014) {
-		    Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Error: Invalid year specified!\n\nPlease enter your date of birth below (DD/MM/YYYY):", "Submit", "Cancel");
-		}
-		else if (iMonth < 1 || iMonth > 12) {
-		    Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Error: Invalid month specified!\n\nPlease enter your date of birth below (DD/MM/YYYY):", "Submit", "Cancel");
-		}
-		else if (iDay < 1 || iDay > arrMonthDays[iMonth - 1]) {
-		    Dialog_Show(playerid, DateBirth, DIALOG_STYLE_INPUT, "Date of Birth", "Error: Invalid day specified!\n\nPlease enter your date of birth below (DD/MM/YYYY):", "Submit", "Cancel");
-		}
-		else {
-		    format(PlayerData[playerid][pAge], 24, inputtext);
-
-		    format(str, sizeof(str), "%s", inputtext);
-		    PlayerTextDrawSetString(playerid, PassportTD_2[playerid][32], str);
-		}
-	}
-    SetTimerEx("SelectTD", 200, false, "d", playerid);
-	return 1;
-}
+// Dialog:Tinggi(playerid, response, listitem, inputtext[])
+// {
+//     if(response)
+//     {
+//         if(strval(inputtext) < 120 || strval(inputtext) > 220) return SendTextDrawMessageEx(playerid, NOTIFICATION_ERROR, "Angka yang kamu masukan tidak valid!");
+//         PlayerData[playerid][pHeigth] = strval(inputtext);
+//         PlayerTextDrawSetString(playerid, PassportTD_2[playerid][38], sprintf("%d_CM", PlayerData[playerid][pHeigth]));
+//     }
+//     return 1;
+// }
